@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Comanda CEN</string>
+    <string name="title_activity_main">Comanda CEN</string>
+    <string name="package_name">io.ionic.comanda</string>
+    <string name="custom_url_scheme">io.ionic.comanda</string>
+</resources>
