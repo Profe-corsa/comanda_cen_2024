@@ -1,0 +1,120 @@
+<ion-content>
+  <div class="container">
+    <ion-card class="login-card">
+      <form [formGroup]="loginForm" (ngSubmit)="onlogin()">
+        <div class="heading">
+          <h1>Comanda CEN</h1>
+          <p>Inicia sesión para continuar</p>
+        </div>
+
+        <div class="form-group">
+          <div class="input-wrapper">
+            <ion-icon name="mail-outline"></ion-icon>
+            <ion-input
+              type="email"
+              placeholder="Email"
+              formControlName="email"
+            ></ion-input>
+          </div>
+          <div
+            *ngIf="
+              loginForm.get('email')?.invalid &&
+              (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)
+            "
+            class="error-message"
+          >
+            <ion-text
+              color="danger"
+              *ngIf="loginForm.get('email')?.errors?.['required']"
+            >
+              Email es requerido.
+            </ion-text>
+            <ion-text
+              color="danger"
+              *ngIf="loginForm.get('email')?.errors?.['email']"
+            >
+              Email no es válido.
+            </ion-text>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="input-wrapper">
+            <ion-icon name="lock-closed-outline"></ion-icon>
+            <ion-input
+              type="showPassword ? 'text' : 'password'"
+              placeholder="Password"
+              formControlName="password"
+            ></ion-input>
+            <ion-icon
+              [name]="showPassword ? 'eye-outline' : 'eye-off-outline'"
+              (click)="togglePasswordVisibility()"
+            ></ion-icon>
+          </div>
+          <div
+            *ngIf="
+              loginForm.get('password')?.invalid &&
+              (loginForm.get('password')?.dirty ||
+                loginForm.get('password')?.touched)
+            "
+            class="error-message"
+          >
+            <ion-text
+              color="danger"
+              *ngIf="loginForm.get('password')?.errors?.['required']"
+            >
+              Password es requerido.
+            </ion-text>
+            <ion-text
+              color="danger"
+              *ngIf="loginForm.get('password')?.errors?.['minlength']"
+            >
+              Password debe tener al menos 6 caracteres.
+            </ion-text>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <ion-button expand="block" type="submit" [disabled]="!loginForm.valid"
+            >Ingresar</ion-button
+          >
+          <a href="#" class="forgot-password">¿No tienes una cuenta?</a>
+          <ion-button
+            expand="block"
+            fill="outline"
+            class="register-button"
+            (click)="irARegistro()"
+          >
+            Registrarse
+          </ion-button>
+        </div>
+      </form>
+
+      <div class="fab-container">
+        <ion-fab vertical="bottom" horizontal="center" slot="fixed">
+          <ion-fab-button (click)="toggleUserOptions()">
+            <ion-icon name="ellipsis-horizontal"></ion-icon>
+          </ion-fab-button>
+          <ion-fab-list side="top">
+            <ion-fab-button color="primary" (click)="fillFormWithUser(1)">
+              <ion-icon name="person-circle-outline"></ion-icon>
+            </ion-fab-button>
+          </ion-fab-list>
+          <ion-fab-list side="start">
+            <ion-fab-button color="secondary" (click)="fillFormWithUser(2)">
+              <ion-icon name="person-circle-outline"></ion-icon>
+            </ion-fab-button>
+          </ion-fab-list>
+          <ion-fab-list side="end">
+            <ion-fab-button color="tertiary" (click)="fillFormWithUser(3)">
+              <ion-icon name="person-circle-outline"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-button color="danger" (click)="fillFormWithUser(4)">
+              <ion-icon name="person-circle-outline"></ion-icon>
+            </ion-fab-button>
+          </ion-fab-list>
+        </ion-fab>
+      </div>
+    </ion-card>
+  </div>
+</ion-content>
