@@ -23,6 +23,7 @@ export class UsuarioService {
   // Si se registra, devuelve el usuario.
   // Si no, devuelve una excepción que se tiene que manejar
   async saveUserWithEmailAndPassword(user: Usuario): Promise<Usuario> {
+    console.log('saveUserWithEmailAndPassword', user);
     try {
       const credenciales = await this.authService.register(
         user.email,

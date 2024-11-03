@@ -17,6 +17,16 @@ export class ToastService {
     await toast.present();
   }
 
+  async showExito(message: string) {
+    const toast = await this.toastController.create({
+      message,
+      duration: 3000, // Duración del toast
+      position: 'top', // Posición del toast
+      color: 'success', // Color del toast
+    });
+    await toast.present();
+  }
+
   translateFirebaseError(errorCode: string): string {
     switch (errorCode) {
       case 'auth/email-already-in-use':

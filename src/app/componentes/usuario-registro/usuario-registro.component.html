@@ -19,7 +19,10 @@
         </ion-row>
       </ion-grid>
 
-      <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+      <form
+        [formGroup]="registerForm"
+        (ngSubmit)="onRegister(registerForm.value)"
+      >
         <ion-grid>
           <ion-row>
             <ion-col size="">

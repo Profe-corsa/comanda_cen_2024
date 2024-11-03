@@ -1,30 +1,36 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import {
+  FormBuilder,
+  FormGroup,
+  FormControl,
+  Validators,
+} from '@angular/forms';
 import { matchPasswordValidator } from 'src/app/validadores/match-password.validator';
 import { CamaraService } from '../../services/camara.service';
 import { Usuario } from '../../clases/usuario';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { QrScannerService } from 'src/app/services/qrscanner.service';
-// import {
-//   IonContent,
-//   IonHeader,
-//   IonTitle,
-//   IonToolbar,
-//   IonIcon,
-//   IonButton,
-//   IonCard,
-//   IonText,
-//   IonGrid,
-//   IonRow,
-//   IonCol,
-// } from '@ionic/angular/standalone';
-import { IonicModule } from '@ionic/angular';
+import {
+  IonContent,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
+  IonIcon,
+  IonButton,
+  IonCard,
+  IonText,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonItem,
+  IonInput,
+} from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { qrCodeOutline, eyeOutline, eyeOffOutline } from 'ionicons/icons';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-usuario-registro',
@@ -32,22 +38,22 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   styleUrls: ['./usuario-registro.component.scss'],
   standalone: true,
   imports: [
-    // IonCol,
-    // IonRow,
-    // IonGrid,
-    // IonText,
-    // IonCard,
-    // IonIcon,
-    // IonContent,
-    // IonHeader,
-    // IonTitle,
-    // IonToolbar,
-    // IonButton,
-    IonicModule,
-    FormsModule,
+    IonItem,
     CommonModule,
-    FormsModule,
     ReactiveFormsModule,
+    RouterLink,
+    IonContent,
+    IonHeader,
+    IonTitle,
+    IonToolbar,
+    IonIcon,
+    IonButton,
+    IonCard,
+    IonText,
+    IonGrid,
+    IonRow,
+    IonCol,
+    IonInput,
   ],
 })
 export class UsuarioRegistroComponent {
@@ -55,6 +61,14 @@ export class UsuarioRegistroComponent {
   public showPassword = false;
   public showRPassword = false;
   public usuario: Usuario | any;
+  imageName: string | null = null;
+
+  nombre: FormGroup | any;
+  apellido: FormGroup | any;
+  dni: FormGroup | any;
+  email: FormGroup | any;
+  password: FormGroup | any;
+  rpassword: FormGroup | any;
 
   constructor(
     private router: Router,
@@ -64,15 +78,36 @@ export class UsuarioRegistroComponent {
     private toastService: ToastService,
     private qrscannerService: QrScannerService
   ) {
+    this.nombre = new FormControl('', [
+      Validators.required,
+      Validators.minLength(3),
+    ]);
+    this.apellido = new FormControl('', [
+      Validators.required,
+      Validators.minLength(3),
+    ]);
+    this.dni = new FormControl('', [
+      Validators.required,
+      Validators.minLength(8),
+    ]);
+    this.email = new FormControl('', [Validators.required, Validators.email]);
+    this.password = new FormControl('', [
+      Validators.required,
+      Validators.minLength(6),
+    ]);
+    this.rpassword = new FormControl('', [
+      Validators.required,
+      Validators.minLength(6),
+    ]);
     this.usuario = new Usuario(); // Inicializa el objeto usuario
     this.registerForm = this.fb.group(
       {
-        nombre: ['', [Validators.required, Validators.minLength(3)]],
-        apellido: ['', [Validators.required, Validators.minLength(3)]],
-        dni: ['', [Validators.required, Validators.minLength(8)]],
-        email: ['', [Validators.required, Validators.email]],
-        password: ['', [Validators.required, Validators.minLength(6)]],
-        rpassword: ['', [Validators.required, Validators.minLength(6)]],
+        nombre: this.nombre,
+        apellido: this.apellido,
+        dni: this.dni,
+        email: this.email,
+        password: this.password,
+        rpassword: this.rpassword,
       },
       { validator: matchPasswordValidator('password', 'rpassword') }
     );
@@ -101,33 +136,40 @@ export class UsuarioRegistroComponent {
     this.usuario.dni = formValues.dni;
   }
 
-  async onRegister() {
-    console.log(this.registerForm.valid);
-    if (this.registerForm.valid) {
-      // const { email, password } = this.registerForm.value;
-      await this.usuarioSrv.saveUserWithEmailAndPassword(this.usuario).then(
-        (res: any) => {
-          console.error('Error login');
-
-          this.toastService.showError('Usuario Registrado');
-
-          //Redireccionar
-
-          this.router.navigate(['/home']);
-        },
-        (error) => {
-          console.error(error.message);
-          this.toastService.showError('¡El correo electrónico ya existe!');
+  async onRegister(formValues: any) {
+    if (this.registerForm.valid && this.usuario.foto) {
+      this.formUsuario(formValues);
+      try {
+        await this.usuarioSrv.saveUserWithEmailAndPassword(this.usuario);
+        this.toastService.showExito('Usuario Registrado');
+        this.router.navigate(['/home']);
+      } catch (error: any) {
+        console.error(error.message);
+        this.toastService.showError(
+          '¡Se produjo un error al dar de alta el usuario!'
+        );
+        if (this.imageName) {
+          await this.camaraService.deleteImage('clientes', this.imageName);
         }
+      }
+    } else {
+      this.toastService.showError(
+        'Debe completar todos los campos y tomar una foto de perfil'
       );
     }
   }
 
   tomarFoto() {
-    this.camaraService.tomarFoto('clientes', Date.now()).then((urlFoto) => {
-      //Guardar la url en el objeto usuario
-      this.usuario.foto = urlFoto;
-    });
+    try {
+      const imageName = Date.now().toString();
+      this.camaraService.tomarFoto('clientes', imageName).then((urlFoto) => {
+        //Guardar la url en el objeto usuario
+        this.usuario.foto = urlFoto;
+        this.imageName = imageName;
+      });
+    } catch (error) {
+      console.error('Error al tomar la foto:', error);
+    }
   }
 
   ///Escanea el código QR del DNI y guarda los datos
@@ -153,7 +195,10 @@ export class UsuarioRegistroComponent {
     });
   }
 
-  irAlLogin() {
+  async irAlLogin() {
+    if (this.imageName) {
+      await this.camaraService.deleteImage('clientes', this.imageName);
+    }
     this.router.navigate(['/login']);
   }
 }
