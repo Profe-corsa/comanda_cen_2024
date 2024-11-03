@@ -7,12 +7,13 @@ import {
   getDownloadURL,
   deleteObject,
 } from '@angular/fire/storage';
+import { ToastService } from './toast.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CamaraService {
-  constructor(private storage: Storage) {}
+  constructor(private storage: Storage, private toastService: ToastService) {}
 
   // Obtener la URL de descarga de una imagen almacenada en Firebase Storage
   async getImageByName(collection: string, imageName: string): Promise<string> {
@@ -51,12 +52,14 @@ export class CamaraService {
 
         // Obtener la URL de descarga de la imagen
         const url = await getDownloadURL(storageRef);
+        this.toastService.showExito('Imagen capturada con éxito');
         return url;
       } else {
+        this.toastService.showError('No se pudo capturar la imagen');
         throw new Error('No se pudo capturar la imagen');
       }
     } catch (error) {
-      console.error('Error al tomar la foto:', error);
+      this.toastService.showError('No se pudo capturar la imagen: ' + error);
       throw error;
     }
   }

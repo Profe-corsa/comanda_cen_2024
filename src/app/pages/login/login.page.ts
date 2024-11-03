@@ -1,21 +1,21 @@
 import { Component } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
-// import {
-//   IonContent,
-//   IonHeader,
-//   IonTitle,
-//   IonToolbar,
-//   IonFabButton,
-//   IonText,
-//   IonButton,
-//   IonCard,
-//   IonIcon,
-//   IonFab,
-//   IonFabList,
-// } from '@ionic/angular/standalone';
 import {
-  FormsModule,
+  IonContent,
+  IonHeader,
+  IonTitle,
+  IonInput,
+  IonToolbar,
+  IonFabButton,
+  IonText,
+  IonButton,
+  IonCard,
+  IonIcon,
+  IonFab,
+  IonFabList,
+  IonRouterLink,
+} from '@ionic/angular/standalone';
+import {
   ReactiveFormsModule,
   FormBuilder,
   FormGroup,
@@ -25,18 +25,12 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { addIcons } from 'ionicons';
 import {
-  chevronDownCircle,
-  chevronForwardCircle,
-  chevronUpCircle,
-  colorPalette,
-  document,
-  globe,
-  mailOutline,
-  lockClosedOutline,
-  ellipsisHorizontal,
-  personCircleOutline,
   eyeOutline,
   eyeOffOutline,
+  lockClosedOutline,
+  mailOutline,
+  ellipsisHorizontal,
+  personCircleOutline,
 } from 'ionicons/icons';
 
 @Component({
@@ -44,7 +38,23 @@ import {
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    IonRouterLink,
+    IonContent,
+    IonHeader,
+    IonTitle,
+    IonToolbar,
+    IonFabButton,
+    IonText,
+    IonButton,
+    IonCard,
+    IonIcon,
+    IonFab,
+    IonFabList,
+    IonInput,
+  ],
 })
 export class LoginPage {
   loginForm: FormGroup;
@@ -66,12 +76,6 @@ export class LoginPage {
       lockClosedOutline,
       ellipsisHorizontal,
       personCircleOutline,
-      chevronDownCircle,
-      chevronForwardCircle,
-      chevronUpCircle,
-      colorPalette,
-      document,
-      globe,
       eyeOutline,
       eyeOffOutline,
     });
@@ -127,6 +131,7 @@ export class LoginPage {
   }
 
   irARegistro() {
+    console.log('entro');
     this.router.navigate(['/registro']);
   }
 }

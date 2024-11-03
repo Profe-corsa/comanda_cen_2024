@@ -42,7 +42,7 @@
           <div class="input-wrapper">
             <ion-icon name="lock-closed-outline"></ion-icon>
             <ion-input
-              type="showPassword ? 'text' : 'password'"
+              [attr.type]="showPassword ? 'text' : 'password'"
               placeholder="Password"
               formControlName="password"
             ></ion-input>
