@@ -85,6 +85,7 @@
 //     animation-timing-function: ease-out;
 //   }
 // }
+
 .splash-container {
   display: flex;
   flex-direction: column;
@@ -96,84 +97,76 @@
 
 .header {
   .encabezado {
-    font-size: 2rem;
-    color: #333;
+    font-size: 6rem;
+    color: #e57933;
   }
 }
 
 .icon-center {
   .app-logo {
-    width: 150px; /* Ajusta el tamaño del logo según tus necesidades */
+    width: 250px;
     height: auto;
-    margin: 20px 0; /* Espacio alrededor del logo */
+    margin: 20px 0;
   }
 }
 
 .cen-container {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Centra las letras */
+  align-items: center;
 
   .cen-letter {
     font-size: 4rem;
     font-weight: bold;
-    color: #222;
     position: relative;
-    opacity: 0; /* Inicialmente invisibles */
-    animation: fade-in 0.5s ease-in forwards; /* Aparecerán una tras otra */
-
-    &.completar {
-      font-size: 1.2rem; /* Tamaño del texto complementario */
-      position: absolute;
-      left: 100%; /* Posición a la derecha de la letra */
-      opacity: 0; /* Inicialmente invisibles */
-      animation: fade-in 0.5s ease-in forwards; /* Aparecerán al mismo tiempo que la letra */
-    }
-
-    /* Resplandor en secuencia para cada letra */
-    #letra-c {
-      animation-delay: 1s; /* Primer letra */
-      & .completar {
-        animation-delay: 1.5s; /* Completar "ristian" después de la letra */
-      }
-    }
-    #letra-e {
-      animation-delay: 1.5s; /* Segunda letra */
-      & .completar {
-        animation-delay: 2s; /* Completar "zequiel" después de la letra */
-      }
-    }
-    #letra-n {
-      animation-delay: 2s; /* Última letra */
-      & .completar {
-        animation-delay: 2.5s; /* Completar "nicolas" después de la letra */
-      }
-    }
-  }
-}
-
-.footer {
-  display: flex;
-  gap: 1rem;
-  .texto {
-    font-size: 1.5rem;
-    color: #555;
     opacity: 0;
-    animation: fade-in 1s ease-in-out forwards;
+    animation: fade-in 0.5s ease-in forwards;
   }
 
-  .texto:nth-child(1) {
+  .color-letras {
+    background: linear-gradient(to right, #e57933, #f9b60b);
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  #letra-c {
+    animation-delay: 1s;
+    .completar {
+      display: inline-block;
+      opacity: 0;
+      animation: fade-in 0.5s ease-in forwards;
+      animation-delay: 3s;
+      margin-left: 0.5rem; /* Espacio entre letra y nombre */
+      font-size: 2rem;
+    }
+  }
+
+  #letra-e {
+    animation-delay: 2s;
+    .completar {
+      display: inline-block;
+      opacity: 0;
+      animation: fade-in 0.5s ease-in forwards;
+      animation-delay: 4s;
+      margin-left: 0.5rem;
+      font-size: 2rem;
+    }
+  }
+
+  #letra-n {
     animation-delay: 3s;
-  }
-  .texto:nth-child(2) {
-    animation-delay: 3.5s;
-  }
-  .texto:nth-child(3) {
-    animation-delay: 4s;
+    .completar {
+      display: inline-block;
+      opacity: 0;
+      animation: fade-in 0.5s ease-in forwards;
+      animation-delay: 5s;
+      margin-left: 0.5rem;
+      font-size: 2rem;
+    }
   }
 }
 
-/* Animaciones */
+/* Animación de aparición gradual */
 @keyframes fade-in {
   to {
     opacity: 1;
