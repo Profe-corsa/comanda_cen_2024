@@ -9,22 +9,56 @@ export class ToastService {
 
   async showError(message: string) {
     const toast = await this.toastController.create({
-      message,
-      duration: 3000, // Duración del toast
+      message: message,
+      duration: 30000, // Duración del toast
       position: 'top', // Posición del toast
       color: 'danger', // Color del toast
+      cssClass: 'custom-toast',
     });
+    const image = this.createImage(
+      'assets/icon/logo_Uno.png',
+      'Profile logo',
+      '50',
+      '50'
+    );
+    toast.shadowRoot?.querySelector('.toast-container')?.appendChild(image);
+
     await toast.present();
   }
 
   async showExito(message: string) {
     const toast = await this.toastController.create({
-      message,
+      message: `<img src="assets/icon/logo_Uno.png" style="height: 24px; vertical-align: middle; margin-right: 8px;">${message}`,
       duration: 3000, // Duración del toast
       position: 'top', // Posición del toast
       color: 'success', // Color del toast
+      cssClass: 'custom-toast',
     });
+    const image = this.createImage(
+      'assets/icon/logo_Uno.png',
+      'Profile logo',
+      '50',
+      '50'
+    );
+    toast.shadowRoot?.querySelector('.toast-container')?.appendChild(image);
+
     await toast.present();
+  }
+
+  private createImage(
+    src: string,
+    alt: string,
+    height: string,
+    width: string
+  ): HTMLImageElement {
+    const image = document.createElement('img');
+    image.setAttribute('src', src);
+    image.setAttribute('height', height);
+    image.setAttribute('width', width);
+    image.setAttribute('alt', alt);
+    image.style.borderRadius = '50%';
+    image.style.marginRight = '15px';
+    return image;
   }
 
   translateFirebaseError(errorCode: string): string {

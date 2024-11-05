@@ -130,8 +130,8 @@ export class LoginPage {
     }
   }
 
-  irARegistro() {
+  irARegistro(tipoCliente: string) {
     console.log('entro');
-    this.router.navigate(['/registro']);
+    this.router.navigate([`/registro/${tipoCliente}`]);
   }
 }

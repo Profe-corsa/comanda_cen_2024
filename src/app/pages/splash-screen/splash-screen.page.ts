@@ -24,13 +24,13 @@ export class SplashScreenPage implements OnInit {
   ngOnInit() {
     const splashShown = sessionStorage.getItem('splashShown');
 
-    // if (!splashShown) {
-    //   setTimeout(() => {
-    //     sessionStorage.setItem('splashShown', 'true');
-    //     this.router.navigate(['/login']);
-    //   }, 5000); // Ajustar el tiempo total según las animaciones
-    // } else {
-    //   this.router.navigate(['/login']);
-    // }
+    if (!splashShown) {
+      setTimeout(() => {
+        sessionStorage.setItem('splashShown', 'true');
+        this.router.navigate(['/login']);
+      }, 5000); // Ajustar el tiempo total según las animaciones
+    } else {
+      this.router.navigate(['/login']);
+    }
   }
 }

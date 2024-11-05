@@ -11,7 +11,7 @@ ion-content {
 /* Contenedor principal */
 .container {
   width: 100%;
-  margin-top: 30%;
+  margin-top: 20%;
   max-width: 100%;
 }
 
@@ -96,15 +96,17 @@ ion-content {
   margin-top: 24px;
 
   ion-button {
-    --background: #4a90e2;
+    --background: linear-gradient(to right, #e57933, #f9b60b);
     --border-radius: 8px;
     margin-bottom: 12px;
+    color: #34332f;
+    font-weight: bold;
   }
 
   .forgot-password {
     display: block;
     text-align: center;
-    color: #4a90e2;
+    color: #777;
     text-decoration: none;
     font-size: 14px;
     margin-bottom: 12px;
@@ -112,8 +114,8 @@ ion-content {
 
   .register-button {
     --border-radius: 8px;
-    --border-color: hsl(315, 83%, 40%);
-    --background: rgb(247, 29, 193);
+    --border-color: #e57933;
+    --background: linear-gradient(to right, #e57933, #f9b60b);
     --color: #ffffff;
   }
 }
@@ -123,12 +125,46 @@ ion-content {
   position: relative;
   display: flex;
   justify-content: center;
-  margin-top: 100px;
+  margin-top: 7.5rem;
+  height: 20%;
+  img {
+    max-width: 90%;
+  }
 }
 
 ion-fab-button {
-  --border-radius: 50%;
+  --background: #e5eae300;
+  --background-activated: #ceae6b;
+  --background-hover: #e1cc9f;
+  --border-radius: 15px;
+  --box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.3),
+    0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+  --color: black;
+  width: 100px;
+  height: 100px;
 }
+
+.small-fab {
+  width: 80px !important;
+  height: 80px !important;
+  border-radius: 25px;
+  background: #f9b60b;
+}
+
+.small-fab-child {
+  margin-top: 10%;
+  width: 50px !important; /* Tamaño reducido del botón */
+  height: 50px !important;
+  --icon-size: 16px; /* Ajusta también el tamaño del ícono */
+}
+
+// .small-fab-child-y {
+//   margin-bottom: 18%;
+//   margin-left: 75%;
+//   width: 50px !important; /* Tamaño reducido del botón */
+//   height: 50px !important;
+//   --icon-size: 16px; /* Ajusta también el tamaño del ícono */
+// }
 
 ion-fab-button ion-icon {
   font-size: 20px;
@@ -137,7 +173,7 @@ ion-fab-button ion-icon {
 ion-fab-list {
   ion-fab-button {
     --border-radius: 50%;
-    --background: rgba(255, 255, 255, 0.9);
+    --background: linear-gradient(to right, #e57933, #f9b60b);
     ion-icon {
       font-size: 20px;
     }

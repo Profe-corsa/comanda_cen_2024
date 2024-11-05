@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import {
@@ -31,6 +31,8 @@ import {
 import { addIcons } from 'ionicons';
 import { qrCodeOutline, eyeOutline, eyeOffOutline } from 'ionicons/icons';
 import { ReactiveFormsModule } from '@angular/forms';
+import { Estados } from '../../clases/enumerados/Estados';
+import { Perfiles } from '../../clases/enumerados/perfiles';
 
 @Component({
   selector: 'app-usuario-registro',
@@ -69,6 +71,10 @@ export class UsuarioRegistroComponent {
   email: FormGroup | any;
   password: FormGroup | any;
   rpassword: FormGroup | any;
+  cuil: FormGroup | any;
+  perfil: FormGroup | any;
+
+  @Input() esCliente: boolean = false;
 
   constructor(
     private router: Router,
@@ -78,17 +84,22 @@ export class UsuarioRegistroComponent {
     private toastService: ToastService,
     private qrscannerService: QrScannerService
   ) {
+    //Formulario
     this.nombre = new FormControl('', [
       Validators.required,
       Validators.minLength(3),
+      Validators.pattern('^[a-zA-Z ]+$'),
     ]);
     this.apellido = new FormControl('', [
       Validators.required,
       Validators.minLength(3),
+      Validators.pattern('^[a-zA-Z ]+$'),
     ]);
     this.dni = new FormControl('', [
       Validators.required,
-      Validators.minLength(8),
+      // Validators.minLength(7),
+      // Validators.maxLength(8),
+      Validators.pattern('^[0-9]{7,8}$'),
     ]);
     this.email = new FormControl('', [Validators.required, Validators.email]);
     this.password = new FormControl('', [
@@ -99,6 +110,15 @@ export class UsuarioRegistroComponent {
       Validators.required,
       Validators.minLength(6),
     ]);
+    this.cuil = new FormControl('');
+    this.perfil = new FormControl('');
+
+    // En caso de que avancemos con todas las altas por acá
+    // if (!this.cliente) {
+    //   this.cuil.setValidators([Validators.pattern('^[0-9]{11}$'), Validators.required])
+    //   this.perfil.setValidators([Validators.required])
+    // }
+
     this.usuario = new Usuario(); // Inicializa el objeto usuario
     this.registerForm = this.fb.group(
       {
@@ -137,6 +157,8 @@ export class UsuarioRegistroComponent {
   }
 
   async onRegister(formValues: any) {
+    this.usuario.perfil = Perfiles.cliente;
+    this.usuario.estado = Estados.pendienteDeAprobacion;
     if (this.registerForm.valid && this.usuario.foto) {
       this.formUsuario(formValues);
       try {

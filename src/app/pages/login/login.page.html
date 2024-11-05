@@ -3,7 +3,7 @@
     <ion-card class="login-card">
       <form [formGroup]="loginForm" (ngSubmit)="onlogin()">
         <div class="heading">
-          <h1>Comanda CEN</h1>
+          <h1><span class="encabezado">Comanda</span> CEN</h1>
           <p>Inicia sesión para continuar</p>
         </div>
 
@@ -78,43 +78,64 @@
           <ion-button expand="block" type="submit" [disabled]="!loginForm.valid"
             >Ingresar</ion-button
           >
-          <a href="#" class="forgot-password">¿No tienes una cuenta?</a>
+          <p class="forgot-password">¿No tienes una cuenta?</p>
           <ion-button
             expand="block"
             fill="outline"
             class="register-button"
-            (click)="irARegistro()"
+            (click)="irARegistro('cliente')"
           >
             Registrarse
           </ion-button>
+          <ion-button
+            expand="block"
+            fill="outline"
+            class="register-button"
+            (click)="irARegistro('clienteAnonimo')"
+          >
+            Ingresar sin registrarse
+          </ion-button>
         </div>
       </form>
-
-      <div class="fab-container">
-        <ion-fab vertical="bottom" horizontal="center" slot="fixed">
-          <ion-fab-button (click)="toggleUserOptions()">
-            <ion-icon name="ellipsis-horizontal"></ion-icon>
-          </ion-fab-button>
-          <ion-fab-list side="top">
-            <ion-fab-button color="primary" (click)="fillFormWithUser(1)">
-              <ion-icon name="person-circle-outline"></ion-icon>
-            </ion-fab-button>
-          </ion-fab-list>
-          <ion-fab-list side="start">
-            <ion-fab-button color="secondary" (click)="fillFormWithUser(2)">
-              <ion-icon name="person-circle-outline"></ion-icon>
-            </ion-fab-button>
-          </ion-fab-list>
-          <ion-fab-list side="end">
-            <ion-fab-button color="tertiary" (click)="fillFormWithUser(3)">
-              <ion-icon name="person-circle-outline"></ion-icon>
-            </ion-fab-button>
-            <ion-fab-button color="danger" (click)="fillFormWithUser(4)">
-              <ion-icon name="person-circle-outline"></ion-icon>
-            </ion-fab-button>
-          </ion-fab-list>
-        </ion-fab>
-      </div>
     </ion-card>
+
+    <div class="fab-container">
+      <ion-fab vertical="bottom" horizontal="center" slot="fixed">
+        <ion-fab-button
+          (click)="toggleUserOptions()"
+          [ngClass]="{'small-fab': showUserOptions}"
+        >
+          <img src="\assets\icon\logo_Uno.png" alt="" />
+        </ion-fab-button>
+        <ion-fab-list side="start">
+          <ion-fab-button
+            [ngClass]="{'small-fab-child': showUserOptions}"
+            (click)="fillFormWithUser(1)"
+          >
+            <img src="\assets\Usuarios\dueño.png" alt="" />
+          </ion-fab-button>
+          <ion-fab-button
+            [ngClass]="{'small-fab-child': showUserOptions}"
+            (click)="fillFormWithUser(2)"
+          >
+            <img src="\assets\Usuarios\mozo.png" alt="" />
+          </ion-fab-button>
+        </ion-fab-list>
+        <ion-fab-list side="end">
+          <ion-fab-button
+            [ngClass]="{'small-fab-child': showUserOptions}"
+            (click)="fillFormWithUser(3)"
+          >
+            <img src="\assets\Usuarios\bartender.png" alt="" />
+          </ion-fab-button>
+          <ion-fab-button
+            [ngClass]="{'small-fab-child': showUserOptions}"
+            (click)="fillFormWithUser(4)"
+          >
+            <img src="\assets\Usuarios\cliente.png" alt="" />
+          </ion-fab-button>
+        </ion-fab-list>
+      </ion-fab>
+    </div>
   </div>
 </ion-content>

@@ -1,13 +1,9 @@
-<!-- <ion-header>
-  <ion-toolbar color="titulo">
-    <ion-button slot="start" fill="clear">
-      <ion-icon name="arrow-back"></ion-icon>
-    </ion-button>
-    <ion-title>Registro de Usuario</ion-title>
-  </ion-toolbar>
-</ion-header> -->
-
-<!-- <ion-title>Registro de {{object}}</ion-title> -->
 <ion-content>
-  <app-usuario-registro></app-usuario-registro>
+  <app-usuario-registro
+    *ngIf="rutaUsuarioPerfil == 'cliente'"
+    [esCliente]="rutaUsuarioPerfil == 'cliente'"
+  ></app-usuario-registro>
+  <app-anonimo-registro
+    *ngIf="rutaUsuarioPerfil == 'clienteAnonimo'"
+  ></app-anonimo-registro>
 </ion-content>
