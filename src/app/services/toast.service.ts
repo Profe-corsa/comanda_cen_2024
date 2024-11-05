@@ -10,7 +10,7 @@ export class ToastService {
   async showError(message: string) {
     const toast = await this.toastController.create({
       message: message,
-      duration: 30000, // Duración del toast
+      duration: 3000, // Duración del toast
       position: 'top', // Posición del toast
       color: 'danger', // Color del toast
       cssClass: 'custom-toast',

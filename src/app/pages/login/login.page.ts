@@ -23,6 +23,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { UsuarioService } from 'src/app/services/usuario.service';
 import { addIcons } from 'ionicons';
 import {
   eyeOutline,
@@ -32,6 +33,10 @@ import {
   ellipsisHorizontal,
   personCircleOutline,
 } from 'ionicons/icons';
+import { Subscription } from 'rxjs';
+import { Perfiles } from 'src/app/clases/enumerados/perfiles';
+import { Estados } from 'src/app/clases/enumerados/Estados';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -58,13 +63,16 @@ import {
 })
 export class LoginPage {
   loginForm: FormGroup;
+  suscripcion: Subscription | any;
   showPassword = false;
   showUserOptions = false; // Para mostrar u ocultar los botones de usuario
 
   constructor(
     private router: Router,
     private authService: AuthService,
-    private fb: FormBuilder
+    private userSrv: UsuarioService,
+    private fb: FormBuilder,
+    private toast: ToastService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -110,28 +118,54 @@ export class LoginPage {
   }
 
   async onlogin() {
+    let res: any;
+
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
       try {
-        this.authService.login(email, password).then((res: any) => {
-          if (res) {
-            this.loginForm.patchValue({
-              email: '',
-              password: '',
-            });
-            this.router.navigate(['/home']);
-          }
-        });
+        res = await this.authService.login(email, password);
+
+        this.suscripcion = this.userSrv
+          .getUser(res.user.uid)
+          .subscribe((usuario: any) => {
+            if (usuario != undefined) {
+              if (
+                usuario.perfil == Perfiles.cliente &&
+                usuario.estado == Estados.pendienteDeAprobacion
+              ) {
+                this.toast.showError(
+                  'Lo sentimos, pero su cuenta aún se encuentra Pendiente de aprobación.'
+                );
+                this.limpiarInputs();
+              } else if (
+                usuario.perfil == Perfiles.cliente &&
+                usuario.estado == Estados.rechazado
+              ) {
+                this.limpiarInputs();
+                this.toast.showError(
+                  'Lo sentimos, pero su cuenta fue rechazada.'
+                );
+              } else {
+                this.limpiarInputs();
+                this.router.navigate(['/home']);
+              }
+            }
+          });
       } catch (error: any) {
-        console.error(error);
+        this.toast.showError('Falló el ingreso: ' + error.message);
       }
     } else {
+      //Este es un error para nosotros. Todos los errores de autenticación son informados por Firebase.
       console.error('Formulario inválido');
     }
   }
 
   irARegistro(tipoCliente: string) {
-    console.log('entro');
     this.router.navigate([`/registro/${tipoCliente}`]);
+  }
+
+  limpiarInputs() {
+    // Se limpia el formulario
+    this.loginForm.reset();
   }
 }

@@ -28,7 +28,7 @@ export class SplashScreenPage implements OnInit {
       setTimeout(() => {
         sessionStorage.setItem('splashShown', 'true');
         this.router.navigate(['/login']);
-      }, 5000); // Ajustar el tiempo total según las animaciones
+      }, 7200); // Ajustar el tiempo total según las animaciones
     } else {
       this.router.navigate(['/login']);
     }

@@ -1,0 +1,76 @@
+[33mcommit 13370399ac9bb3122b1478989b9cde4e305957c5[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31mupstream/main[m[33m)[m
+Merge: 19f6742 fc2511d
+Author: Cris <40776473+corsa144@users.noreply.github.com>
+Date:   Mon Nov 4 14:37:49 2024 -0300
+
+    Merge pull request #3 from nmiguenz/nmiguenz
+    
+    Corrección de estilos en el splash y clases
+
+[33mcommit fc2511d6803da6a5bc2aba8c8a78bee2829990de[m[33m ([m[1;31morigin/nmiguenz[m[33m)[m
+Merge: b320c11 19f6742
+Author: nmiguenz <nmiguenz@gmail.com>
+Date:   Mon Nov 4 14:34:20 2024 -0300
+
+    Merge branch 'main' into nmiguenz
+
+[33mcommit b320c11f3a1d5450d0b5bd544f6ea5f3320e1834[m
+Author: nmiguenz <nmiguenz@gmail.com>
+Date:   Mon Nov 4 14:32:59 2024 -0300
+
+    Corrección de las animaciones del Splash. Carga inicial de clases
+
+[33mcommit 19f67426a48a3189adb8ff58b7325cf695493be0[m
+Merge: 893fa30 761a7b4
+Author: Cris <40776473+corsa144@users.noreply.github.com>
+Date:   Sun Nov 3 19:01:52 2024 -0300
+
+    Merge pull request #2 from nmiguenz/nmiguenz
+    
+    Corrección de estilos
+
+[33mcommit 761a7b423ecc32e070efcbcab229bc359e374169[m
+Merge: b8cd6b4 893fa30
+Author: nmiguenz <nmiguenz@gmail.com>
+Date:   Sun Nov 3 18:58:17 2024 -0300
+
+    Merge branch 'main' into nmiguenz
+
+[33mcommit b8cd6b474b3eab18a3c9e32598d1ea70f7416a35[m
+Author: nmiguenz <nmiguenz@gmail.com>
+Date:   Sun Nov 3 18:54:16 2024 -0300
+
+    Corrección de los errores de estilo
+
+[33mcommit 893fa30773b91f6b854ff5dd9245ba34b5dcbc7f[m
+Merge: 22addab e15c584
+Author: Nicolás Miguenz <37988654+nmiguenz@users.noreply.github.com>
+Date:   Fri Nov 1 16:44:30 2024 -0300
+
+    Merge pull request #1 from nmiguenz/nmiguenz
+    
+    Subida de login genérico y alta de usuario
+
+[33mcommit e15c584926f38d29effde701eda01db6d52350cb[m
+Author: nmiguenz <nmiguenz@gmail.com>
+Date:   Fri Nov 1 16:38:45 2024 -0300
+
+    Subida de login genérico y alta de usuario
+
+[33mcommit 22addab6ca3d786f9e9064c03c1bedf514ba8781[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: corsa144 <corsa144@gmail.com>
+Date:   Mon Oct 28 17:47:02 2024 -0300
+
+    Corrección de ubicación del .git
+
+[33mcommit 267bde476ff3a155046179c80615eb715dd8c689[m
+Author: corsa144 <corsa144@gmail.com>
+Date:   Mon Oct 28 17:34:34 2024 -0300
+
+    Creación de la aplicación para el trabajo práctico de la comanda
+
+[33mcommit 5401484f66cbe4b62902ff8338c3df636922c744[m
+Author: Cris <40776473+corsa144@users.noreply.github.com>
+Date:   Mon Oct 28 14:32:02 2024 -0300
+
+    Initial commit

@@ -6,9 +6,11 @@ import {
   setDoc,
   addDoc,
   updateDoc,
+  docData,
 } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
 import { Usuario } from '../clases/usuario';
+import { Observable } from 'rxjs/internal/Observable';
 
 @Injectable({
   providedIn: 'root',
@@ -57,5 +59,12 @@ export class UsuarioService {
 
     // Convierte el objeto a un objeto plano de JavaScript y actualiza el documento
     await updateDoc(userDocRef, { ...object });
+  }
+
+  getUser(userId: string): Observable<Usuario> {
+    // Creamos una referencia al documento específico en la colección 'usuarios'
+    const userDocRef = doc(this.usuariosCollection, userId);
+    // Usamos `docData` para obtener los datos del documento como un Observable
+    return docData(userDocRef, { idField: 'id' }) as Observable<Usuario>;
   }
 }
