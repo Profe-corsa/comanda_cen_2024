@@ -7,14 +7,14 @@ ion-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  justify-content: center;
   height: 100%;
   background-color: #33322ead; /* Fondo de splash */
 }
 
 .header {
   .encabezado {
-    font-size: 6rem;
+    font-size: 5rem;
     color: #e57933;
   }
 }
@@ -25,6 +25,10 @@ ion-content {
     height: auto;
     margin: 20px 0;
   }
+}
+
+img {
+  filter: drop-shadow(10px 10px 50px #f9b60b);
 }
 
 .cen-container {
@@ -52,7 +56,7 @@ ion-content {
       display: inline-block;
       opacity: 0;
       animation: fade-in 0.5s ease-in forwards;
-      animation-delay: 3s;
+      animation-delay: 3.5s;
       margin-left: 0.5rem; /* Espacio entre letra y nombre */
       font-size: 2rem;
     }
@@ -64,7 +68,7 @@ ion-content {
       display: inline-block;
       opacity: 0;
       animation: fade-in 0.5s ease-in forwards;
-      animation-delay: 4s;
+      animation-delay: 4.5s;
       margin-left: 0.5rem;
       font-size: 2rem;
     }
@@ -76,7 +80,7 @@ ion-content {
       display: inline-block;
       opacity: 0;
       animation: fade-in 0.5s ease-in forwards;
-      animation-delay: 5s;
+      animation-delay: 5.5s;
       margin-left: 0.5rem;
       font-size: 2rem;
     }
@@ -87,5 +91,48 @@ ion-content {
 @keyframes fade-in {
   to {
     opacity: 1;
+  }
+}
+
+.swirl-out-fwd {
+  -webkit-animation: swirl-out-fwd 1s ease-in 6.5s both;
+  animation: swirl-out-fwd 1s ease-in 6.5s both;
+}
+
+@-webkit-keyframes swirl-out-fwd {
+  0% {
+    -webkit-transform: rotate(0) scale(1);
+    transform: rotate(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: rotate(540deg) scale(5);
+    transform: rotate(540deg) scale(5);
+    opacity: 0;
+  }
+}
+@keyframes swirl-out-fwd {
+  0% {
+    -webkit-transform: rotate(0) scale(1);
+    transform: rotate(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: rotate(540deg) scale(5);
+    transform: rotate(540deg) scale(5);
+    opacity: 0;
+  }
+}
+
+.text-blur-out {
+  animation: text-blur-out 1s cubic-bezier(0.55, 0.085, 0.68, 0.53) 6.2s both;
+}
+
+@keyframes text-blur-out {
+  0% {
+    filter: blur(0.01);
+  }
+  100% {
+    filter: blur(12px) opacity(0);
   }
 }

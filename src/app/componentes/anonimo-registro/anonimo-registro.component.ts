@@ -24,6 +24,7 @@ import {
   IonGrid,
   IonIcon,
 } from '@ionic/angular/standalone';
+import { CamaraService } from '../../services/camara.service';
 
 @Component({
   selector: 'app-anonimo-registro',
@@ -47,12 +48,14 @@ import {
 export class AnonimoRegistroComponent {
   usuario: Usuario;
   registerForm: FormGroup;
+  imageName: string | null = null;
 
   constructor(
     private usuarioService: UsuarioService,
     private router: Router,
     private fb: FormBuilder,
-    private toast: ToastService
+    private toast: ToastService,
+    private camaraService: CamaraService
   ) {
     this.usuario = new Usuario();
 
@@ -68,7 +71,6 @@ export class AnonimoRegistroComponent {
       apellido: new FormControl(
         '',
         Validators.compose([
-          Validators.required,
           Validators.minLength(3),
           Validators.pattern('^[a-zA-Z ]+$'),
         ])
@@ -76,22 +78,45 @@ export class AnonimoRegistroComponent {
     });
   }
 
-  altaUsuarioAnonimo() {
+  async altaUsuarioAnonimo() {
     this.usuario.perfil = Perfiles.clienteAnonimo;
     this.usuario.estado = Estados.aprobado;
     this.usuario.nombre = this.registerForm.value.nombre;
     this.usuario.apellido = this.registerForm.value.apellido;
-    this.usuarioService
-      .createUsuario(this.usuario)
-      .then(async (refUser) => {
+
+    if (this.registerForm.valid && this.usuario.foto) {
+      try {
+        const refUser = await this.usuarioService.createUsuario(this.usuario);
         this.usuario.id = refUser.id;
         await this.usuarioService.updateUser(refUser.id, this.usuario);
         this.router.navigate(['/home']);
-      })
-      .catch((error) => {
-        console.log(error);
-        this.toast.showError('Error al crear un usuario anónimo');
-      });
+      } catch (error: any) {
+        if (this.imageName) {
+          await this.camaraService.deleteImage('clientes', this.imageName);
+        }
+        this.toast.showError(
+          'Error al crear un usuario anónimo: ' + error.message
+        );
+      }
+    } else if (this.registerForm.valid && this.usuario.apellido != '') {
+      try {
+        const refUser = await this.usuarioService.createUsuario(this.usuario);
+        this.usuario.id = refUser.id;
+        await this.usuarioService.updateUser(refUser.id, this.usuario);
+        this.router.navigate(['/home']);
+      } catch (error: any) {
+        this.toast.showError(
+          'Error al crear un usuario anónimo: ' + error.message
+        );
+      }
+    } else {
+      if (this.imageName) {
+        await this.camaraService.deleteImage('clientes', this.imageName);
+      }
+      this.toast.showError(
+        'Debe completar al menos el nombre y tomar una foto de perfil, o el nombre y el apellido.'
+      );
+    }
   }
 
   validaciones = {
@@ -126,7 +151,23 @@ export class AnonimoRegistroComponent {
   }
 
   async irAlLogin() {
+    if (this.imageName) {
+      await this.camaraService.deleteImage('clientes', this.imageName);
+    }
     this.clear();
     this.router.navigate(['/login']);
+  }
+
+  tomarFoto() {
+    try {
+      const imageName = Date.now().toString();
+      this.camaraService.tomarFoto('clientes', imageName).then((urlFoto) => {
+        //Guardar la url en el objeto usuario
+        this.usuario.foto = urlFoto;
+        this.imageName = imageName;
+      });
+    } catch (error) {
+      console.error('Error al tomar la foto:', error);
+    }
   }
 }

@@ -154,6 +154,9 @@ export class UsuarioRegistroComponent {
     this.usuario.email = formValues.email;
     this.usuario.password = formValues.password;
     this.usuario.dni = formValues.dni;
+    //Utilizados para el Cliente
+    this.usuario.perfil = Perfiles.cliente;
+    this.usuario.estado == Estados.pendienteDeAprobacion;
   }
 
   async onRegister(formValues: any) {
@@ -164,7 +167,7 @@ export class UsuarioRegistroComponent {
       try {
         await this.usuarioSrv.saveUserWithEmailAndPassword(this.usuario);
         this.toastService.showExito('Usuario Registrado');
-        this.router.navigate(['/home']);
+        this.router.navigate(['/login']);
       } catch (error: any) {
         console.error(error.message);
         this.toastService.showError(
@@ -176,7 +179,7 @@ export class UsuarioRegistroComponent {
       }
     } else {
       this.toastService.showError(
-        'Debe completar todos los campos y tomar una foto de perfil'
+        'Debe completar todos los campos y tomar una foto de perfil.'
       );
     }
   }
