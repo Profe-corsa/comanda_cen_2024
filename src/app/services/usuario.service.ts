@@ -5,6 +5,7 @@ import {
   doc,
   setDoc,
   addDoc,
+  updateDoc,
 } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
 import { Usuario } from '../clases/usuario';
@@ -44,8 +45,17 @@ export class UsuarioService {
     await setDoc(userDocRef, { ...user });
   }
 
-  // Crea un nuevo documento de usuario en Firestore sin especificar el ID
-  async createUsuario(user: Usuario): Promise<void> {
-    await addDoc(this.usuariosCollection, { ...user });
+  // Crea un nuevo documento de usuario en Firestore y devuelve su referencia
+  async createUsuario(user: Usuario): Promise<any> {
+    const docRef = await addDoc(this.usuariosCollection, { ...user });
+    return docRef; // Devuelve la referencia del documento creado
+  }
+
+  async updateUser(id: string, object: any): Promise<void> {
+    // Obtiene la referencia al documento del usuario en la colección "usuarios" usando su ID
+    const userDocRef = doc(this.usuariosCollection, id);
+
+    // Convierte el objeto a un objeto plano de JavaScript y actualiza el documento
+    await updateDoc(userDocRef, { ...object });
   }
 }

@@ -19,7 +19,7 @@ export const routes: Routes = [
       import('./pages/login/login.page').then((m) => m.LoginPage),
   },
   {
-    path: 'registro',
+    path: 'registro/:object',
     loadComponent: () =>
       import('./pages/registro/registro.page').then((m) => m.RegistroPage),
   },

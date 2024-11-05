@@ -1,0 +1,82 @@
+<ion-content>
+  <div class="container">
+    <ion-card class="login-card">
+      <div class="heading">
+        <img src="../../../assets/icon/logo_Uno.png" alt="" />
+        <h1>Bienvenido a <span class="encabezado">Comanda</span> CEN</h1>
+        <p>
+          Registrándote de esta forma podrás ingresar al restaurant y disfrutar
+          de nuestra excelente comida, pero no contarás con los beneficios
+          exclusivos de nuestros clientes. Si estás seguro de querer continuar,
+          completa el formulario, que te esperamos dentro.
+        </p>
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="altaUsuarioAnonimo()">
+        <!-- Nombre -->
+        <div class="form-group">
+          <div class="input-wrapper">
+            <!-- <ion-icon name="mail-outline"></ion-icon> -->
+            <ion-input
+              type="text"
+              placeholder="Nombre"
+              formControlName="nombre"
+            ></ion-input>
+          </div>
+          <div class="error-message">
+            <ng-container *ngFor="let validation of validaciones.nombre">
+              <ion-text
+                *ngIf="
+                  registerForm.get('nombre')?.hasError(validation.type) &&
+                  (registerForm.get('nombre')?.dirty ||
+                    registerForm.get('nombre')?.touched)
+                "
+              >
+                {{ validation.message }}
+              </ion-text>
+            </ng-container>
+          </div>
+        </div>
+
+        <!-- apellido -->
+        <div class="form-group">
+          <div class="input-wrapper">
+            <!-- <ion-icon name="mail-outline"></ion-icon> -->
+            <ion-input
+              type="text"
+              placeholder="Apellido"
+              formControlName="apellido"
+            ></ion-input>
+          </div>
+          <div class="error-message">
+            <ng-container *ngFor="let validation of validaciones.apellido">
+              <ion-text
+                *ngIf="
+                  registerForm.get('apellido')?.hasError(validation.type) &&
+                  (registerForm.get('apellido')?.dirty ||
+                    registerForm.get('apellido')?.touched)
+                "
+              >
+                {{ validation.message }}
+              </ion-text>
+            </ng-container>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <ion-button
+            expand="block"
+            type="submit"
+            [disabled]="!registerForm.valid"
+          >
+            Ingresar al restaurant
+          </ion-button>
+          <p>
+            ¿Se arrepintió?
+            <a (click)="irAlLogin()" class="encabezado"> VOLVER</a>
+          </p>
+        </div>
+      </form>
+    </ion-card>
+  </div>
+</ion-content>

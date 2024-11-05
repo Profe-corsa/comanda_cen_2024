@@ -5,7 +5,7 @@
         <ion-row>
           <ion-col size="9">
             <div class="heading">
-              <h1>Registrar un usuario</h1>
+              <h1>Registrar un {{ esCliente ? "Cliente" : "Empleado" }}</h1>
               <p>Únete a nosotros</p>
             </div>
           </ion-col>
@@ -50,6 +50,18 @@
                   >
                     El nombre es requerido.
                   </ion-text>
+                  <ion-text
+                    color="danger"
+                    *ngIf="registerForm.get('nombre')?.errors?.['pattern']"
+                  >
+                    El nombre solo puede contener letras y un espacio.
+                  </ion-text>
+                  <ion-text
+                    color="danger"
+                    *ngIf="registerForm.get('nombre')?.errors?.['minlength']"
+                  >
+                    El nombre no puede tener menos de 3 caracteres.
+                  </ion-text>
                 </div>
               </div>
             </ion-col>
@@ -78,6 +90,18 @@
                   >
                     El apellido es requerido.
                   </ion-text>
+                  <ion-text
+                    color="danger"
+                    *ngIf="registerForm.get('apellido')?.errors?.['pattern']"
+                  >
+                    El apellido solo puede contener letras y un espacio.
+                  </ion-text>
+                  <ion-text
+                    color="danger"
+                    *ngIf="registerForm.get('apellido')?.errors?.['minlength']"
+                  >
+                    El apellido no puede tener menos de 3 caracteres.
+                  </ion-text>
                 </div>
               </div>
             </ion-col>
@@ -89,8 +113,8 @@
           <div class="input-wrapper">
             <!-- <ion-icon name="mail-outline"></ion-icon> -->
             <ion-input
-              type="number"
-              placeholder="dni"
+              type="text"
+              placeholder="DNI"
               formControlName="dni"
             ></ion-input>
           </div>
@@ -107,6 +131,12 @@
               *ngIf="registerForm.get('dni')?.errors?.['required']"
             >
               El DNI es requerido.
+            </ion-text>
+            <ion-text
+              color="danger"
+              *ngIf="registerForm.get('dni')?.errors?.['pattern']"
+            >
+              El DNI solo puede contener entre 7 y 8 números.
             </ion-text>
           </div>
         </div>
@@ -218,11 +248,10 @@
           </div>
         </div>
 
-        <ion-button expand="block" type="button" (click)="tomarFoto()">
-          Tomar foto
-        </ion-button>
-
         <div class="action-buttons">
+          <ion-button expand="block" type="button" (click)="tomarFoto()">
+            Tomar foto
+          </ion-button>
           <ion-button
             expand="block"
             type="submit"
@@ -230,7 +259,10 @@
           >
             Crear
           </ion-button>
-          <p>¿Posees una cuenta? <a (click)="irAlLogin()">Ir al ingreso</a></p>
+          <p>
+            ¿Posees una cuenta?
+            <a (click)="irAlLogin()" class="encabezado">Ir al ingreso</a>
+          </p>
         </div>
       </form>
     </ion-card>

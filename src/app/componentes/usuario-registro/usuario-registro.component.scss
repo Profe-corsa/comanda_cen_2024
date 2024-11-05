@@ -51,6 +51,12 @@ ion-content {
   margin-bottom: 16px;
 }
 
+ion-grid {
+  width: 106%;
+  margin-left: -10px;
+  margin-bottom: -10px;
+}
+
 /* Envoltura de entrada */
 .input-wrapper {
   display: flex;
@@ -93,25 +99,15 @@ ion-content {
   margin-top: 24px;
 
   ion-button {
-    --background: #4a90e2;
+    --background: linear-gradient(to right, #e57933, #f9b60b);
     --border-radius: 8px;
     margin-bottom: 12px;
+    color: #34332f;
+    font-weight: bold;
   }
 
-  .forgot-password {
-    display: block;
-    text-align: center;
-    color: #4a90e2;
-    text-decoration: none;
-    font-size: 14px;
-    margin-bottom: 12px;
-  }
-
-  .register-button {
-    --border-radius: 8px;
-    --border-color: hsl(315, 83%, 40%);
-    --background: rgb(247, 29, 193);
-    --color: #ffffff;
+  a {
+    color: #e57933;
   }
 }
 
