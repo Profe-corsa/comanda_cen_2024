@@ -1,0 +1,38 @@
+<div id="contenedor">
+  <h1>Clientes pendientes de aprobación</h1>
+  <ion-list>
+    <ion-item-sliding *ngFor="let cliente of listaClientesPendientes">
+      <ion-item-options side="start">
+        <ion-item-option
+          color="success"
+          (click)="cambiarEstadoCliente('aprobado', cliente)"
+          ><ion-icon name="checkmark-outline"></ion-icon
+        ></ion-item-option>
+      </ion-item-options>
+      <ion-item>
+        <ion-avatar *ngIf="cliente.foto != undefined" slot="start">
+          <img [src]="[cliente.foto]" />
+        </ion-avatar>
+        <ion-label>
+          <h2>
+            {{ cliente.nombre | titlecase }} {{ cliente.apellido | titlecase }}
+          </h2>
+        </ion-label>
+        <!-- <ion-button
+          slot="end"
+          (click)="aprobarORechazarCliente(cliente)"
+          color="success"
+        >
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+        </ion-button> -->
+        <ion-item-options side="end">
+          <ion-item-option
+            color="danger"
+            (click)="cambiarEstadoCliente('rechazado', cliente)"
+            ><ion-icon name="trash-outline"></ion-icon
+          ></ion-item-option>
+        </ion-item-options>
+      </ion-item>
+    </ion-item-sliding>
+  </ion-list>
+</div>

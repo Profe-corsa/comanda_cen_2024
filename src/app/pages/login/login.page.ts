@@ -100,10 +100,10 @@ export class LoginPage {
   // Método para rellenar los campos con datos predefinidos
   fillFormWithUser(userIndex: number) {
     const users = [
-      { email: 'prueba@test1.com', password: '1234567' },
+      { email: 'duenio@comandacen.com', password: '123456' },
       { email: 'prueba@test.com', password: '123456' },
       { email: 'prueba@test2.com', password: '123456' },
-      { email: 'user3@example.com', password: 'password3' },
+      { email: 'nmiguenz@gmail.com', password: '123456' },
     ];
 
     const selectedUser = users[userIndex - 1];
@@ -124,6 +124,7 @@ export class LoginPage {
       const { email, password } = this.loginForm.value;
       try {
         res = await this.authService.login(email, password);
+        console.log(res);
 
         this.suscripcion = this.userSrv
           .getUser(res.user.uid)
@@ -146,7 +147,9 @@ export class LoginPage {
                   'Lo sentimos, pero su cuenta fue rechazada.'
                 );
               } else {
+                console.log('Login correcto');
                 this.limpiarInputs();
+                this.suscripcion.unsubscribe();
                 this.router.navigate(['/home']);
               }
             }

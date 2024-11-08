@@ -49,7 +49,7 @@ export class QrScannerService {
     return camera === 'granted' || camera === 'limited';
   }
 
-  async scanCode(options: any) {
+  async scanCode(options?: any) {
     const granted = await this.requestPermissions();
     if (!granted) {
       console.log('Permisos de cálculo denegados');

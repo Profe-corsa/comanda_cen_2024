@@ -7,11 +7,11 @@ import { ToastController } from '@ionic/angular';
 export class ToastService {
   constructor(private toastController: ToastController) {}
 
-  async showError(message: string) {
+  async showError(message: string, position?: 'top' | 'bottom' | 'middle') {
     const toast = await this.toastController.create({
       message: message,
       duration: 3000, // Duración del toast
-      position: 'top', // Posición del toast
+      position: position ?? 'top', // Posición del toast
       color: 'danger', // Color del toast
       cssClass: 'custom-toast',
     });
@@ -26,11 +26,11 @@ export class ToastService {
     await toast.present();
   }
 
-  async showExito(message: string) {
+  async showExito(message: string, position?: 'top' | 'bottom' | 'middle') {
     const toast = await this.toastController.create({
-      message: `<img src="assets/icon/logo_Uno.png" style="height: 24px; vertical-align: middle; margin-right: 8px;">${message}`,
+      message: message,
       duration: 3000, // Duración del toast
-      position: 'top', // Posición del toast
+      position: position ?? 'top', // Posición del toast
       color: 'success', // Color del toast
       cssClass: 'custom-toast',
     });
@@ -76,5 +76,40 @@ export class ToastService {
       default:
         return 'Se ha producido un error. Inténtalo de nuevo más tarde.';
     }
+  }
+
+  //Este revisarlo para otras ocasiones
+  async showDecisionToast(
+    message: string,
+    onAccept: () => void,
+    onReject: () => void
+  ) {
+    const toast = await this.toastController.create({
+      header: message,
+      icon: '../../../assets/icon/logo_Uno.png',
+      position: 'middle',
+      color: 'tertiary',
+      buttons: [
+        {
+          icon: 'checkmark',
+          text: 'Aceptar',
+          handler: onAccept,
+        },
+        {
+          icon: 'close',
+          text: 'Rechazar',
+          handler: onReject,
+        },
+      ],
+    });
+    // const image = this.createImage(
+    //   'assets/icon/logo_Uno.png',
+    //   'Profile logo',
+    //   '50',
+    //   '50'
+    // );
+    // toast.shadowRoot?.querySelector('.toast-container')?.appendChild(image);
+
+    await toast.present();
   }
 }

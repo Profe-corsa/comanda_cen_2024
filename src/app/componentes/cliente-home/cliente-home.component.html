@@ -1,0 +1,19 @@
+<section class="ion-text-center ion-margin-bottom">
+  <ion-grid>
+    <ion-row>
+      <ion-col
+        col-12
+        *ngIf="usuario?.estado == undefined || usuario?.estado == 'aprobado'"
+      >
+        <ion-card
+          (click)="leerQR()"
+          class="ion-text-center ion-padding"
+          color="000"
+        >
+          <ion-icon name="list"></ion-icon>
+          <h2 class="long-name">Lista de Espera</h2>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</section>
