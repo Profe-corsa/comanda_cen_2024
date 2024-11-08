@@ -1,9 +1,10 @@
 <ion-content>
   <app-usuario-registro
-    *ngIf="rutaUsuarioPerfil == 'cliente'"
-    [esCliente]="rutaUsuarioPerfil == 'cliente'"
+    *ngIf="rutaUsuarioPerfil === 'cliente'"
+    [esCliente]="rutaUsuarioPerfil === 'cliente'"
   ></app-usuario-registro>
   <app-anonimo-registro
-    *ngIf="rutaUsuarioPerfil == 'clienteAnonimo'"
+    *ngIf="rutaUsuarioPerfil === 'clienteAnonimo'"
   ></app-anonimo-registro>
+  <app-alta-mesa *ngIf="rutaUsuarioPerfil === 'alta-mesa'"></app-alta-mesa>
 </ion-content>
