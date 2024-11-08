@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   IonCard,
@@ -10,7 +10,7 @@ import {
 import { RouterLink } from '@angular/router';
 import { Usuario } from 'src/app/clases/usuario';
 import { addIcons } from 'ionicons';
-import { restaurantOutline, man } from 'ionicons/icons';
+import { restaurantOutline, man, addCircleOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-duenio-supervisor-home',
@@ -27,12 +27,12 @@ import { restaurantOutline, man } from 'ionicons/icons';
     CommonModule,
   ],
 })
-export class DuenioSupervisorHomeComponent implements OnInit {
+export class DuenioSupervisorHomeComponent  {
   @Input() usuario: Usuario | any;
 
   constructor() {
-    addIcons({ restaurantOutline, man });
+    addIcons({man,restaurantOutline,addCircleOutline});
   }
 
-  ngOnInit() {}
+  
 }
