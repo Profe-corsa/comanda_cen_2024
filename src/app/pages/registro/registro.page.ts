@@ -5,6 +5,7 @@ import { UsuarioRegistroComponent } from 'src/app/componentes/usuario-registro/u
 import { IonicModule } from '@ionic/angular';
 import { AnonimoRegistroComponent } from '../../componentes/anonimo-registro/anonimo-registro.component';
 import { ActivatedRoute } from '@angular/router';
+import { AltaMesaComponent } from '../../componentes/alta-mesa/alta-mesa.component';
 
 @Component({
   selector: 'app-registro',
@@ -17,6 +18,7 @@ import { ActivatedRoute } from '@angular/router';
     FormsModule,
     UsuarioRegistroComponent,
     AnonimoRegistroComponent,
+    AltaMesaComponent,
   ],
 })
 export class RegistroPage implements OnInit {
