@@ -28,4 +28,14 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/home/home.page').then((m) => m.HomePage),
   },
+  {
+    path: 'home/:usuarioAnonimo',
+    loadComponent: () =>
+      import('./pages/home/home.page').then((m) => m.HomePage),
+  },
+  {
+    path: 'listados/:object',
+    loadComponent: () =>
+      import('./pages/listados/listados.page').then((m) => m.ListadosPage),
+  },
 ];

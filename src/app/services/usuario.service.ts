@@ -7,10 +7,16 @@ import {
   addDoc,
   updateDoc,
   docData,
+  CollectionReference,
+  query,
+  where,
+  getDocs,
 } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
 import { Usuario } from '../clases/usuario';
 import { Observable } from 'rxjs/internal/Observable';
+import { from } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +25,10 @@ export class UsuarioService {
   private usuariosCollection;
 
   constructor(private firestore: Firestore, private authService: AuthService) {
-    this.usuariosCollection = collection(this.firestore, 'usuarios');
+    this.usuariosCollection = collection(
+      this.firestore,
+      'usuarios'
+    ) as CollectionReference;
   }
 
   // Registra un usuario.
@@ -66,5 +75,46 @@ export class UsuarioService {
     const userDocRef = doc(this.usuariosCollection, userId);
     // Usamos `docData` para obtener los datos del documento como un Observable
     return docData(userDocRef, { idField: 'id' }) as Observable<Usuario>;
+  }
+
+  obtenerUsuariosPorPerfil(perfil: string): Observable<Usuario[]> {
+    let usuariosQuery;
+
+    usuariosQuery = query(
+      this.usuariosCollection,
+      where('perfil', '==', perfil)
+    );
+
+    // Ejecutar la consulta y devolver los resultados como un Observable
+    return from(getDocs(usuariosQuery)).pipe(
+      map((querySnapshot) => {
+        const usuarios: Usuario[] = [];
+        querySnapshot.forEach((doc) => {
+          usuarios.push({ id: doc.id, ...doc.data() } as Usuario);
+        });
+        return usuarios;
+      })
+    );
+  }
+
+  async setDocument(
+    collectionName: string,
+    id: string,
+    object: object
+  ): Promise<void> {
+    try {
+      const documentRef = doc(this.firestore, `${collectionName}/${id}`);
+      // Usa 'setDoc' para establecer el contenido del documento
+      await setDoc(documentRef, object);
+      console.log(
+        `Documento ${id} en la colección ${collectionName} se ha guardado correctamente.`
+      );
+    } catch (error) {
+      console.error(
+        `Error al guardar el documento ${id} en la colección ${collectionName}: `,
+        error
+      );
+      throw error;
+    }
   }
 }

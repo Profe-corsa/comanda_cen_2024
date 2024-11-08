@@ -1,0 +1,14 @@
+<ion-header>
+  <ion-toolbar color="titulo">
+    <!-- <ion-button slot="start" fill="clear" (click)="inicio()"> -->
+    <!-- <ion-icon name="arrow-back"></ion-icon> -->
+    <!-- </ion-button> -->
+    <ion-title>Lista de {{object}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <app-supervisor-lista-clientes-pendientes
+    *ngIf="object == 'clientesPendientes'"
+  ></app-supervisor-lista-clientes-pendientes>
+</ion-content>

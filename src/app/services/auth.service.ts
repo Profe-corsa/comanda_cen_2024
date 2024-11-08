@@ -42,7 +42,11 @@ export class AuthService {
     }
   }
 
-  async logout(): Promise<void> {
+  getCurrentUser() {
+    return this.auth.currentUser;
+  }
+
+  async logOut(): Promise<void> {
     try {
       await signOut(this.auth);
       this.router.navigate(['/login']);

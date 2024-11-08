@@ -1,19 +1,86 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import {
   IonHeader,
   IonToolbar,
   IonTitle,
   IonContent,
   IonButton,
+  IonIcon,
 } from '@ionic/angular/standalone';
+import { AuthService } from 'src/app/services/auth.service';
+import { Subscription } from 'rxjs';
+import { Usuario } from 'src/app/clases/usuario';
+import { Router, ActivatedRoute } from '@angular/router';
+import { UsuarioService } from 'src/app/services/usuario.service';
+import { ToastService } from 'src/app/services/toast.service';
+import { addIcons } from 'ionicons';
+import { exitOutline } from 'ionicons/icons';
+import { Cliente } from 'src/app/clases/cliente';
+import { DuenioSupervisorHomeComponent } from '../../componentes/duenio-supervisor-home/duenio-supervisor-home.component';
+import { ClienteHomeComponent } from '../../componentes/cliente-home/cliente-home.component';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
   standalone: true,
-  imports: [IonButton, IonHeader, IonToolbar, IonTitle, IonContent],
+  imports: [
+    IonIcon,
+    IonButton,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    DuenioSupervisorHomeComponent,
+    CommonModule,
+    ClienteHomeComponent,
+  ],
 })
 export class HomePage {
-  constructor() {}
+  usuario: Usuario | any;
+  idAnonimo: string = '';
+  suscripcion: Subscription | any;
+
+  constructor(
+    private authService: AuthService,
+    private userSrv: UsuarioService,
+    private toast: ToastService,
+    private activatedRoute: ActivatedRoute
+  ) {
+    addIcons({
+      exitOutline,
+    });
+  }
+
+  ngOnInit() {
+    let idUsuario = null;
+    let cliente: Cliente;
+
+    this.activatedRoute.paramMap.subscribe((paramMap) => {
+      idUsuario = paramMap.get('usuarioAnonimo')!;
+
+      if (idUsuario == null) {
+        idUsuario = this.authService.getCurrentUser()?.uid ?? '';
+        console.log(idUsuario);
+      }
+
+      this.suscripcion = this.userSrv
+        .getUser(idUsuario)
+        .subscribe(async (data) => {
+          this.usuario = data;
+
+          if (this.usuario.perfil == 'cliente') {
+            //Se supone que los clientes van a tener un trato preferencial y van a poder hacer reservas
+            //(SEGUIR DESARROLLANDO)
+            cliente = this.usuario as Cliente;
+          }
+        });
+    });
+  }
+
+  logout() {
+    this.suscripcion.unsubscribe();
+    this.authService.logOut();
+  }
 }

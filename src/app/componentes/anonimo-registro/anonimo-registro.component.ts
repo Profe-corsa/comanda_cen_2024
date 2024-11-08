@@ -89,7 +89,7 @@ export class AnonimoRegistroComponent {
         const refUser = await this.usuarioService.createUsuario(this.usuario);
         this.usuario.id = refUser.id;
         await this.usuarioService.updateUser(refUser.id, this.usuario);
-        this.router.navigate(['/home']);
+        this.router.navigate([`/home/${this.usuario.id}`]); //Paso el Id a través de la URL
       } catch (error: any) {
         if (this.imageName) {
           await this.camaraService.deleteImage('clientes', this.imageName);
@@ -103,7 +103,7 @@ export class AnonimoRegistroComponent {
         const refUser = await this.usuarioService.createUsuario(this.usuario);
         this.usuario.id = refUser.id;
         await this.usuarioService.updateUser(refUser.id, this.usuario);
-        this.router.navigate(['/home']);
+        this.router.navigate([`/home/${this.usuario.id}`]);
       } catch (error: any) {
         this.toast.showError(
           'Error al crear un usuario anónimo: ' + error.message

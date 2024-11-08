@@ -1,0 +1,15 @@
+ion-header {
+  ion-toolbar {
+    ion-button {
+      font-size: 20px;
+      color: antiquewhite;
+      ion-icon {
+        color: antiquewhite;
+      }
+    }
+    ion-title {
+      text-transform: uppercase;
+      text-align: center;
+    }
+  }
+}
