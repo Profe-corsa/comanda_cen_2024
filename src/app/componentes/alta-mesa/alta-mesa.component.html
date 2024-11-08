@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Alta de Mesa</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form (submit)="onSubmit()" [formGroup]="mesaForm">
+    <ion-item>
+      <ion-label position="floating">Número de Mesa</ion-label>
+      <ion-input formControlName="numero" type="number"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Capacidad</ion-label>
+      <ion-input formControlName="nroComensales" type="number"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Tipo</ion-label>
+      <ion-select formControlName="tipo">
+        <ion-select-option value="VIP">VIP</ion-select-option>
+        <ion-select-option value="Discapacitados">Para discapacitados</ion-select-option>
+        <ion-select-option value="Estándar">Estándar</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-button expand="full" (click)="tomarFoto()">Tomar Foto</ion-button>
+    </ion-item>
+
+    <div *ngIf="foto">
+      <img [src]="foto" alt="Foto de la mesa" />
+    </div>
+
+    <ion-item>
+      <ion-button expand="full" type="submit" [disabled]="mesaForm.invalid">Guardar Mesa</ion-button>
+    </ion-item>
+  </form>
+
+  <div *ngIf="qrCode">
+    <p>Código QR:</p>
+    <img [src]="qrCode" alt="QR de la mesa" />
+  </div>
+</ion-content>
+
