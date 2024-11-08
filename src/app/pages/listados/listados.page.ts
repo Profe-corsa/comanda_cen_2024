@@ -11,6 +11,7 @@ import {
 } from '@ionic/angular/standalone';
 import { ActivatedRoute } from '@angular/router';
 import { SupervisorListaClientesPendientesComponent } from '../../componentes/supervisor-lista-clientes-pendientes/supervisor-lista-clientes-pendientes.component';
+import { MetreListaEsperaComponent } from '../../componentes/metre-lista-espera/metre-lista-espera.component';
 
 @Component({
   selector: 'app-listados',
@@ -27,6 +28,7 @@ import { SupervisorListaClientesPendientesComponent } from '../../componentes/su
     CommonModule,
     FormsModule,
     SupervisorListaClientesPendientesComponent,
+    MetreListaEsperaComponent,
   ],
 })
 export class ListadosPage implements OnInit {
