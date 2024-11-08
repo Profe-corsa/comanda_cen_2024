@@ -38,4 +38,5 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/listados/listados.page').then((m) => m.ListadosPage),
   },
+
 ];
