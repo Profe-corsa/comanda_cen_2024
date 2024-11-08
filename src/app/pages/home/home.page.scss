@@ -1,3 +1,13 @@
+ion-content {
+  --background: url("/assets/background_splash.jpg") no-repeat center center /
+    cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 16px;
+}
+
 #container {
   text-align: center;
 

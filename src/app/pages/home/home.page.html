@@ -17,5 +17,9 @@
       [usuario]="usuario"
       *ngIf="usuario!=undefined && usuario?.perfil == 'cliente' || usuario?.perfil == 'cliente anonimo'"
     ></app-cliente-home>
+    <app-empleados-home
+      [usuario]="usuario"
+      *ngIf="usuario!=undefined && usuario?.perfil == 'metre'"
+    ></app-empleados-home>
   </div>
 </ion-content>

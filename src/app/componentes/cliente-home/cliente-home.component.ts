@@ -16,6 +16,7 @@ import { QrScannerService } from 'src/app/services/qrscanner.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { Objetos } from 'src/app/clases/enumerados/Objetos';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import { Estados } from 'src/app/clases/enumerados/Estados';
 
 @Component({
   selector: 'app-cliente-home',
@@ -46,21 +47,39 @@ export class ClienteHomeComponent implements OnInit {
     });
   }
 
-  agregarAListaEspera() {
-    console.log(this.usuario);
-    const usuarioEspera = {
-      id: this.usuario.id,
-      nombre:
-        this.usuario.nombre.trim() +
-        (this.usuario.apellido ? ' ' + this.usuario.apellido.trim() : ''),
-      fecha: Date.now(),
-    };
-    this.usuarioSrv
-      .setDocument('listaDeEspera', this.usuario.id, usuarioEspera)
-      .then(() => {
-        this.toast.showExito(
-          'Fue anotado en la lista de espera. A la brevedad el maître le asignará una mesa.'
-        );
-      });
+  async agregarAListaEspera() {
+    try {
+      console.log(this.usuario);
+
+      const usuarioEspera = {
+        id: this.usuario.id,
+        nombre:
+          this.usuario.nombre.trim() +
+          (this.usuario.apellido ? ' ' + this.usuario.apellido.trim() : ''),
+        fecha: Date.now(),
+      };
+
+      // Guarda el usuario en la lista de espera
+      await this.usuarioSrv.setDocument(
+        'listaDeEspera',
+        this.usuario.id,
+        usuarioEspera
+      );
+
+      // Actualiza el estado del usuario a "en espera"
+      await this.usuarioSrv.updateUserField(
+        this.usuario.id,
+        'estado',
+        Estados.enEspera
+      );
+
+      // Muestra el mensaje de éxito
+      this.toast.showExito(
+        'Fue anotado en la lista de espera. A la brevedad el maître le asignará una mesa.'
+      );
+    } catch (error) {
+      console.error('Error al agregar a lista de espera:', error);
+      this.toast.showError('Hubo un error al agregar a la lista de espera.');
+    }
   }
 }

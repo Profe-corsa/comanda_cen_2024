@@ -1,0 +1,11 @@
+<ion-grid>
+  <ion-col col-12 *ngIf="usuario?.perfil == 'metre'">
+    <ion-card
+      [routerLink]="['/listados', 'espera']"
+      class="ion-text-center ion-padding"
+    >
+      <ion-icon name="man"></ion-icon>
+      <h2 class="long-name">Clientes en Lista de Espera</h2>
+    </ion-card>
+  </ion-col>
+</ion-grid>

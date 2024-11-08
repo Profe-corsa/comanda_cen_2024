@@ -19,6 +19,7 @@ import { exitOutline } from 'ionicons/icons';
 import { Cliente } from 'src/app/clases/cliente';
 import { DuenioSupervisorHomeComponent } from '../../componentes/duenio-supervisor-home/duenio-supervisor-home.component';
 import { ClienteHomeComponent } from '../../componentes/cliente-home/cliente-home.component';
+import { EmpleadosHomeComponent } from '../../componentes/empleados-home/empleados-home.component';
 
 @Component({
   selector: 'app-home',
@@ -35,6 +36,7 @@ import { ClienteHomeComponent } from '../../componentes/cliente-home/cliente-hom
     DuenioSupervisorHomeComponent,
     CommonModule,
     ClienteHomeComponent,
+    EmpleadosHomeComponent,
   ],
 })
 export class HomePage {

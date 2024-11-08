@@ -101,7 +101,7 @@ export class LoginPage {
   fillFormWithUser(userIndex: number) {
     const users = [
       { email: 'duenio@comandacen.com', password: '123456' },
-      { email: 'prueba@test.com', password: '123456' },
+      { email: 'metre@gmail.com', password: '123456' },
       { email: 'prueba@test2.com', password: '123456' },
       { email: 'nmiguenz@gmail.com', password: '123456' },
     ];

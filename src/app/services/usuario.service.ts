@@ -117,4 +117,31 @@ export class UsuarioService {
       throw error;
     }
   }
+
+  // Actualiza un campo específico de un usuario en Firestore
+  async updateUserField(
+    userId: string,
+    fieldName: string,
+    fieldValue: any
+  ): Promise<void> {
+    try {
+      const userDocRef = doc(this.usuariosCollection, userId);
+
+      // Crea un objeto con el campo a actualizar
+      const updateObject = {
+        [fieldName]: fieldValue,
+      };
+
+      await updateDoc(userDocRef, updateObject);
+      console.log(
+        `Campo ${fieldName} del usuario ${userId} actualizado correctamente.`
+      );
+    } catch (error) {
+      console.error(
+        `Error al actualizar el campo ${fieldName} del usuario ${userId}:`,
+        error
+      );
+      throw error;
+    }
+  }
 }
