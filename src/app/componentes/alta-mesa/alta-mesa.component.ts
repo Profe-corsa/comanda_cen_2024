@@ -1,5 +1,10 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Mesa } from '../../clases/mesa'; // Ajusta la ruta a tu modelo Mesa
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
@@ -12,13 +17,23 @@ import {
   IonInput,
   IonSelect,
   IonSelectOption,
-  IonHeader, IonToolbar, IonTitle, IonLabel } from '@ionic/angular/standalone';
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonLabel,
+} from '@ionic/angular/standalone';
+import { DataService } from 'src/app/services/data.service';
+import { Route, Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-alta-mesa',
   templateUrl: './alta-mesa.component.html',
   standalone: true,
-  imports: [IonLabel, IonTitle, IonToolbar, IonHeader, 
+  imports: [
+    IonLabel,
+    IonTitle,
+    IonToolbar,
+    IonHeader,
     CommonModule,
     IonItem,
     IonContent,
@@ -26,7 +41,8 @@ import {
     IonInput,
     ReactiveFormsModule,
     IonSelect,
-    IonSelectOption
+    IonSelectOption,
+    RouterLink
   ],
 })
 export class AltaMesaComponent {
@@ -37,7 +53,8 @@ export class AltaMesaComponent {
   constructor(
     private fb: FormBuilder,
     private sanitizer: DomSanitizer,
-    private qrCodeGenerator: QrScannerService 
+    private dataSrv: DataService,
+    private route: Router
   ) {
     this.mesaForm = this.fb.group({
       numero: [null, [Validators.required]],
@@ -55,16 +72,19 @@ export class AltaMesaComponent {
     this.foto = this.sanitizer.bypassSecurityTrustUrl(photo.dataUrl!);
   }
 
-  onSubmit() {
+  async onSubmit() {
     if (this.mesaForm.valid) {
       const mesaData: Mesa = {
         ...this.mesaForm.value,
-        foto: this.foto as string,
+        foto: (this.foto as string) ?? '',
         estado: 'Disponible',
         reservas: [],
       };
 
-      this.qrCode = this.qrCodeGenerator.scanCode(mesaData.numero.toString());
+      await this.dataSrv.saveObject(mesaData, 'mesas').then(() => {
+          this.route.navigate(['home']);
+        });
+      // this.qrCode = this.qrCodeGenerator.scanCode(mesaData.numero.toString());
     }
   }
 }
