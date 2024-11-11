@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ToastController } from '@ionic/angular';
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +24,8 @@ export class ToastService {
     );
     toast.shadowRoot?.querySelector('.toast-container')?.appendChild(image);
 
+    Haptics.vibrate({ duration: 500 });
+    
     await toast.present();
   }
 

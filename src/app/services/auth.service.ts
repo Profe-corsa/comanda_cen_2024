@@ -7,6 +7,7 @@ import {
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { ToastService } from './toast.service';
+//import { AppComponent } from '../app.component';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +16,8 @@ export class AuthService {
   constructor(
     private auth: Auth,
     private toastService: ToastService,
-    private router: Router
+    private router: Router,
+    //private appComponent: AppComponent
   ) {}
 
   async login(email: string, password: string): Promise<any> {
@@ -49,6 +51,7 @@ export class AuthService {
   async logOut(): Promise<void> {
     try {
       await signOut(this.auth);
+      //this.appComponent.playCloseSound();
       this.router.navigate(['/login']);
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
