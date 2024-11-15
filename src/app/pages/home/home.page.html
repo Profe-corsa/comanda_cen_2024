@@ -19,7 +19,7 @@
     ></app-cliente-home>
     <app-empleados-home
       [usuario]="usuario"
-      *ngIf="usuario!=undefined && usuario?.perfil == 'metre'"
+      *ngIf="usuario!=undefined && (usuario?.perfil == 'metre'|| usuario?.perfil == 'mozo' || usuario?.perfil == 'cocinero' || usuario?.perfil == 'bartender')"
     ></app-empleados-home>
   </div>
 </ion-content>

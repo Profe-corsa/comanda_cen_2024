@@ -6,7 +6,7 @@ import { IonicModule } from '@ionic/angular';
 import { AnonimoRegistroComponent } from '../../componentes/anonimo-registro/anonimo-registro.component';
 import { ActivatedRoute } from '@angular/router';
 import { AltaMesaComponent } from 'src/app/componentes/alta-mesa/alta-mesa.component';
-
+import { DuenioEmpleadoComponent } from 'src/app/componentes/duenio-empleado/duenio-empleado.component';
 @Component({
   selector: 'app-registro',
   templateUrl: './registro.page.html',
@@ -18,11 +18,13 @@ import { AltaMesaComponent } from 'src/app/componentes/alta-mesa/alta-mesa.compo
     FormsModule,
     UsuarioRegistroComponent,
     AnonimoRegistroComponent,
-    AltaMesaComponent
+    AltaMesaComponent,
+    DuenioEmpleadoComponent,
   ],
 })
 export class RegistroPage implements OnInit {
   rutaUsuarioPerfil: any;
+  tipoUsuario: string = '';
 
   constructor(private activatedRoute: ActivatedRoute) {}
 
