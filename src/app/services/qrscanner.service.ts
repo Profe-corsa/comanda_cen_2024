@@ -1,17 +1,18 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { BarcodeScanner, Barcode } from '@capacitor-mlkit/barcode-scanning';
 
 @Injectable({
   providedIn: 'root',
 })
 export class 
-QrScannerService {
+QrScannerService implements OnInit {
   isSupported = false;
   barcodes: Barcode[] = [];
 
   dispositivo = 'mobile'; //cambiar a mobile para las pruebas en el celu, cualq. otro nombre para el navegador
   constructor() {}
 
+  // eslint-disable-next-line @angular-eslint/contextual-lifecycle
   async ngOnInit() {
     // Verificar si el escaneo de códigos de barras es compatible en el dispositivo
     const result = await BarcodeScanner.isSupported();
