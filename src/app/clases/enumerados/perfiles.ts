@@ -4,4 +4,6 @@ export enum Perfiles {
   dueño = 'dueño',
   metre = 'metre',
   mozo = 'mozo',
+  cocinero = 'cocinero',
+  bartender = 'bartender',
 }
