@@ -1,6 +1,6 @@
 ion-content {
-  --background: url("/assets/background_splash.jpg") no-repeat center center /
-    cover;
+  --background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.9)), 
+    url("/assets/background_splash.jpg") no-repeat center center / cover;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -19,19 +19,20 @@ ion-content {
 }
 
 #container strong {
-  font-size: 20px;
-  line-height: 26px;
+  font-size: 24px; /* Aumenta el tamaño de fuente */
+  line-height: 32px; /* Ajusta la altura de línea para mayor legibilidad */
+  color: #ffffff;
 }
 
 #container p {
-  font-size: 16px;
-  line-height: 22px;
-
-  color: #8c8c8c;
-
+  font-size: 18px; /* Aumenta el tamaño de fuente */
+  line-height: 26px;
+  color: #cccccc; /* Cambia el color a un tono más claro para contraste */
   margin: 0;
 }
 
 #container a {
   text-decoration: none;
+  font-size: 18px; /* Aumenta el tamaño para los enlaces */
+  color: #ffffff;
 }
