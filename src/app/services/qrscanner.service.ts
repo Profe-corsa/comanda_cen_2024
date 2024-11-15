@@ -4,7 +4,8 @@ import { BarcodeScanner, Barcode } from '@capacitor-mlkit/barcode-scanning';
 @Injectable({
   providedIn: 'root',
 })
-export class QrScannerService {
+export class 
+QrScannerService {
   isSupported = false;
   barcodes: Barcode[] = [];
 

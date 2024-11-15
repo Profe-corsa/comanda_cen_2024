@@ -38,5 +38,14 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/listados/listados.page').then((m) => m.ListadosPage),
   },
+  {
+    path: 'listados/:object',
+    loadComponent: () =>
+      import('./pages/listados/listados.page').then((m) => m.ListadosPage),
+  },{
+    path: 'alta-producto',
+    loadComponent: () =>
+      import('./componentes/alta-producto/alta-producto.component').then((m)=>m.AltaProductoComponent),
+  },
 
 ];
