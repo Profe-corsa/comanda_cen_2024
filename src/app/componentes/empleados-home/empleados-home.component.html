@@ -1,4 +1,4 @@
-<ion-grid>
+<ion-grid *ngIf="opcionSeleccionada === ''">
   <ion-col col-12 *ngIf="usuario?.perfil == 'metre'">
     <ion-card
       [routerLink]="['/listados', 'espera']"
@@ -8,4 +8,15 @@
       <h2 class="long-name">Clientes en Lista de Espera</h2>
     </ion-card>
   </ion-col>
+  <ion-col col-12 *ngIf="usuario?.perfil == 'cocinero' || usuario?.perfil == 'bartender'">
+    <ion-card
+      (click)="seleccionarOpcion('altaProducto')"
+      class="ion-text-center ion-padding"
+    >
+      <ion-icon name="man"></ion-icon>
+      <h2 class="long-name">Dar producto de Alta
+      </h2>
+    </ion-card>
+  </ion-col>
 </ion-grid>
+<app-alta-producto *ngIf="opcionSeleccionada === 'altaProducto'"></app-alta-producto>

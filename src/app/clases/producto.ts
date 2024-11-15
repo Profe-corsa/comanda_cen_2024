@@ -1,8 +1,9 @@
 export enum TipoProducto {
-  comida,
-  bebida,
-  postre,
+  Comida = 'comida',
+  Bebida = 'bebida',
+  Postre = 'postre'
 }
+
 
 export class Producto {
   id: string = '';
@@ -11,8 +12,17 @@ export class Producto {
   tiempoPreparacion: number = 0;
   precio: number = 0;
   fotos: string[] = [];
-  tipo: TipoProducto = TipoProducto.comida;
-  estado?: string;
-  cantidad?: number;
-  idPedido?: string;
+  tipo: TipoProducto = TipoProducto.Comida;
+
+  toJSON() {
+    return {
+      id: this.id,
+      nombre: this.nombre,
+      descripcion: this.descripcion,
+      tiempoPreparacion: this.tiempoPreparacion,
+      precio: this.precio,
+      fotos: this.fotos,
+      tipo: this.tipo,
+    };
+  }
 }

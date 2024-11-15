@@ -1,0 +1,164 @@
+<ion-content>
+  <div class="container">
+    <ion-card class="login-card">
+      <div class="heading">
+        <h1>Agregar producto</h1>
+      </div>
+      <form [formGroup]="productoForm" (ngSubmit)="guardarProducto()">
+        <!-- Nombre -->
+        <div class="form-group">
+          <div class="input-wrapper">
+            <!-- <ion-icon name="mail-outline"></ion-icon> -->
+            <ion-input
+              type="text"
+              placeholder="Nombre"
+              formControlName="nombre"
+            ></ion-input>
+          </div>
+          <div
+            *ngIf="
+              productoForm.get('nombre')?.invalid &&
+              (productoForm.get('nombre')?.dirty ||
+              productoForm.get('nombre')?.touched)
+            "
+            class="error-message"
+          >
+            <ion-text
+              color="danger"
+              *ngIf="productoForm.get('nombre')?.errors?.['required']"
+            >
+              El nombre es requerido.
+            </ion-text>
+          </div>
+        </div>
+        <!-- apellido -->
+        <div class="form-group">
+          <div class="input-wrapper">
+            <!-- <ion-icon name="mail-outline"></ion-icon> -->
+            <ion-textarea placeholder="Descripcion" formControlName="descripcion"></ion-textarea>
+          </div>
+          <div
+            *ngIf="
+              productoForm.get('descripcion')?.invalid &&
+              (productoForm.get('descripcion')?.dirty ||
+              productoForm.get('descripcion')?.touched)
+            "
+            class="error-message"
+          >
+            <ion-text
+              color="danger"
+              *ngIf="productoForm.get('descripcion')?.errors?.['required']"
+            >
+              La descripción es requerida.
+            </ion-text>
+          </div>
+        </div>
+            
+
+        <!-- tiempo -->
+        <div class="form-group">
+          <div class="input-wrapper">
+            <!-- <ion-icon name="mail-outline"></ion-icon> -->
+            <ion-input
+              type="number"
+              placeholder="tiempo"
+              formControlName="tiempoPreparacion"
+            ></ion-input>
+          </div>
+          <div
+            *ngIf="
+              productoForm.get('tiempoPreparacion')?.invalid &&
+              (productoForm.get('tiempoPreparacion')?.dirty ||
+              productoForm.get('tiempoPreparacion')?.touched)
+            "
+            class="error-message"
+          >
+            <ion-text
+              color="danger"
+              *ngIf="productoForm.get('dni')?.errors?.['required']"
+            >
+              El tiempo de elaboración es requerido.
+            </ion-text>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-wrapper">
+            <ion-input
+              type="number"
+              placeholder="precio"
+              formControlName="precio"
+            ></ion-input>
+          </div>
+          <div *ngIf="productoForm.get('precio')?.invalid && productoForm.get('precio')?.touched" class="error-message">
+            <ion-text
+            color="danger"
+            *ngIf="productoForm.get('precio')?.errors?.['required']"
+            >
+              El precio es requerido.
+          </ion-text>
+          </div>
+        </div>
+        <!-- Tipo de Producto -->
+        <div class="form-group">
+          <ion-select placeholder="Tipo de Producto" formControlName="tipo">
+            <ion-select-option *ngFor="let tipo of tiposProductoOptions" [value]="tipo.key">
+              {{ tipo.key }}
+            </ion-select-option>
+          </ion-select>          
+        </div>
+        <!-- Foto -->
+        <div class="foto-container">
+          <ion-button (click)="tomarFoto()">Tomar Foto</ion-button>
+          <p>{{ fotos.length }} / 3 fotos cargadas</p>
+          <div class="imagenes-flex">
+            <div *ngFor="let foto of fotos" class="imagen-item">
+              <img [src]="foto" />
+            </div>
+          </div>
+        </div>
+        
+        
+
+        <div class="action-buttons">
+          <ion-button
+            expand="block"
+            type="submit"
+            [disabled]="!productoForm.valid"
+          >
+            Crear
+          </ion-button>
+        </div>
+      </form>
+      <!-- <form [formGroup]="productoForm" (ngSubmit)="guardarProducto()">
+        <ion-item>
+          <ion-label position="floating">Nombre</ion-label>
+          <ion-input formControlName="nombre" type="text"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Descripción</ion-label>
+          <ion-textarea formControlName="descripcion"></ion-textarea>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Tiempo de Elaboración (minutos)</ion-label>
+          <ion-input formControlName="tiempoElaboracion" type="number"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Precio</ion-label>
+          <ion-input formControlName="precio" type="number"></ion-input>
+        </ion-item>
+
+        <div class="foto-container">
+          <ion-button (click)="tomarFoto()">Tomar Foto</ion-button>
+          <div *ngFor="let foto of fotos">
+            <img [src]="foto" />
+          </div>
+        </div>
+
+        <ion-button expand="full" type="submit">Guardar Producto</ion-button>
+      </form> -->
+    </ion-card>
+  </div>
+</ion-content>
