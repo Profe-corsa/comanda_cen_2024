@@ -38,5 +38,10 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/listados/listados.page').then((m) => m.ListadosPage),
   },
-
+  {
+    //object va a ser el tipo de usuario que accceda a la consulta
+    path: 'consulta/:object/:id',
+    loadComponent: () =>
+      import('./pages/consulta/consulta.page').then((m) => m.ConsultaPage),
+  },
 ];

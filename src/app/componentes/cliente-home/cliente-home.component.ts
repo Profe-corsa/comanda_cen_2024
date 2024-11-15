@@ -11,19 +11,34 @@ import {
 // import { RouterLink } from '@angular/router';
 import { Usuario } from 'src/app/clases/usuario';
 import { addIcons } from 'ionicons';
-import { restaurantOutline, man, list } from 'ionicons/icons';
+import {
+  restaurantOutline,
+  man,
+  list,
+  addCircleOutline,
+  chatbubblesOutline,
+} from 'ionicons/icons';
 import { QrScannerService } from 'src/app/services/qrscanner.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { Objetos } from 'src/app/clases/enumerados/Objetos';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { Estados } from 'src/app/clases/enumerados/Estados';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-cliente-home',
   templateUrl: './cliente-home.component.html',
   styleUrls: ['./cliente-home.component.scss'],
   standalone: true,
-  imports: [IonGrid, IonCard, IonIcon, IonRow, IonCol, CommonModule],
+  imports: [
+    IonGrid,
+    IonCard,
+    IonIcon,
+    IonRow,
+    IonCol,
+    CommonModule,
+    RouterLink,
+  ],
 })
 export class ClienteHomeComponent implements OnInit {
   @Input() usuario: Usuario | any;
@@ -32,7 +47,13 @@ export class ClienteHomeComponent implements OnInit {
     private toast: ToastService,
     private usuarioSrv: UsuarioService
   ) {
-    addIcons({ list, restaurantOutline, man });
+    addIcons({
+      list,
+      chatbubblesOutline,
+      addCircleOutline,
+      restaurantOutline,
+      man,
+    });
   }
 
   ngOnInit() {}

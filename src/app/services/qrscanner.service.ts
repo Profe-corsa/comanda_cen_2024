@@ -8,7 +8,6 @@ export class QrScannerService {
   isSupported = false;
   barcodes: Barcode[] = [];
 
-  dispositivo = 'mobile'; //cambiar a mobile para las pruebas en el celu, cualq. otro nombre para el navegador
   constructor() {}
 
   async ngOnInit() {
