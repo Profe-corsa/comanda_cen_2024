@@ -17,6 +17,7 @@ import { Usuario } from '../clases/usuario';
 import { Observable } from 'rxjs/internal/Observable';
 import { from } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -75,6 +76,21 @@ export class UsuarioService {
     const userDocRef = doc(this.usuariosCollection, userId);
     // Usamos `docData` para obtener los datos del documento como un Observable
     return docData(userDocRef, { idField: 'id' }) as Observable<Usuario>;
+  }
+
+  async getUserPromise(idUsuario: string): Promise<Usuario | undefined> {
+    try {
+      // Crea la referencia al documento del usuario
+      const userDocRef = doc(this.firestore, `usuarios/${idUsuario}`);
+      // Usa `docData` para obtener los datos del documento
+      const userData = await firstValueFrom(
+        docData(userDocRef, { idField: 'id' })
+      );
+      return userData as Usuario;
+    } catch (error) {
+      console.error('Error al obtener el usuario con promesa:', error);
+      throw error;
+    }
   }
 
   obtenerUsuariosPorPerfil(perfil: string): Observable<Usuario[]> {

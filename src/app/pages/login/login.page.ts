@@ -14,6 +14,7 @@ import {
   IonFab,
   IonFabList,
   IonRouterLink,
+  IonSpinner,
 } from '@ionic/angular/standalone';
 import {
   ReactiveFormsModule,
@@ -37,6 +38,8 @@ import { Subscription } from 'rxjs';
 import { Perfiles } from 'src/app/clases/enumerados/perfiles';
 import { Estados } from 'src/app/clases/enumerados/Estados';
 import { ToastService } from 'src/app/services/toast.service';
+import { LoadingService } from 'src/app/services/loading.service';
+import { LoadingComponent } from 'src/app/componentes/loading/loading.component';
 
 @Component({
   selector: 'app-login',
@@ -44,6 +47,7 @@ import { ToastService } from 'src/app/services/toast.service';
   styleUrls: ['./login.page.scss'],
   standalone: true,
   imports: [
+    IonSpinner,
     ReactiveFormsModule,
     CommonModule,
     IonRouterLink,
@@ -59,6 +63,7 @@ import { ToastService } from 'src/app/services/toast.service';
     IonFab,
     IonFabList,
     IonInput,
+    LoadingComponent,
   ],
 })
 export class LoginPage {
@@ -72,7 +77,8 @@ export class LoginPage {
     private authService: AuthService,
     private userSrv: UsuarioService,
     private fb: FormBuilder,
-    private toast: ToastService
+    private toast: ToastService,
+    public loadingService: LoadingService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -122,6 +128,8 @@ export class LoginPage {
 
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
+      // Mostrar el loading antes de la petición
+      this.loadingService.showLoading();
       try {
         res = await this.authService.login(email, password);
         console.log(res);
@@ -134,6 +142,7 @@ export class LoginPage {
                 usuario.perfil == Perfiles.cliente &&
                 usuario.estado == Estados.pendienteDeAprobacion
               ) {
+                this.loadingService.hideLoading();
                 this.toast.showError(
                   'Lo sentimos, pero su cuenta aún se encuentra Pendiente de aprobación.'
                 );
@@ -143,6 +152,7 @@ export class LoginPage {
                 usuario.estado == Estados.rechazado
               ) {
                 this.limpiarInputs();
+                this.loadingService.hideLoading();
                 this.toast.showError(
                   'Lo sentimos, pero su cuenta fue rechazada.'
                 );
@@ -150,11 +160,13 @@ export class LoginPage {
                 console.log('Login correcto');
                 this.limpiarInputs();
                 this.suscripcion.unsubscribe();
+                this.loadingService.hideLoading();
                 this.router.navigate(['/home']);
               }
             }
           });
       } catch (error: any) {
+        this.loadingService.hideLoading();
         this.toast.showError('Falló el ingreso: ' + error.message);
       }
     } else {
@@ -168,7 +180,6 @@ export class LoginPage {
   }
 
   limpiarInputs() {
-    // Se limpia el formulario
     this.loginForm.reset();
   }
 }

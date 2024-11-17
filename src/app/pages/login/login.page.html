@@ -1,4 +1,9 @@
 <ion-content>
+  <!-- Mostrar el loading spinner cuando isLoading es true -->
+  <div *ngIf="loadingService.loadingStatus">
+    <app-loading></app-loading>
+  </div>
+
   <div class="container">
     <ion-card class="login-card">
       <form [formGroup]="loginForm" (ngSubmit)="onlogin()">

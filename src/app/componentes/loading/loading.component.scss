@@ -1,0 +1,64 @@
+.contenedor {
+  height: 100vh;
+  width: 100%;
+  margin: 0;
+  border-style: none;
+  background-color: rgba(0, 0, 0, 0.3); /* Fondo semi-transparente */
+  text-align: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99;
+
+  /* Configuración flexbox para centrar contenido */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rotate-scale-up {
+  -webkit-animation: rotate-scale-up 0.65s linear infinite both;
+  animation: rotate-scale-up 0.65s linear infinite both;
+}
+
+@-webkit-keyframes rotate-scale-up {
+  0% {
+    -webkit-transform: scale(1) rotateZ(0);
+    transform: scale(1) rotateZ(0);
+  }
+  50% {
+    -webkit-transform: scale(2) rotateZ(180deg);
+    transform: scale(2) rotateZ(180deg);
+  }
+  100% {
+    -webkit-transform: scale(1) rotateZ(360deg);
+    transform: scale(1) rotateZ(360deg);
+  }
+}
+@keyframes rotate-scale-up {
+  0% {
+    -webkit-transform: scale(1) rotateZ(0);
+    transform: scale(1) rotateZ(0);
+  }
+  50% {
+    -webkit-transform: scale(2) rotateZ(180deg);
+    transform: scale(2) rotateZ(180deg);
+  }
+  100% {
+    -webkit-transform: scale(1) rotateZ(360deg);
+    transform: scale(1) rotateZ(360deg);
+  }
+}
+
+.corazon {
+  display: inline-block;
+  text-shadow: 0 0 10px #222, 1px 1px 0 #450505;
+  color: red;
+  animation: rotate-scale-up 0.5s infinite;
+  transform-origin: center;
+  /* Asegurarse de que el tamaño del ícono sea adecuado */
+  max-width: 100%;
+  max-height: 100%;
+  height: auto;
+  width: auto;
+}
