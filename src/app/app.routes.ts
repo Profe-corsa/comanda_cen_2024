@@ -39,13 +39,16 @@ export const routes: Routes = [
       import('./pages/listados/listados.page').then((m) => m.ListadosPage),
   },
   {
-    path: 'listados/:object',
+    //object va a ser el tipo de usuario que accceda a la consulta
+    path: 'consulta/:object/:id',
     loadComponent: () =>
-      import('./pages/listados/listados.page').then((m) => m.ListadosPage),
-  },{
+      import('./pages/consulta/consulta.page').then((m) => m.ConsultaPage),
+  },
+  {
     path: 'alta-producto',
     loadComponent: () =>
-      import('./componentes/alta-producto/alta-producto.component').then((m)=>m.AltaProductoComponent),
+      import('./componentes/alta-producto/alta-producto.component').then(
+        (m) => m.AltaProductoComponent
+      ),
   },
-
 ];

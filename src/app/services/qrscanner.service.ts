@@ -9,7 +9,6 @@ QrScannerService implements OnInit {
   isSupported = false;
   barcodes: Barcode[] = [];
 
-  dispositivo = 'mobile'; //cambiar a mobile para las pruebas en el celu, cualq. otro nombre para el navegador
   constructor() {}
 
   // eslint-disable-next-line @angular-eslint/contextual-lifecycle

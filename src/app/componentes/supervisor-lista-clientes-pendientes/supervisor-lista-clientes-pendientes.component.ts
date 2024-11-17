@@ -71,6 +71,7 @@ export class SupervisorListaClientesPendientesComponent implements OnInit {
 
   //Funciona con el slicing
   cambiarEstadoCliente(estado: string, cliente: Usuario) {
+    console.log('entro', estado);
     if (estado == 'aprobado') {
       cliente.estado = Estados.aprobado;
     } else {
