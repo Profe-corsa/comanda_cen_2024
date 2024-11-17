@@ -9,10 +9,11 @@ import {
   IonButton,
   IonIcon,
 } from '@ionic/angular/standalone';
-import { ActivatedRoute } from '@angular/router';
-import { ClienteConsultaComponent } from 'src/app/componentes/cliente-consulta/cliente-consulta.component';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UsuarioService } from 'src/app/services/usuario.service';
-import { Subscription } from 'rxjs';
+import { Usuario } from 'src/app/clases/usuario';
+import { ClienteConsultaComponent } from 'src/app/componentes/cliente-consulta/cliente-consulta.component';
+import { firstValueFrom } from 'rxjs'; //me resuelve el problema del asincronismo
 
 @Component({
   selector: 'app-consulta',
@@ -20,49 +21,51 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./consulta.page.scss'],
   standalone: true,
   imports: [
-    IonIcon,
-    IonButton,
     IonContent,
     IonHeader,
     IonTitle,
     IonToolbar,
     CommonModule,
     FormsModule,
+    IonButton,
+    IonIcon,
     ClienteConsultaComponent,
   ],
 })
 export class ConsultaPage implements OnInit {
-  tipoUsuario: string = '';
-  usuarioActual: any;
-  idUsuario: string = '';
-
-  suscripcion: Subscription | any;
+  tipoUsuario: any = '';
+  idUsuario: any = '';
+  usuarioActual: Usuario | null = null;
 
   constructor(
-    private route: ActivatedRoute,
-    private usuarioService: UsuarioService
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private userSrv: UsuarioService
   ) {}
 
   ngOnInit() {
-    this.tipoUsuario = this.route.snapshot.paramMap.get('object') || '';
-    this.idUsuario = this.route.snapshot.paramMap.get('id') || '';
-    this.obtenerUsuario();
+    this.tipoUsuario = this.activatedRoute.snapshot.paramMap.get('object');
+    this.idUsuario = this.activatedRoute.snapshot.paramMap.get('id');
+    this.getUsuario();
   }
 
-  async obtenerUsuario() {
+  ///Recupera el usuario actual de la base de datos
+  async getUsuario() {
     try {
-      this.usuarioActual = await this.usuarioService.getUserPromise(
-        this.idUsuario
+      this.usuarioActual = await firstValueFrom(
+        this.userSrv.getUser(this.idUsuario)
       );
-      console.log(this.usuarioActual);
+      console.log('Usuario recuperado:', this.usuarioActual);
     } catch (error) {
-      console.error('Error al obtener usuario:', error);
+      console.error('Error al recuperar el usuario:', error);
     }
   }
 
-  // Método para volver al inicio segun el tipo de usuario
   inicio() {
-    // Aquí redireccionas al usuario a la página principal
-    console.log('Volver al inicio');
+    if (this.tipoUsuario != 'cliente anonimo') {
+      this.router.navigate([`/home`]);
+    } else {
+      this.router.navigate([`/home`, this.idUsuario]);
+    }
   }
 }

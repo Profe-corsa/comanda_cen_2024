@@ -56,7 +56,9 @@ export class ClienteHomeComponent implements OnInit {
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log('el usuario en home:', this.usuario);
+  }
 
   leerQR() {
     this.qrService.scanCode().then((response) => {

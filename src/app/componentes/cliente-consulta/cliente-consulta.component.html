@@ -1,6 +1,28 @@
-<app-chat
-  [mensajes]="mensajes"
-  [usuario]="usuario"
-  (enviarMensaje)="onEnviarMensaje($event)"
->
-</app-chat>
+<div id="contenedor">
+  <h1>Su consulta:</h1>
+  <ion-item *ngIf="!consultaCreada">
+    <ion-label position="floating">Escriba su consulta:</ion-label>
+    <ion-textarea [(ngModel)]="textoCliente"></ion-textarea>
+  </ion-item>
+  <ion-item *ngIf="consultaCreada == true && consulta != undefined">
+    <ion-textarea disabled readonly>{{ consulta.textoConsulta }}</ion-textarea>
+  </ion-item>
+  <ion-label
+    class="ion-text-right"
+    *ngIf="consultaCreada == true && consulta != undefined"
+    >Estado de la consulta: {{ consulta.estado }}</ion-label
+  >
+
+  <ion-button color="success" *ngIf="!consultaCreada" (click)="crearConsulta()"
+    >Enviar</ion-button
+  >
+  <ion-button color="danger" *ngIf="consultaCreada" (click)="nuevaConsulta()"
+    >Nueva Consulta</ion-button
+  >
+
+  <h1>Respuesta del mozo:</h1>
+  <ion-item *ngIf="consultaCreada && consulta.estado == 'respondida'">
+    <ion-label position="stacked">Respuesta</ion-label>
+    <ion-textarea disabled readonly>{{ consulta.respuesta }}</ion-textarea>
+  </ion-item>
+</div>

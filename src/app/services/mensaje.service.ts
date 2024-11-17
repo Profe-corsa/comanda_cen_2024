@@ -3,6 +3,7 @@ import {
   Firestore,
   collection,
   doc,
+  docData,
   setDoc,
   updateDoc,
   collectionData,
@@ -26,15 +27,21 @@ export class MensajesService {
    * Agregar una nueva consulta a Firestore.
    * @param consulta Objeto de tipo Consulta
    */
-  async addConsulta(consulta: Consulta): Promise<void> {
+  async addConsulta(consulta: Consulta): Promise<string> {
     try {
       const docRef = doc(this.consultasCollection);
       consulta.id = docRef.id; // Asignar ID generado automáticamente
       await setDoc(docRef, { ...consulta });
+      return consulta.id;
     } catch (error) {
       console.error('Error al agregar consulta:', error);
       throw new Error('No se pudo agregar la consulta.');
     }
+  }
+
+  getConsultaById(id: string): Observable<Consulta> {
+    const docRef = doc(this.consultasCollection, id);
+    return docData(docRef, { idField: 'id' }) as Observable<Consulta>;
   }
 
   /**
@@ -84,7 +91,7 @@ export class MensajesService {
       const consultaDoc = doc(this.consultasCollection, id);
       await updateDoc(consultaDoc, {
         respuesta,
-        estado: EstadoConsulta.Respondida,
+        estado: EstadoConsulta.respondida,
         idMozo,
         nombreMozo,
         fecha: new Date().toLocaleString(),
@@ -143,21 +150,21 @@ export class MensajesService {
     }
   }
 
-  // mensajes.service.ts
-  async enviarMensajeCliente(
-    mensaje: string,
-    idUsuario: string
-  ): Promise<Consulta> {
-    try {
-      const nuevaConsulta: Consulta = {
-        idCliente: idUsuario,
-        textoConsulta: mensaje,
-      };
-      await this.addConsulta(nuevaConsulta);
-      return nuevaConsulta;
-    } catch (error) {
-      console.error('Error al enviar mensaje:', error);
-      throw new Error('No se pudo enviar el mensaje.');
-    }
-  }
+  // Funcion utilizada cuando usabamos el modulo de chat
+  // async enviarMensajeCliente(
+  //   mensaje: string,
+  //   idUsuario: string
+  // ): Promise<Consulta> {
+  //   try {
+  //     const nuevaConsulta: Consulta = {
+  //       idCliente: idUsuario,
+  //       textoConsulta: mensaje,
+  //     };
+  //     await this.addConsulta(nuevaConsulta);
+  //     return nuevaConsulta;
+  //   } catch (error) {
+  //     console.error('Error al enviar mensaje:', error);
+  //     throw new Error('No se pudo enviar el mensaje.');
+  //   }
+  // }
 }
