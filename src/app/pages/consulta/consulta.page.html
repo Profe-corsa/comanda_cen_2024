@@ -12,5 +12,8 @@
     [usuario]="usuarioActual"
     *ngIf="usuarioActual && tipoUsuario === 'cliente'"
   ></app-cliente-consulta>
-  <!-- <app-mozo-consulta [usuario]="usuarioActual" *ngIf="tipoUsuario == 'mozo' && usuarioActual != undefined"></app-mozo-consulta> -->
+  <app-mozo-consulta
+    [usuario]="usuarioActual"
+    *ngIf="tipoUsuario == 'mozo' && usuarioActual != undefined"
+  ></app-mozo-consulta>
 </ion-content>

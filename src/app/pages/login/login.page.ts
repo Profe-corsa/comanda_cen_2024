@@ -108,7 +108,7 @@ export class LoginPage {
     const users = [
       { email: 'duenio@comandacen.com', password: '123456' },
       { email: 'metre@gmail.com', password: '123456' },
-      { email: 'prueba@test2.com', password: '123456' },
+      { email: 'mozo@comandacen.com', password: '123456' },
       { email: 'nmiguenz@gmail.com', password: '123456' },
     ];
 
