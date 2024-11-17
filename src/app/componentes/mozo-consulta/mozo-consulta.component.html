@@ -1,3 +1,51 @@
-<p>
-  mozo-consulta works!
-</p>
+<div *ngIf="loadingService.loadingStatus">
+  <app-loading></app-loading>
+</div>
+<div id="contenedor" *ngIf="!responderFlag">
+  <h1>Consultas pendientes de respuesta</h1>
+  <div id="lista-consultas">
+    <ion-list>
+      <ion-item
+        (click)="responder(consulta)"
+        *ngFor="let consulta of listadoConsultas"
+      >
+        <ion-label>
+          <h2>Mesa: {{ consulta.nroMesa }}</h2>
+          <ion-label
+            >Consulta: {{ consulta.textoConsulta | slice : 0 : 10
+            }}{{ consulta.textoConsulta.length > 10 ? "..." : "" }}</ion-label
+          >
+          <ion-label *ngIf="consulta.hora != undefined"
+            >Hora:
+            {{ consulta.hora.toDate() | date : "dd/MM/yyyy HH:mm" }}</ion-label
+          >
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+</div>
+
+<div id="contenedor" *ngIf="responderFlag">
+  <h3>Consulta del cliente:</h3>
+
+  <ion-item *ngIf="consultaSeleccionada != undefined">
+    <ion-label position="stacked">Consulta:</ion-label>
+    <ion-textarea disabled readonly>{{
+      consultaSeleccionada.textoConsulta
+    }}</ion-textarea>
+  </ion-item>
+  <ion-label class="ion-text-right" *ngIf="consultaSeleccionada != undefined"
+    >Estado de la consulta: {{ consultaSeleccionada.estado }}</ion-label
+  >
+
+  <h3>Respuesta:</h3>
+  <ion-item>
+    <ion-label position="stacked">Respuesta:</ion-label>
+    <ion-textarea [(ngModel)]="consultaSeleccionada.respuesta"></ion-textarea>
+  </ion-item>
+
+  <ion-button color="success" (click)="devolverConsulta()"
+    >Enviar Respuesta</ion-button
+  >
+  <ion-button color="success" (click)="responder()">Volver</ion-button>
+</div>

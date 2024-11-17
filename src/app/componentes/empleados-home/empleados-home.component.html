@@ -8,15 +8,29 @@
       <h2 class="long-name">Clientes en Lista de Espera</h2>
     </ion-card>
   </ion-col>
-  <ion-col col-12 *ngIf="usuario?.perfil == 'cocinero' || usuario?.perfil == 'bartender'">
+  <ion-col
+    col-12
+    *ngIf="usuario?.perfil == 'cocinero' || usuario?.perfil == 'bartender'"
+  >
     <ion-card
       (click)="seleccionarOpcion('altaProducto')"
       class="ion-text-center ion-padding"
     >
       <ion-icon name="man"></ion-icon>
-      <h2 class="long-name">Dar producto de Alta
-      </h2>
+      <h2 class="long-name">Dar producto de Alta</h2>
+    </ion-card>
+  </ion-col>
+
+  <ion-col col-12 *ngIf="usuario?.perfil == 'mozo'">
+    <ion-card
+      [routerLink]="['/consulta', usuario.perfil, usuario?.id]"
+      class="ion-text-center ion-padding"
+    >
+      <ion-icon name="chatbubbles-outline"></ion-icon>
+      <h2 class="long-name">Consultas de clientes</h2>
     </ion-card>
   </ion-col>
 </ion-grid>
-<app-alta-producto *ngIf="opcionSeleccionada === 'altaProducto'"></app-alta-producto>
+<app-alta-producto
+  *ngIf="opcionSeleccionada === 'altaProducto'"
+></app-alta-producto>

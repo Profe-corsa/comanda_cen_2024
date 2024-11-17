@@ -8,7 +8,8 @@ export enum Estados {
   paraConfirmarPedido = 'para confirmar pedido',
   atendido = 'atendido',
   pagando = 'pagando',
-  mesaAsignada = 'mesaAsignada',
+  mesaAsignada = 'mesaAsignada', //lo pone el metre
+  mesaTomada = 'mesaTomada', // el cliente aceptó la mesa que le asignó el metre
   esperandoOrden = 'esperandoOrden',
   finalizado = 'finalizado',
   tieneReserva = 'tieneReserva',
