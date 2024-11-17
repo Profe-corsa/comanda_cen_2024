@@ -20,6 +20,7 @@ import { Cliente } from 'src/app/clases/cliente';
 import { DuenioSupervisorHomeComponent } from '../../componentes/duenio-supervisor-home/duenio-supervisor-home.component';
 import { ClienteHomeComponent } from '../../componentes/cliente-home/cliente-home.component';
 import { EmpleadosHomeComponent } from '../../componentes/empleados-home/empleados-home.component';
+import { AppComponent } from 'src/app/app.component';
 
 @Component({
   selector: 'app-home',
@@ -37,6 +38,7 @@ import { EmpleadosHomeComponent } from '../../componentes/empleados-home/emplead
     CommonModule,
     ClienteHomeComponent,
     EmpleadosHomeComponent,
+    AppComponent
   ],
 })
 export class HomePage {
@@ -48,7 +50,9 @@ export class HomePage {
     private authService: AuthService,
     private userSrv: UsuarioService,
     private toast: ToastService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private appComponent: AppComponent
+
   ) {
     addIcons({
       exitOutline,
@@ -82,7 +86,9 @@ export class HomePage {
   }
 
   logout() {
+    this.appComponent.playCloseSound();
     this.suscripcion.unsubscribe();
+
     this.authService.logOut();
   }
 }

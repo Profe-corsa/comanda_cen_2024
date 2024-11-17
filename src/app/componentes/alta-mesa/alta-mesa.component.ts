@@ -21,6 +21,7 @@ import {
   IonToolbar,
   IonTitle,
   IonLabel,
+  IonCard,
 } from '@ionic/angular/standalone';
 import { DataService } from 'src/app/services/data.service';
 import { Route, Router, RouterLink } from '@angular/router';
@@ -28,8 +29,10 @@ import { Route, Router, RouterLink } from '@angular/router';
 @Component({
   selector: 'app-alta-mesa',
   templateUrl: './alta-mesa.component.html',
+  styleUrls: ['./alta-mesa.component.scss'],
   standalone: true,
   imports: [
+    IonCard,
     IonLabel,
     IonTitle,
     IonToolbar,
@@ -42,7 +45,7 @@ import { Route, Router, RouterLink } from '@angular/router';
     ReactiveFormsModule,
     IonSelect,
     IonSelectOption,
-    RouterLink
+    RouterLink,
   ],
 })
 export class AltaMesaComponent {
@@ -82,8 +85,8 @@ export class AltaMesaComponent {
       };
 
       await this.dataSrv.saveObject(mesaData, 'mesas').then(() => {
-          this.route.navigate(['home']);
-        });
+        this.route.navigate(['home']);
+      });
       // this.qrCode = this.qrCodeGenerator.scanCode(mesaData.numero.toString());
     }
   }
