@@ -7,6 +7,5 @@ export class Mesa {
   tipo: string = '';
   foto: string = '';
   estado: string = '';
-
   constructor() {}
 }

@@ -13,11 +13,7 @@ import {
   where,
   getDocs,
 } from '@angular/fire/firestore';
-import { AuthService } from './auth.service';
-import { Usuario } from '../clases/usuario';
-import { Observable } from 'rxjs/internal/Observable';
-import { from } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Mesa } from '../clases/mesa';
 import { ToastService } from './toast.service';
 
 @Injectable({
@@ -30,38 +26,57 @@ export class DataService {
 
   async saveObject(objeto: any, collectionName: string): Promise<void> {
     try {
-        const collectionRef = collection(this.firestore, collectionName) as CollectionReference;
+      const collectionRef = collection(
+        this.firestore,
+        collectionName
+      ) as CollectionReference;
 
-        // Verifica si el objeto ya tiene un ID. Si no, crea uno nuevo con `addDoc`
-        if (!objeto.id) {
-            // Usa addDoc para crear el documento y obtener el uid generado
-            const docRef = await addDoc(collectionRef, objeto);
-            // Actualiza el campo `id` en el documento
-            await updateDoc(docRef, { id: docRef.id });
-        } else {
-            // Si el objeto ya tiene un ID, usa setDoc para actualizarlo
-            const docRef = doc(collectionRef, objeto.id);
-            await setDoc(docRef, objeto);
-        }
+      // Verifica si el objeto ya tiene un ID. Si no, crea uno nuevo con `addDoc`
+      if (!objeto.id) {
+        // Usa addDoc para crear el documento y obtener el uid generado
+        const docRef = await addDoc(collectionRef, objeto);
+        // Actualiza el campo `id` en el documento
+        await updateDoc(docRef, { id: docRef.id });
+      } else {
+        // Si el objeto ya tiene un ID, usa setDoc para actualizarlo
+        const docRef = doc(collectionRef, objeto.id);
+        await setDoc(docRef, objeto);
+      }
 
-        this.toast.showExito(`Se guardó un registro en la colección: ${collectionName}`, 'middle');
+      this.toast.showExito(
+        `Se guardó un registro en la colección: ${collectionName}`,
+        'middle'
+      );
     } catch (error) {
-        this.toast.showError(`Error al guardar el objeto en la colección ${collectionName}`, 'middle');
-        throw error;
+      this.toast.showError(
+        `Error al guardar el objeto en la colección ${collectionName}`,
+        'middle'
+      );
+      throw error;
     }
   }
   //Verifica que el cliente esté en la lista de espera y que tenga el estado pendiente.
   async asignarMesa(numeroMesa: number, idCliente: string): Promise<void> {
     try {
-      const clienteRef = doc(this.firestore, `listaEspera/${idCliente}`);
-      const clienteSnap = await getDoc(clienteRef);
+      if (numeroMesa === undefined || numeroMesa === null) {
+        throw new Error('El número de mesa no puede ser undefined o null.');
+      }
 
+      const clienteRef = doc(this.firestore, `listaDeEspera/${idCliente}`);
+      const clienteSnap = await getDoc(clienteRef);
+      //console.log(clienteSnap.ref.id);
       if (!clienteSnap.exists()) {
         throw new Error('El cliente no está en la lista de espera.');
       }
-
-      const clienteData = clienteSnap.data();
-      if (clienteData && clienteData['estado'] !== 'pendiente') {
+      const usuarioRef = doc(this.firestore, `usuarios/${idCliente}`);
+      const usuarioSnap = await getDoc(usuarioRef);
+      console.log(usuarioSnap.ref.id);
+      if (!usuarioSnap.exists()) {
+        throw new Error('El cliente no está en la lista de espera.');
+      }
+      const usuarioData = usuarioSnap.data();
+      console.log(usuarioData);
+      if (usuarioData && usuarioData['estado'] !== 'enEspera') {
         throw new Error(
           'El cliente no está pendiente para ser asignado a una mesa.'
         );
@@ -69,7 +84,7 @@ export class DataService {
 
       // Consulta la mesa por el número de mesa
       const mesasRef = collection(this.firestore, 'mesas');
-      const mesaQuery = query(mesasRef, where('numeroMesa', '==', numeroMesa));
+      const mesaQuery = query(mesasRef, where('numero', '==', numeroMesa));
       const mesaSnap = await getDocs(mesaQuery);
 
       if (mesaSnap.empty) {
@@ -83,7 +98,7 @@ export class DataService {
         idClienteAsignado: idCliente,
         estado: 'reservada',
       });
-      await updateDoc(clienteRef, { estado: 'asignado' });
+      await updateDoc(usuarioRef, { estado: 'puedeTomarMesa' });
 
       this.toast.showExito(
         `Mesa ${numeroMesa} asignada al cliente ${idCliente}`,
@@ -91,6 +106,7 @@ export class DataService {
       );
     } catch (error) {
       this.toast.showError(`Error al asignar mesa: ${numeroMesa}`, 'middle');
+      console.error(error);
       throw error;
     }
   }
@@ -103,7 +119,7 @@ export class DataService {
     try {
       // Consulta la mesa por el número de mesa
       const mesasRef = collection(this.firestore, 'mesas');
-      const mesaQuery = query(mesasRef, where('numeroMesa', '==', numeroMesa));
+      const mesaQuery = query(mesasRef, where('numero', '==', numeroMesa));
       const mesaSnap = await getDocs(mesaQuery);
 
       if (mesaSnap.empty) {
@@ -117,15 +133,20 @@ export class DataService {
         throw new Error('El cliente no está asignado a esta mesa.');
       }
 
-      const clienteRef = doc(this.firestore, `listaEspera/${idCliente}`);
+      const clienteRef = doc(this.firestore, `listaDeEspera/${idCliente}`);
       const clienteSnap = await getDoc(clienteRef);
 
       if (!clienteSnap.exists()) {
         throw new Error('El cliente no está en la lista de espera.');
       }
+      const usuarioRef = doc(this.firestore, `usuarios/${idCliente}`);
+      const usuarioSnap = await getDoc(usuarioRef);
 
-      const clienteData = clienteSnap.data();
-      if (clienteData && clienteData['estado'] !== 'asignado') {
+      if (!usuarioSnap.exists()) {
+        throw new Error('El cliente no está en la lista de espera.');
+      }
+      const clienteData = usuarioSnap.data();
+      if (clienteData && clienteData['estado'] !== 'puedeTomarMesa') {
         throw new Error('El cliente no está asignado a una mesa.');
       }
 
@@ -141,5 +162,30 @@ export class DataService {
       );
       throw error;
     }
+  }
+
+  async obtenerMesas(): Promise<Mesa[]> {
+    const mesasRef = collection(this.firestore, 'mesas');
+    const snapshot = await getDocs(mesasRef);
+
+    // Mapear correctamente las propiedades del documento
+    const mesas: Mesa[] = snapshot.docs.map((doc) => {
+      const data = doc.data() as Omit<Mesa, 'id'>; // Datos del documento
+      return {
+        id: doc.id, // ID del documento
+        ...data, // Todas las propiedades del documento
+      };
+    });
+
+    // Filtrar solo las mesas con estado 'Disponible'
+    return mesas.filter((mesa) => mesa.estado === 'Disponible');
+  }
+
+  // Obtiene todos los clientes en la lista de espera
+  async obtenerClientesEnEspera(): Promise<any[]> {
+    const clientesRef = collection(this.firestore, 'listaDeEspera');
+    const querySnap = query(clientesRef, where('estado', '==', 'enEspera'));
+    const snapshot = await getDocs(querySnap);
+    return snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
   }
 }

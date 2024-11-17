@@ -21,6 +21,7 @@ import { ToastService } from 'src/app/services/toast.service';
 import { DataService } from 'src/app/services/data.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { Estados } from 'src/app/clases/enumerados/Estados';
+import { Mesa } from '../../clases/mesa'
 // import { addIcons } from 'ionicons';
 // import { man } from 'ionicons/icons';
 
@@ -50,7 +51,8 @@ import { Estados } from 'src/app/clases/enumerados/Estados';
 export class MetreListaEsperaComponent implements OnInit {
   listaClientes: Usuario[] = [];
   listaVacia: boolean = false;
-  @Input() mesa!: { numero: number; [key: number]: any };
+  listaMesasDisponibles: Mesa[] = [];
+  mesa!: Mesa;
 
   constructor(
     private usuarioSrv: UsuarioService,
@@ -59,6 +61,9 @@ export class MetreListaEsperaComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
+    //this.cargarClientes();
+    this.cargarMesasDisponibles();
+
     const listaAnonimos: Usuario[] = [];
     const listaRegistrados: Usuario[] = [];
 
@@ -90,9 +95,90 @@ export class MetreListaEsperaComponent implements OnInit {
     this.listaClientes = [...listaAnonimos, ...listaRegistrados];
     this.listaVacia = this.listaClientes.length === 0;
   }
-  cambiarEstadoCliente(estado: string, {}) {}
 
-  async asignarMesa(idMesa: number, idCliente: string) {
-    await this.dataService.asignarMesa(idMesa, idCliente);
+  async asignarMesa(numeroMesa: number, idCliente: string) {
+    if (!numeroMesa) {
+      this.toast.showError(
+        'No se puede asignar la mesa porque no está definida.',
+        'bottom'
+      );
+      return;
+    }
+    await this.dataService.asignarMesa(numeroMesa, idCliente);
+  }
+
+  //Funciona con el slicing
+  cambiarEstadoCliente(estado: string, cliente: Usuario) {
+    console.log('entro', estado);
+    if (estado == 'aprobado') {
+      cliente.estado = Estados.puedeTomarMesa;
+      this.asignarMesa(this.mesa.numero, cliente.id);
+    } else {
+      cliente.estado = Estados.rechazado;
+    }
+    this.actualizarEstadoCliente(cliente);
+  }
+
+  private actualizarEstadoCliente(cliente: Usuario) {
+    this.usuarioSrv
+      .updateUser(cliente.id, { estado: cliente.estado })
+      .then(() => {
+        if (cliente.estado == Estados.aprobado) {
+          this.toast.showExito('El cliente puede tomar una mesa', 'bottom');
+        } else {
+          this.toast.showError('El cliente ha sido rechazado', 'bottom');
+        }
+        // Opcional: Filtra la lista para eliminar al cliente aprobado o rechazado si ya no debe mostrarse
+        this.listaClientes = this.listaClientes.filter(
+          (c: Usuario) => c.id !== cliente.id
+        );
+        this.listaVacia = this.listaClientes.length === 0;
+      });
+  }
+
+  async cargarClientes() {
+    // Cargar clientes en lista de espera
+    const clientes = await this.dataService.obtenerClientesEnEspera();
+    this.listaClientes = clientes || [];
+  }
+
+  async cargarMesasDisponibles() {
+    try {
+      this.listaMesasDisponibles = await this.dataService.obtenerMesas();
+    } catch (error) {
+      console.error('Error al cargar las mesas disponibles:', error);
+    }
+  }
+
+  async asignarMesaCliente(cliente: any) {
+    if (this.listaMesasDisponibles.length === 0) {
+      this.toast.showError('No hay mesas disponibles.', 'bottom');
+      return;
+    }
+
+    // Toma la primera mesa disponible
+    const mesaDisponible = this.listaMesasDisponibles.shift();
+
+    if (!mesaDisponible) {
+      this.toast.showError('No se pudo asignar una mesa.', 'bottom');
+      return;
+    }
+
+    try {
+      // Asigna la mesa al cliente
+      await this.dataService.asignarMesa(mesaDisponible.numero, cliente.id);
+
+      // Actualizar lista de mesas disponibles y cliente
+      cliente.estado = 'puedeTomarMesa';
+      mesaDisponible.estado = 'reservada';
+
+      this.toast.showExito(
+        `Mesa ${mesaDisponible.numero} asignada a ${cliente.nombre}`,
+        'bottom'
+      );
+    } catch (error) {
+      console.error('Error al asignar mesa:', error);
+      this.toast.showError('Error al asignar mesa.', 'bottom');
+    }
   }
 }

@@ -5,10 +5,10 @@
   </div>
   <ion-list>
     <ion-item-sliding *ngFor="let cliente of listaClientes">
-      <ion-item-options side="end">
+      <ion-item-options side="start">
         <ion-item-option
           color="success"
-          (click)="asignarMesa(mesa.numero, cliente.id)"
+          (click)="asignarMesaCliente(cliente)"
           ><ion-icon name="checkmark-outline"></ion-icon
         ></ion-item-option>
       </ion-item-options>
