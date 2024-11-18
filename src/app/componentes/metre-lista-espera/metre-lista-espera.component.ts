@@ -66,12 +66,12 @@ export class MetreListaEsperaComponent implements OnInit {
   }
 
   async ngOnInit() {
-    //this.cargarClientes();
+    this.cargarClientes();
     this.cargarMesasDisponibles();
 
     const listaAnonimos: Usuario[] = [];
     const listaRegistrados: Usuario[] = [];
-
+    /*
     await this.usuarioSrv
       .obtenerUsuariosPorPerfil('cliente anonimo')
       .subscribe((usuarios) => {
@@ -91,6 +91,7 @@ export class MetreListaEsperaComponent implements OnInit {
         this.actualizarListaClientes(listaAnonimos, listaRegistrados);
         console.log('Clientes registrados:', listaRegistrados);
       });
+      */
   }
 
   private actualizarListaClientes(
@@ -114,30 +115,44 @@ export class MetreListaEsperaComponent implements OnInit {
 
   //Funciona con el slicing
   cambiarEstadoCliente(estado: string, cliente: Usuario) {
-    console.log('entro', estado);
-    if (estado == 'aprobado') {
+    if (estado === 'aprobado') {
       cliente.estado = Estados.puedeTomarMesa;
-      this.asignarMesa(this.mesa.numero, cliente.id);
+
+      // Asignar una mesa al cliente aprobado
+      this.asignarMesaCliente(cliente);
     } else {
       cliente.estado = Estados.rechazado;
+      this.actualizarEstadoCliente(cliente);
     }
-    this.actualizarEstadoCliente(cliente);
   }
 
   private actualizarEstadoCliente(cliente: Usuario) {
     this.usuarioSrv
       .updateUser(cliente.id, { estado: cliente.estado })
       .then(() => {
-        if (cliente.estado == Estados.aprobado) {
-          this.toast.showExito('El cliente puede tomar una mesa', 'bottom');
+        if (cliente.estado === Estados.puedeTomarMesa) {
+          this.toast.showExito(
+            'El cliente ha sido aprobado y puede tomar una mesa.',
+            'bottom'
+          );
         } else {
-          this.toast.showError('El cliente ha sido rechazado', 'bottom');
+          this.toast.showError('El cliente ha sido rechazado.', 'bottom');
         }
-        // Opcional: Filtra la lista para eliminar al cliente aprobado o rechazado si ya no debe mostrarse
+
+        // Filtra al cliente de la lista
         this.listaClientes = this.listaClientes.filter(
           (c: Usuario) => c.id !== cliente.id
         );
+
+        // Actualiza el estado de la lista
         this.listaVacia = this.listaClientes.length === 0;
+      })
+      .catch((error) => {
+        console.error('Error al actualizar el estado del cliente:', error);
+        this.toast.showError(
+          'Hubo un error al actualizar el estado del cliente.',
+          'bottom'
+        );
       });
   }
 
@@ -159,7 +174,7 @@ export class MetreListaEsperaComponent implements OnInit {
     }
   }
 
-  async asignarMesaCliente(cliente: any) {
+  async asignarMesaCliente(cliente: Usuario) {
     if (this.listaMesasDisponibles.length === 0) {
       this.toast.showError('No hay mesas disponibles.', 'bottom');
       return;
@@ -178,13 +193,19 @@ export class MetreListaEsperaComponent implements OnInit {
       await this.dataService.asignarMesa(mesaDisponible.numero, cliente.id);
 
       // Actualizar lista de mesas disponibles y cliente
-      cliente.estado = 'puedeTomarMesa';
+      cliente.estado = Estados.puedeTomarMesa;
       mesaDisponible.estado = 'reservada';
 
       this.toast.showExito(
         `Mesa ${mesaDisponible.numero} asignada a ${cliente.nombre}`,
         'bottom'
       );
+
+      // Actualizar lista local
+      this.listaClientes = this.listaClientes.filter(
+        (c: Usuario) => c.id !== cliente.id
+      );
+      this.listaVacia = this.listaClientes.length === 0;
     } catch (error) {
       console.error('Error al asignar mesa:', error);
       this.toast.showError('Error al asignar mesa.', 'bottom');
