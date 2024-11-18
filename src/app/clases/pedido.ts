@@ -12,7 +12,6 @@ export class Pedido {
     productos: any[] = [];
     precioTotal: number = 0;
     estado: Estado = Estado.pendiente;
-    tipo: string = '';
     toJSON() {
         return {
             tiempoEstimado: this.tiempoEstimado,
@@ -20,7 +19,6 @@ export class Pedido {
             productos: this.productos,
             precioTotal: this.precioTotal,
             estado: this.estado,
-            tipo: this.tipo,
         };
     }
     calcularTiempoEstimado() {
