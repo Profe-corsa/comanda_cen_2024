@@ -15,6 +15,7 @@ import {
 } from '@angular/fire/firestore';
 import { Mesa } from '../clases/mesa';
 import { ToastService } from './toast.service';
+import { Usuario } from '../clases/usuario';
 
 @Injectable({
   providedIn: 'root',
@@ -183,10 +184,31 @@ export class DataService {
   }
 
   // Obtiene todos los clientes en la lista de espera
+
   async obtenerClientesEnEspera(): Promise<any[]> {
     const clientesRef = collection(this.firestore, 'listaDeEspera');
-    const querySnap = query(clientesRef, where('estado', '==', 'enEspera'));
-    const snapshot = await getDocs(querySnap);
-    return snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+    const usuariosRef = collection(this.firestore, 'usuarios');
+
+    // Obtener todos los clientes en lista de espera
+    const listaDeEsperaSnapshot = await getDocs(clientesRef);
+    const listaDeEspera = listaDeEsperaSnapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+
+    // Obtener todos los usuarios
+    const usuariosSnapshot = await getDocs(usuariosRef);
+    const usuarios = usuariosSnapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    })) as Usuario[]; 
+
+    // Filtrar los clientes en lista de espera que tienen estado "enEspera" en la tabla usuarios
+    const clientesEnEspera = listaDeEspera.filter((cliente) => {
+      const usuario = usuarios.find((u) => u.id === cliente.id);
+      return usuario?.estado === 'enEspera'; 
+    });
+
+    return clientesEnEspera;
   }
 }
