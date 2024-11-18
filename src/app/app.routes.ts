@@ -51,4 +51,9 @@ export const routes: Routes = [
         (m) => m.AltaProductoComponent
       ),
   },
+  {
+    path: 'carta/:id',
+    loadComponent: () =>
+      import('./componentes/carta/carta.component').then((m) => m.CartaComponent),
+  },
 ];

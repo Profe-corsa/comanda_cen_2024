@@ -1,0 +1,39 @@
+<ion-content>
+  <div class="contenedor-principal">
+    <div class="titulo-close">
+      <p class="titulo">PEDIDO</p>
+      <ion-buttons slot="end">
+        <ion-button (click)="close()" class="btn-close">X</ion-button>
+      </ion-buttons>
+    </div>
+    <div class="contenido">
+      <ion-list>
+        <ion-item *ngFor="let producto of productosAgrupados; let i = index">
+          <ion-thumbnail slot="start">
+            <img [src]="producto.fotos[0]" alt="Imagen del producto" />
+          </ion-thumbnail>
+          <ion-label>
+            <h2>{{ producto.nombre }}</h2>
+            <p>Precio unitario: {{ producto.precio | currency }}</p>
+            <p>Cantidad: {{ producto.cantidad }}</p>
+            <p>Subtotal: {{ producto.precio * producto.cantidad | currency }}</p>
+          </ion-label>
+          <ion-button 
+            slot="end" 
+            color="danger" 
+            (click)="eliminarProducto(i)"
+            fill="clear"
+          >
+            <ion-icon name="trash-outline"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-list>
+      <ion-footer>
+        <ion-toolbar class="footer">
+          <ion-title>Total: {{ total | currency }}</ion-title>
+          <ion-button class="btn-pedir" (click)="realizarPedido()">Pedir</ion-button>
+        </ion-toolbar>
+      </ion-footer>
+    </div>
+  </div>
+</ion-content>

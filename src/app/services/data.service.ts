@@ -56,6 +56,11 @@ export class DataService {
       throw error;
     }
   }
+  async getCollectionData(collectionName: string): Promise<any[]> {
+    const collectionRef = collection(this.firestore, collectionName);
+    const snapshot = await getDocs(collectionRef);
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  }
   //Verifica que el cliente esté en la lista de espera y que tenga el estado pendiente.
   async asignarMesa(numeroMesa: number, idCliente: string): Promise<void> {
     try {

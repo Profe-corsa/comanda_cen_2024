@@ -1,20 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  IonCard,
-  IonIcon,
-  IonRouterLink,
-  IonRow,
-  IonCol,
-  IonGrid,
-  IonList,
-  IonItemSliding,
-  IonItemOptions,
-  IonItemOption,
-  IonItem,
-  IonAvatar,
-  IonLabel,
-} from '@ionic/angular/standalone';
+import { IonicModule } from '@ionic/angular';
+
 import { RouterLink } from '@angular/router';
 import { Usuario } from 'src/app/clases/usuario';
 import { ToastService } from 'src/app/services/toast.service';
@@ -31,21 +18,8 @@ import { trashOutline, checkmarkOutline } from 'ionicons/icons';
   styleUrls: ['./metre-lista-espera.component.scss'],
   standalone: true,
   imports: [
-    IonLabel,
-    IonAvatar,
-    IonItem,
-    IonItemOption,
-    IonItemOptions,
-    IonItemSliding,
-    IonList,
-    IonGrid,
+    IonicModule,
     CommonModule,
-    IonCard,
-    IonIcon,
-    IonRouterLink,
-    IonRow,
-    IonCol,
-    RouterLink,
   ],
 })
 export class MetreListaEsperaComponent implements OnInit {
