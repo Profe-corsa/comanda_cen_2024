@@ -132,7 +132,6 @@ export class LoginPage {
       this.loadingService.showLoading();
       try {
         res = await this.authService.login(email, password);
-        console.log(res);
 
         this.suscripcion = this.userSrv
           .getUser(res.user.uid)
@@ -157,7 +156,6 @@ export class LoginPage {
                   'Lo sentimos, pero su cuenta fue rechazada.'
                 );
               } else {
-                console.log('Login correcto');
                 this.limpiarInputs();
                 this.suscripcion.unsubscribe();
                 this.loadingService.hideLoading();

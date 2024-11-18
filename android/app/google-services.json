@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "388609361201",
+    "project_id": "comandacen-1",
+    "storage_bucket": "comandacen-1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:388609361201:android:f84121442690fa09cd9c10",
+        "android_client_info": {
+          "package_name": "io.ionic.comanda"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBr7mdAWkD7zI04id6o5brR0aUhmJ5G1ZI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

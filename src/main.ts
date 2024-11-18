@@ -22,6 +22,9 @@ import { IonicModule } from '@ionic/angular';
 import { getDatabase, provideDatabase } from '@angular/fire/database';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import { LoadingComponent } from './app/componentes/loading/loading.component';
+import { PushNotifications } from '@capacitor/push-notifications';
+import { provideHttpClient } from '@angular/common/http';
+
 // Call the element loader before the bootstrapModule/bootstrapApplication call
 defineCustomElements(window);
 
@@ -30,6 +33,7 @@ bootstrapApplication(AppComponent, {
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: LoadingComponent, useClass: LoadingComponent },
     provideIonicAngular(),
+    provideHttpClient(),
     importProvidersFrom(IonicModule.forRoot({})),
     provideRouter(routes, withPreloading(PreloadAllModules)),
     provideFirebaseApp(() =>
@@ -42,4 +46,18 @@ bootstrapApplication(AppComponent, {
     provideDatabase(() => getDatabase()),
     provideStorage(() => getStorage()),
   ],
+});
+
+PushNotifications.requestPermissions().then((result) => {
+  if (result.receive === 'granted') {
+    PushNotifications.register();
+  }
+});
+
+PushNotifications.addListener('registration', (token) => {
+  console.log('Push registration success, token:', token.value);
+});
+
+PushNotifications.addListener('pushNotificationReceived', (notification) => {
+  console.log('Push received:', notification);
 });
