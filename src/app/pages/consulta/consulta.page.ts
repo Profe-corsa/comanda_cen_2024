@@ -14,6 +14,9 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 import { Usuario } from 'src/app/clases/usuario';
 import { ClienteConsultaComponent } from 'src/app/componentes/cliente-consulta/cliente-consulta.component';
 import { firstValueFrom } from 'rxjs'; //me resuelve el problema del asincronismo
+import { MozoConsultaComponent } from 'src/app/componentes/mozo-consulta/mozo-consulta.component';
+import { addIcons } from 'ionicons';
+import { arrowBackCircleOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-consulta',
@@ -30,6 +33,7 @@ import { firstValueFrom } from 'rxjs'; //me resuelve el problema del asincronism
     IonButton,
     IonIcon,
     ClienteConsultaComponent,
+    MozoConsultaComponent,
   ],
 })
 export class ConsultaPage implements OnInit {
@@ -41,7 +45,9 @@ export class ConsultaPage implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private userSrv: UsuarioService
-  ) {}
+  ) {
+    addIcons({ arrowBackCircleOutline });
+  }
 
   ngOnInit() {
     this.tipoUsuario = this.activatedRoute.snapshot.paramMap.get('object');

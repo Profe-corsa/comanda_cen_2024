@@ -54,3 +54,52 @@ ion-toast {
     flex-direction: row-reverse !important;
   }
 }
+
+ion-toolbar {
+  background: black !important;
+  box-shadow: 0 4px 10px rgba(244, 162, 10, 0.5) !important; /* Cambia el color y opacidad según tu preferencia */
+
+  ion-title {
+    color: #d96d2d !important;
+    font-weight: bold !important;
+    font-size: 1.8rem !important;
+  }
+
+  ion-icon {
+    font-size: 2rem;
+    color: #f4a40a !important;
+  }
+}
+
+ion-list {
+  background: transparent !important;
+}
+
+ion-item {
+  --background: linear-gradient(to right, #d96d2d, #f4a40a);
+}
+
+// ion-button {
+//   --background: linear-gradient(
+//     to right,
+//     #d96d2d,
+//     #f4a40a
+//   ); /* Tonos más intensos */
+//   --border-radius: 8px;
+//   margin-bottom: 12px;
+//   color: #ffffff; /* Texto blanco para contraste */
+//   font-weight: bold;
+//   font-size: 18px; /* Aumenta el tamaño del texto en los botones */
+// }
+
+h1 {
+  font-size: 2rem !important;
+}
+
+h2 {
+  font-size: 1.8rem !important;
+}
+
+p {
+  font-size: 1.5rem !important;
+}

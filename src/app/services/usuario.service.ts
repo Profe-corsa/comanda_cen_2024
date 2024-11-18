@@ -160,4 +160,21 @@ export class UsuarioService {
       throw error;
     }
   }
+
+  // Actualiza múltiples campos de un usuario en Firestore
+  async updateUserFields(userId: string, updateData: any): Promise<void> {
+    try {
+      const userDocRef = doc(this.usuariosCollection, userId);
+
+      // Actualizar múltiples campos al mismo tiempo
+      await updateDoc(userDocRef, updateData);
+      console.log(`Campos del usuario ${userId} actualizados correctamente.`);
+    } catch (error) {
+      console.error(
+        `Error al actualizar los campos del usuario ${userId}:`,
+        error
+      );
+      throw error;
+    }
+  }
 }

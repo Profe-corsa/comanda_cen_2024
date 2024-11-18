@@ -17,13 +17,20 @@ import {
   list,
   addCircleOutline,
   chatbubblesOutline,
+  qrCodeOutline,
 } from 'ionicons/icons';
+
 import { QrScannerService } from '../../services/qrscanner.service';
 import { ToastService } from '../../services/toast.service';
 import { Objetos } from '../../clases/enumerados/Objetos';
 import { UsuarioService } from '../../services/usuario.service';
 import { Estados } from '../../clases/enumerados/Estados';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
+import { DataService } from 'src/app/services/data.service';
+import { LoadingService } from 'src/app/services/loading.service';
+import { LoadingComponent } from 'src/app/componentes/loading/loading.component';
+
 
 @Component({
   selector: 'app-cliente-home',
@@ -38,6 +45,7 @@ import { RouterLink } from '@angular/router';
     IonCol,
     CommonModule,
     RouterLink,
+    LoadingComponent,
   ],
 })
 export class ClienteHomeComponent implements OnInit {
@@ -45,10 +53,15 @@ export class ClienteHomeComponent implements OnInit {
   constructor(
     private qrService: QrScannerService,
     private toast: ToastService,
-    private usuarioSrv: UsuarioService
+    private usuarioSrv: UsuarioService,
+    private authService: AuthService,
+    private dataService: DataService,
+    public loadingService: LoadingService,
+    private router: Router
   ) {
     addIcons({
       list,
+      qrCodeOutline,
       chatbubblesOutline,
       addCircleOutline,
       restaurantOutline,
@@ -62,8 +75,14 @@ export class ClienteHomeComponent implements OnInit {
 
   leerQR() {
     this.qrService.scanCode().then((response) => {
+      console.log(response);
       if (response == Objetos.listaDeEspera) {
         this.agregarAListaEspera();
+      }
+      // Verificar si el QR es de una mesa (formato "Mesa 1", "Mesa 2", etc.)
+      else if (response.startsWith('Mesa ')) {
+        const numeroMesa = response.split(' ')[1]; // Extraer el número de mesa
+        this.unirseAMesa(numeroMesa);
       } else {
         this.toast.showError('Tuvimos un error al leer el QR');
       }
@@ -104,5 +123,58 @@ export class ClienteHomeComponent implements OnInit {
       console.error('Error al agregar a lista de espera:', error);
       this.toast.showError('Hubo un error al agregar a la lista de espera.');
     }
+  }
+
+  async unirseAMesa(numeroMesa: string) {
+    try {
+      this.loadingService.showLoading();
+      const idCliente = this.usuario.id;
+      const mesas = await this.dataService.obtenerMesas();
+      this.loadingService.hideLoading();
+
+      // Buscar la mesa que tiene el idClienteAsignado
+      const mesaAsignada = mesas.find(
+        (mesa) => mesa.idClienteAsignado === idCliente
+      );
+
+      // Verificar si la mesa encontrada es diferente a la escaneada
+      if (mesaAsignada && mesaAsignada.numero != parseInt(numeroMesa)) {
+        this.toast.showError(
+          'Esta no es la mesa que se le asignó. Debe escanear el QR de la mesa ' +
+            mesaAsignada.numero
+        );
+        return;
+      }
+
+      // Si se encontró la mesa asignada y es la correcta
+      if (
+        mesaAsignada &&
+        mesaAsignada.numero === parseInt(numeroMesa) &&
+        this.usuario.mesaAsignada === ''
+      ) {
+        this.loadingService.showLoading();
+        // Actualizar los campos del usuario (por ejemplo: estado y numeroMesa)
+        await this.usuarioSrv.updateUserFields(idCliente, {
+          estado: Estados.mesaTomada,
+          mesaAsignada: numeroMesa,
+        });
+        this.loadingService.hideLoading();
+        this.toast.showExito('Te has unido a la mesa ' + numeroMesa);
+      }
+      //Agregar opciones para seguir trabajando con el cliente
+      else {
+        this.toast.showError(
+          'No se encontró ninguna mesa asignada al cliente.'
+        );
+      }
+    } catch (error) {
+      this.loadingService.hideLoading();
+      this.toast.showError('Hubo un error al unirse a la mesa: ' + error);
+    }
+  }
+
+  cerrarSesion() {
+    this.authService.logOut();
+    this.router.navigate(['/login']);
   }
 }

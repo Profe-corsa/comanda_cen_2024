@@ -10,8 +10,8 @@ import {
 import { RouterLink } from '@angular/router';
 import { Usuario } from 'src/app/clases/usuario';
 import { addIcons } from 'ionicons';
-import { man } from 'ionicons/icons';
-import { AltaProductoComponent } from "../alta-producto/alta-producto.component";
+import { man, chatbubblesOutline } from 'ionicons/icons';
+import { AltaProductoComponent } from '../alta-producto/alta-producto.component';
 
 @Component({
   selector: 'app-empleados-home',
@@ -26,19 +26,19 @@ import { AltaProductoComponent } from "../alta-producto/alta-producto.component"
     IonRouterLink,
     IonCol,
     RouterLink,
-    AltaProductoComponent
-],
+    AltaProductoComponent,
+  ],
 })
 export class EmpleadosHomeComponent implements OnInit {
-@Input() usuario: Usuario | any;
-opcionSeleccionada: string = '';
+  @Input() usuario: Usuario | any;
+  opcionSeleccionada: string = '';
 
   constructor() {
-    addIcons({ man });
+    addIcons({ man, chatbubblesOutline });
   }
 
   ngOnInit() {}
-  
+
   seleccionarOpcion(opcion: string) {
     this.opcionSeleccionada = opcion;
   }
