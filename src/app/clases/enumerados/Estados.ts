@@ -9,6 +9,7 @@ export enum Estados {
   atendido = 'atendido',
   pagando = 'pagando',
   mesaAsignada = 'mesaAsignada',
+  mesaTomada = 'mesaTomada',
   esperandoOrden = 'esperandoOrden',
   finalizado = 'finalizado',
   tieneReserva = 'tieneReserva',

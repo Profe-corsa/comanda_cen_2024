@@ -1,0 +1,35 @@
+<nav class="nav-bar">
+  <button class="btn-back" (click)="volverAtras()">
+    <ion-icon name="arrow-back-circle-outline"></ion-icon>
+  </button>
+  <p *ngIf="precioTotal > 0" class="precio-total"><strong>Precio Total: {{ precioTotal | currency }}</strong></p>
+</nav>
+
+<ion-content>
+  <div class="contenedor" >
+    <section  *ngFor="let categoria of categorias | keyvalue">
+      <h2 class="titulos ion-text-center ion-margin-bottom">{{ categoria.key | titlecase }}S</h2>
+      <div class="grid-productos">
+        <ion-card
+          *ngFor="let producto of categoria.value"
+          class="producto-card"
+          (click)="abrirProductoDetalles(producto)"
+        >
+          <img class="img-producto" [src]="producto.fotos[0]" alt="Imagen de {{ producto.nombre }}" />
+          <ion-card-header class="titulo-card">
+            <ion-card-title class="mayusculas">{{ producto.nombre }}</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </div>
+    </section>
+  </div>
+</ion-content>
+<ion-fab vertical="bottom" horizontal="end" slot="fixed" class="action-buttons">
+  <ion-badge color="danger" *ngIf="productosUnicos > 0">{{ productosUnicos }}</ion-badge>
+  <ion-fab-button (click)="abrirPedidoCliente()">
+    <ion-icon name="bag-handle-outline"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
+
+
+

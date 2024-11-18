@@ -18,11 +18,11 @@ import {
   addCircleOutline,
   chatbubblesOutline,
 } from 'ionicons/icons';
-import { QrScannerService } from 'src/app/services/qrscanner.service';
-import { ToastService } from 'src/app/services/toast.service';
-import { Objetos } from 'src/app/clases/enumerados/Objetos';
-import { UsuarioService } from 'src/app/services/usuario.service';
-import { Estados } from 'src/app/clases/enumerados/Estados';
+import { QrScannerService } from '../../services/qrscanner.service';
+import { ToastService } from '../../services/toast.service';
+import { Objetos } from '../../clases/enumerados/Objetos';
+import { UsuarioService } from '../../services/usuario.service';
+import { Estados } from '../../clases/enumerados/Estados';
 import { RouterLink } from '@angular/router';
 
 @Component({

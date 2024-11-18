@@ -26,5 +26,15 @@
         </ion-card>
       </ion-col>
     </ion-row>
+    <ion-row>
+      <ion-col col-12>
+        <ion-card
+          [routerLink]="['/carta', usuario?.id]"
+          class="ion-text-center ion-padding">
+          <ion-icon name="restaurant-outline"></ion-icon>
+          <h2 class="long-name">Ver la carta </h2>
+        </ion-card>
+      </ion-col>
+    </ion-row>
   </ion-grid>
 </section>
