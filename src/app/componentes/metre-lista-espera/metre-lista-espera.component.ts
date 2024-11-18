@@ -21,9 +21,9 @@ import { ToastService } from 'src/app/services/toast.service';
 import { DataService } from 'src/app/services/data.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { Estados } from 'src/app/clases/enumerados/Estados';
-import { Mesa } from '../../clases/mesa'
-// import { addIcons } from 'ionicons';
-// import { man } from 'ionicons/icons';
+import { Mesa } from '../../clases/mesa';
+import { addIcons } from 'ionicons';
+import { trashOutline, checkmarkOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-metre-lista-espera',
@@ -58,7 +58,12 @@ export class MetreListaEsperaComponent implements OnInit {
     private usuarioSrv: UsuarioService,
     private toast: ToastService,
     private dataService: DataService
-  ) {}
+  ) {
+    addIcons({
+      trashOutline,
+      checkmarkOutline,
+    });
+  }
 
   async ngOnInit() {
     //this.cargarClientes();
@@ -144,7 +149,11 @@ export class MetreListaEsperaComponent implements OnInit {
 
   async cargarMesasDisponibles() {
     try {
-      this.listaMesasDisponibles = await this.dataService.obtenerMesas();
+      const mesas = await this.dataService.obtenerMesas();
+      // Filtrar solo las mesas que tienen estado 'Disponible'
+      this.listaMesasDisponibles = mesas.filter(
+        (mesa) => mesa.estado === 'Disponible'
+      );
     } catch (error) {
       console.error('Error al cargar las mesas disponibles:', error);
     }

@@ -178,7 +178,8 @@ export class DataService {
     });
 
     // Filtrar solo las mesas con estado 'Disponible'
-    return mesas.filter((mesa) => mesa.estado === 'Disponible');
+    // return mesas.filter((mesa) => mesa.estado === 'Disponible');
+    return mesas;
   }
 
   // Obtiene todos los clientes en la lista de espera

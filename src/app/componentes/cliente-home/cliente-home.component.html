@@ -1,3 +1,7 @@
+<div *ngIf="loadingService.loadingStatus">
+  <app-loading></app-loading>
+</div>
+
 <section class="ion-text-center ion-margin-bottom">
   <ion-grid>
     <ion-row>
@@ -16,7 +20,29 @@
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col col-12>
+      <ion-col
+        col-12
+        *ngIf="
+          usuario?.estado == undefined ||
+          usuario?.estado == 'puedeTomarMesa' ||
+          usuario?.estado == 'mesaTomada'
+        "
+      >
+        <ion-card
+          (click)="leerQR()"
+          class="ion-text-center ion-padding"
+          color="000"
+        >
+          <ion-icon name="qr-code-outline"></ion-icon>
+          <h2 class="long-name">QR de la mesa</h2>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col
+        col-12
+        *ngIf="usuario?.estado == undefined || usuario?.estado == 'mesaTomada'"
+      >
         <ion-card
           [routerLink]="['/consulta', usuario.perfil, usuario?.id]"
           class="ion-text-center ion-padding"
