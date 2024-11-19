@@ -21,6 +21,7 @@ import { DuenioSupervisorHomeComponent } from '../../componentes/duenio-supervis
 import { ClienteHomeComponent } from '../../componentes/cliente-home/cliente-home.component';
 import { EmpleadosHomeComponent } from '../../componentes/empleados-home/empleados-home.component';
 import { AppComponent } from 'src/app/app.component';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-home',
@@ -38,7 +39,7 @@ import { AppComponent } from 'src/app/app.component';
     CommonModule,
     ClienteHomeComponent,
     EmpleadosHomeComponent,
-    AppComponent
+    AppComponent,
   ],
 })
 export class HomePage {
@@ -51,8 +52,8 @@ export class HomePage {
     private userSrv: UsuarioService,
     private toast: ToastService,
     private activatedRoute: ActivatedRoute,
-    private appComponent: AppComponent
-
+    private appComponent: AppComponent,
+    private loadingService: LoadingService
   ) {
     addIcons({
       exitOutline,
@@ -85,10 +86,13 @@ export class HomePage {
     });
   }
 
-  logout() {
+  async logout() {
+    this.loadingService.showLoading();
+
     this.appComponent.playCloseSound();
     this.suscripcion.unsubscribe();
 
-    this.authService.logOut();
+    await this.authService.logOut();
+    this.loadingService.hideLoading();
   }
 }

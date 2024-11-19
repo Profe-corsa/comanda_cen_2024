@@ -25,6 +25,7 @@ import {
   trashOutline,
   checkmarkOutline,
 } from 'ionicons/icons';
+import { PushMailNotificationService } from 'src/app/services/push-mail-notification.service';
 
 @Component({
   selector: 'app-supervisor-lista-clientes-pendientes',
@@ -51,7 +52,11 @@ import {
 export class SupervisorListaClientesPendientesComponent implements OnInit {
   listaClientesPendientes: Usuario[] | any;
 
-  constructor(private usuarioSrv: UsuarioService, private toast: ToastService) {
+  constructor(
+    private usuarioSrv: UsuarioService,
+    private toast: ToastService,
+    private notificationSrv: PushMailNotificationService
+  ) {
     addIcons({
       checkmarkCircleOutline,
       trashOutline,
@@ -71,7 +76,6 @@ export class SupervisorListaClientesPendientesComponent implements OnInit {
 
   //Funciona con el slicing
   cambiarEstadoCliente(estado: string, cliente: Usuario) {
-    console.log('entro', estado);
     if (estado == 'aprobado') {
       cliente.estado = Estados.aprobado;
     } else {
@@ -85,8 +89,10 @@ export class SupervisorListaClientesPendientesComponent implements OnInit {
       .updateUser(cliente.id, { estado: cliente.estado })
       .then(() => {
         if (cliente.estado == Estados.aprobado) {
+          this.notificationSrv.sendEmail(true, cliente.nombre, cliente.email);
           this.toast.showExito('El cliente ha sido aprobado', 'bottom');
         } else {
+          this.notificationSrv.sendEmail(false, cliente.nombre, cliente.email);
           this.toast.showError('El cliente ha sido rechazado', 'bottom');
         }
         // Opcional: Filtra la lista para eliminar al cliente aprobado o rechazado si ya no debe mostrarse
