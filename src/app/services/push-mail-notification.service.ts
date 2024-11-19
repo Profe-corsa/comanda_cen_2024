@@ -98,11 +98,23 @@ export class PushMailNotificationService {
   }
 
   sendPushNotification(title: string, body: string, token: string) {
-    return this.http.post(`${this.apiUrl}/notify`, {
+    const payload = {
       title: title,
       body: body,
       token: token,
-    });
+    };
+
+    return this.http
+      .post(`${this.apiUrl}/notify`, payload, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .subscribe({
+        next: (response) => console.log('Notificación enviada:', response),
+        error: (error) =>
+          console.error('Error al enviar la notificación:', error),
+      });
   }
 
   sendPushNotificationToRole(title: string, body: string, role: string) {

@@ -140,6 +140,22 @@
             <img src="\assets\Usuarios\cliente.png" alt="" />
           </ion-fab-button>
         </ion-fab-list>
+        <ion-fab-list side="top" class="fab-list-head">
+          <div class="fab-list-top">
+            <ion-fab-button
+              [ngClass]="{'small-fab-child': showUserOptions}"
+              (click)="fillFormWithUser(5)"
+            >
+              <img src="\assets\Usuarios\metre.png" alt="" />
+            </ion-fab-button>
+            <ion-fab-button
+              [ngClass]="{'small-fab-child': showUserOptions}"
+              (click)="fillFormWithUser(6)"
+            >
+              <img src="\assets\Usuarios\cocinero.png" alt="" />
+            </ion-fab-button>
+          </div>
+        </ion-fab-list>
       </ion-fab>
     </div>
   </div>

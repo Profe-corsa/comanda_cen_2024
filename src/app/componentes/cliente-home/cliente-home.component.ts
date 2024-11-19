@@ -25,12 +25,13 @@ import { ToastService } from '../../services/toast.service';
 import { Objetos } from '../../clases/enumerados/Objetos';
 import { UsuarioService } from '../../services/usuario.service';
 import { Estados } from '../../clases/enumerados/Estados';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, RouterModule } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataService } from 'src/app/services/data.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { LoadingComponent } from 'src/app/componentes/loading/loading.component';
-
+import { PushMailNotificationService } from 'src/app/services/push-mail-notification.service';
+import { Perfiles } from 'src/app/clases/enumerados/perfiles';
 
 @Component({
   selector: 'app-cliente-home',
@@ -57,7 +58,8 @@ export class ClienteHomeComponent implements OnInit {
     private authService: AuthService,
     private dataService: DataService,
     public loadingService: LoadingService,
-    private router: Router
+    private router: Router,
+    private notificationService: PushMailNotificationService
   ) {
     addIcons({
       list,
@@ -114,6 +116,13 @@ export class ClienteHomeComponent implements OnInit {
         'estado',
         Estados.enEspera
       );
+
+      this.notificationService.sendPushNotificationToRole(
+        'Nuevo cliente en espera',
+        `${this.usuario.nombre} ${this.usuario.apellido} se unio a la lista y espera una respuesta.`,
+        Perfiles.metre
+      );
+
       this.loadingService.hideLoading();
       // Muestra el mensaje de éxito
       this.toast.showExito(

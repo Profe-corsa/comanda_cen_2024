@@ -16,7 +16,7 @@ ion-content {
 /* Contenedor principal */
 .container {
   width: 100%;
-  margin-top: 20%;
+  margin-top: 10%;
   max-width: 100%;
 }
 
@@ -96,7 +96,11 @@ ion-content {
   margin-top: 24px;
 
   ion-button {
-    --background: linear-gradient(to right, #d96d2d, #f4a40a); /* Tonos más intensos */
+    --background: linear-gradient(
+      to right,
+      #d96d2d,
+      #f4a40a
+    ); /* Tonos más intensos */
     --border-radius: 8px;
     margin-bottom: 12px;
     color: #ffffff; /* Texto blanco para contraste */
@@ -172,6 +176,17 @@ ion-fab-list {
       font-size: 22px;
     }
   }
+}
+
+.fab-list-head {
+  margin-left: -16px;
+  margin-bottom: calc(100% + 15px);
+}
+
+.fab-list-top {
+  display: flex;
+  justify-content: space-between;
+  width: 110px;
 }
 
 /* Media Queries para Responsividad */

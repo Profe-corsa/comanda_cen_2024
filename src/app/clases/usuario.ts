@@ -10,4 +10,5 @@ export class Usuario {
   cuil: number = 0;
   estado: string = '';
   mesaAsignada?: string = '';
+  token?: string = '';
 }
