@@ -109,9 +109,11 @@ export class LoginPage {
   fillFormWithUser(userIndex: number) {
     const users = [
       { email: 'duenio@comandacen.com', password: '123456' },
-      { email: 'metre@gmail.com', password: '123456' },
       { email: 'mozo@comandacen.com', password: '123456' },
+      { email: 'bartender@comandacen.com', password: '123456' },
       { email: 'nmiguenz@gmail.com', password: '123456' },
+      { email: 'metre@gmail.com', password: '123456' },
+      { email: 'cocinero@comandacen.com', password: '123456' },
     ];
 
     const selectedUser = users[userIndex - 1];
