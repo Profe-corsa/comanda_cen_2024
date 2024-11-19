@@ -89,7 +89,7 @@ export class ClienteHomeComponent implements OnInit {
 
   async agregarAListaEspera() {
     try {
-      console.log(this.usuario);
+      this.loadingService.showLoading();
 
       const usuarioEspera = {
         id: this.usuario.id,
@@ -112,12 +112,13 @@ export class ClienteHomeComponent implements OnInit {
         'estado',
         Estados.enEspera
       );
-
+      this.loadingService.hideLoading();
       // Muestra el mensaje de éxito
       this.toast.showExito(
         'Fue anotado en la lista de espera. A la brevedad el maître le asignará una mesa.'
       );
     } catch (error) {
+      this.loadingService.hideLoading();
       console.error('Error al agregar a lista de espera:', error);
       this.toast.showError('Hubo un error al agregar a la lista de espera.');
     }
@@ -128,7 +129,6 @@ export class ClienteHomeComponent implements OnInit {
       this.loadingService.showLoading();
       const idCliente = this.usuario.id;
       const mesas = await this.dataService.obtenerMesas();
-      this.loadingService.hideLoading();
 
       // Buscar la mesa que tiene el idClienteAsignado
       const mesaAsignada = mesas.find(
@@ -137,6 +137,7 @@ export class ClienteHomeComponent implements OnInit {
 
       // Verificar si la mesa encontrada es diferente a la escaneada
       if (mesaAsignada && mesaAsignada.numero != parseInt(numeroMesa)) {
+        this.loadingService.hideLoading();
         this.toast.showError(
           'Esta no es la mesa que se le asignó. Debe escanear el QR de la mesa ' +
             mesaAsignada.numero
@@ -150,7 +151,6 @@ export class ClienteHomeComponent implements OnInit {
         mesaAsignada.numero === parseInt(numeroMesa) &&
         this.usuario.mesaAsignada === ''
       ) {
-        this.loadingService.showLoading();
         // Actualizar los campos del usuario (por ejemplo: estado y numeroMesa)
         await this.usuarioSrv.updateUserFields(idCliente, {
           estado: Estados.mesaTomada,
@@ -161,6 +161,7 @@ export class ClienteHomeComponent implements OnInit {
       }
       //Agregar opciones para seguir trabajando con el cliente
       else {
+        this.loadingService.hideLoading();
         this.toast.showError(
           'No se encontró ninguna mesa asignada al cliente.'
         );
@@ -171,8 +172,10 @@ export class ClienteHomeComponent implements OnInit {
     }
   }
 
-  cerrarSesion() {
-    this.authService.logOut();
+  async cerrarSesion() {
+    this.loadingService.showLoading();
+    await this.authService.logOut();
+    this.loadingService.hideLoading();
     this.router.navigate(['/login']);
   }
 }

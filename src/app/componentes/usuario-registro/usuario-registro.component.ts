@@ -33,6 +33,7 @@ import { qrCodeOutline, eyeOutline, eyeOffOutline } from 'ionicons/icons';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Estados } from '../../clases/enumerados/Estados';
 import { Perfiles } from '../../clases/enumerados/perfiles';
+import { PushMailNotificationService } from 'src/app/services/push-mail-notification.service';
 
 @Component({
   selector: 'app-usuario-registro',
@@ -82,7 +83,8 @@ export class UsuarioRegistroComponent {
     private camaraService: CamaraService,
     private usuarioSrv: UsuarioService,
     private toastService: ToastService,
-    private qrscannerService: QrScannerService
+    private qrscannerService: QrScannerService,
+    private notificationSrv: PushMailNotificationService
   ) {
     //Formulario
     this.nombre = new FormControl('', [
@@ -166,6 +168,17 @@ export class UsuarioRegistroComponent {
       this.formUsuario(formValues);
       try {
         await this.usuarioSrv.saveUserWithEmailAndPassword(this.usuario);
+        this.notificationSrv.sendPushNotificationToRole(
+          'Usuario pendiente de confirmación',
+          `El usuario ${this.usuario.nombre} ${this.usuario.apellido} se encuentra pendiente de aprobación.`,
+          'dueño'
+        );
+
+        this.notificationSrv.sendPushNotificationToRole(
+          'Usuario pendiente de confirmación',
+          `El usuario ${this.usuario.nombre} ${this.usuario.apellido} se encuentra pendiente de aprobación.`,
+          'supervisor'
+        );
         this.toastService.showExito('Usuario Registrado');
         this.router.navigate(['/login']);
       } catch (error: any) {

@@ -40,6 +40,7 @@ import { Estados } from 'src/app/clases/enumerados/Estados';
 import { ToastService } from 'src/app/services/toast.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { LoadingComponent } from 'src/app/componentes/loading/loading.component';
+import { PushMailNotificationService } from 'src/app/services/push-mail-notification.service';
 
 @Component({
   selector: 'app-login',
@@ -78,7 +79,8 @@ export class LoginPage {
     private userSrv: UsuarioService,
     private fb: FormBuilder,
     private toast: ToastService,
-    public loadingService: LoadingService
+    public loadingService: LoadingService,
+    private notificationService: PushMailNotificationService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -137,6 +139,9 @@ export class LoginPage {
           .getUser(res.user.uid)
           .subscribe((usuario: any) => {
             if (usuario != undefined) {
+              //Si el usuario se logueo guardamos el token
+              this.notificationService.init(usuario);
+
               if (
                 usuario.perfil == Perfiles.cliente &&
                 usuario.estado == Estados.pendienteDeAprobacion

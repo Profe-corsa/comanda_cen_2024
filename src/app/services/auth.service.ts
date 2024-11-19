@@ -7,7 +7,7 @@ import {
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { ToastService } from './toast.service';
-//import { AppComponent } from '../app.component';
+import { PushMailNotificationService } from './push-mail-notification.service';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +17,7 @@ export class AuthService {
     private auth: Auth,
     private toastService: ToastService,
     private router: Router,
-    //private appComponent: AppComponent
+    private notificationService: PushMailNotificationService
   ) {}
 
   async login(email: string, password: string): Promise<any> {
@@ -50,6 +50,7 @@ export class AuthService {
 
   async logOut(): Promise<void> {
     try {
+      await this.notificationService.deleteToken();
       await signOut(this.auth);
       //this.appComponent.playCloseSound();
       this.router.navigate(['/login']);
