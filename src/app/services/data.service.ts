@@ -12,10 +12,15 @@ import {
   query,
   where,
   getDocs,
+  DocumentReference,
 } from '@angular/fire/firestore';
 import { Mesa } from '../clases/mesa';
 import { ToastService } from './toast.service';
 import { Usuario } from '../clases/usuario';
+import { Pedido, Estado } from '../clases/pedido'
+import { Observable } from 'rxjs';
+import { collectionData } from 'rxfire/firestore';
+import { map, switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -59,7 +64,7 @@ export class DataService {
   async getCollectionData(collectionName: string): Promise<any[]> {
     const collectionRef = collection(this.firestore, collectionName);
     const snapshot = await getDocs(collectionRef);
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   }
   //Verifica que el cliente esté en la lista de espera y que tenga el estado pendiente.
   async asignarMesa(numeroMesa: number, idCliente: string): Promise<void> {
@@ -206,14 +211,81 @@ export class DataService {
     const usuarios = usuariosSnapshot.docs.map((doc) => ({
       ...doc.data(),
       id: doc.id,
-    })) as Usuario[]; 
+    })) as Usuario[];
 
     // Filtrar los clientes en lista de espera que tienen estado "enEspera" en la tabla usuarios
     const clientesEnEspera = listaDeEspera.filter((cliente) => {
       const usuario = usuarios.find((u) => u.id === cliente.id);
-      return usuario?.estado === 'enEspera'; 
+      return usuario?.estado === 'enEspera';
     });
 
     return clientesEnEspera;
+  }
+
+  obtenerPedidoPorEstado(estado: string): Observable<Pedido[]> {
+    const pedidosRef = collection(this.firestore, 'pedidos');
+    const q = query(pedidosRef, where('estado', '==', estado));
+
+    return collectionData(q, { idField: 'id' as string }) as Observable<
+      Pedido[]
+    >;
+  }
+
+  actualizarPedido(id: string, data: Partial<Pedido>): Promise<void> {
+    const pedidoDoc = doc(this.firestore, `pedidos/${id}`);
+    return updateDoc(pedidoDoc, data);
+  }
+
+  agregarPedido(data: Pedido): Promise<DocumentReference> {
+    return addDoc(this.coleccion, data);
+  }
+
+  async derivarASector(idPedido: string, sector: string): Promise<void> {
+    const pedidoRef = doc(this.firestore, 'pedidos', idPedido);
+    try {
+      await updateDoc(pedidoRef, { sector });
+      console.log(`Pedido ${idPedido} derivado al sector ${sector}`);
+    } catch (error) {
+      console.error('Error al derivar al sector:', error);
+    }
+  }
+
+  obtenerMesaPorCliente(
+    clienteId: string
+  ): Observable<{ clienteId: string; nroMesa: number } | null> {
+    const mesasRef = collection(this.firestore, 'mesas');
+    const q = query(mesasRef, where('clienteId', '==', clienteId));
+
+    return collectionData(q, { idField: 'id' }).pipe(
+      map((mesas: any[]) => (mesas.length > 0 ? mesas[0] : null)) // Obtiene la primera mesa asignada al cliente
+    );
+  }
+
+  obtenerPedidoConMesaPorEstado(estado: string): Observable<Pedido[]> {
+    const pedidosRef = collection(this.firestore, 'pedidos');
+    const q = query(pedidosRef, where('estado', '==', estado));
+
+    return collectionData(q, { idField: 'id' }) as Observable<Pedido[]>;
+  }
+
+  obtenerPedidoConMesa(clienteId: string, estado: string): Observable<any> {
+    const pedidosRef = collection(this.firestore, 'pedidos');
+    const qPedidos = query(pedidosRef, where('estado', '==', estado));
+
+    return collectionData(qPedidos, { idField: 'id' }).pipe(
+      switchMap((pedidos: any[]) => {
+        if (pedidos.length === 0) {
+          return []; // No hay pedidos
+        }
+
+        const pedido = pedidos[0];
+        return this.obtenerMesaPorCliente(clienteId).pipe(
+          map((mesa) => ({
+            ...pedido,
+            mesa: mesa ? mesa.nroMesa : 'Sin asignar',
+          }))
+        );
+      })
+    );
   }
 }

@@ -168,6 +168,7 @@ export class MetreListaEsperaComponent implements OnInit {
 
       // Actualizar lista de mesas disponibles y cliente
       cliente.estado = Estados.puedeTomarMesa;
+      cliente.mesaAsignada = mesaDisponible.numero.toString();//verificar que esta linea funcione
       mesaDisponible.estado = 'reservada';
 
       this.toast.showExito(

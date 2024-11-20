@@ -15,7 +15,7 @@
             >Consulta: {{ consulta.textoConsulta | slice : 0 : 10
             }}{{ consulta.textoConsulta.length > 10 ? "..." : "" }}</ion-label
           >
-          <ion-label *ngIf="consulta.hora != undefined"
+          <ion-label *ngIf="consulta.hora !== undefined"
             >Hora:
             {{ consulta.hora.toDate() | date : "dd/MM/yyyy HH:mm" }}</ion-label
           >
@@ -23,18 +23,24 @@
       </ion-item>
     </ion-list>
   </div>
+
+  <div id="boton-pedidos">
+    <ion-button [routerLink]="['/mozo-home']">
+      Ver Pedidos Pendientes
+    </ion-button>
+  </div>
 </div>
 
 <div id="contenedor" *ngIf="responderFlag">
   <h3>Consulta del cliente:</h3>
 
-  <ion-item *ngIf="consultaSeleccionada != undefined">
+  <ion-item *ngIf="consultaSeleccionada !== undefined">
     <ion-label position="stacked">Consulta:</ion-label>
     <ion-textarea disabled readonly>{{
       consultaSeleccionada.textoConsulta
     }}</ion-textarea>
   </ion-item>
-  <ion-label class="ion-text-right" *ngIf="consultaSeleccionada != undefined"
+  <ion-label class="ion-text-right" *ngIf="consultaSeleccionada !== undefined"
     >Estado de la consulta: {{ consultaSeleccionada.estado }}</ion-label
   >
 
