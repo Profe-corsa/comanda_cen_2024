@@ -21,6 +21,7 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { LoadingComponent } from 'src/app/componentes/loading/loading.component';
 import { Cliente } from 'src/app/clases/cliente';
 import { firstValueFrom } from 'rxjs';
+import { RouterLink } from '@angular/router';
 import { PushMailNotificationService } from 'src/app/services/push-mail-notification.service';
 
 @Component({
@@ -42,6 +43,7 @@ import { PushMailNotificationService } from 'src/app/services/push-mail-notifica
     IonIcon,
     IonItem,
     LoadingComponent,
+    RouterLink
   ],
 })
 export class MozoConsultaComponent implements OnInit {

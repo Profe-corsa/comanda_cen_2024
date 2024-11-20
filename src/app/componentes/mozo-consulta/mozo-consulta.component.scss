@@ -8,3 +8,17 @@
 #lista-consultas {
   margin-top: 2vh;
 }
+
+#boton-pedidos{
+  height: 100px;
+  ion-button{
+  --background: linear-gradient(to right, #d96d2d, #f4a40a);
+  margin-bottom: 12px;
+  color: #ffffff; /* Texto blanco para contraste */
+  font-weight: bold;
+  font-size: 18px;
+  width: 100%;
+}
+}
+
+

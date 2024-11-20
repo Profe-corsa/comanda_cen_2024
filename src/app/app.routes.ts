@@ -54,6 +54,15 @@ export const routes: Routes = [
   {
     path: 'carta/:id',
     loadComponent: () =>
-      import('./componentes/carta/carta.component').then((m) => m.CartaComponent),
+      import('./componentes/carta/carta.component').then(
+        (m) => m.CartaComponent
+      ),
+  },
+  {
+    path: 'mozo-home',
+    loadComponent: () =>
+      import('./componentes/mozo-home/mozo-home.component').then(
+        (m) => m.MozoHomeComponent
+      ),
   },
 ];
