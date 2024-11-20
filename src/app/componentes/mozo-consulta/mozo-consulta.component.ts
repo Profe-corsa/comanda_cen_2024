@@ -21,6 +21,7 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { LoadingComponent } from 'src/app/componentes/loading/loading.component';
 import { Cliente } from 'src/app/clases/cliente';
 import { firstValueFrom } from 'rxjs';
+import { PushMailNotificationService } from 'src/app/services/push-mail-notification.service';
 
 @Component({
   selector: 'app-mozo-consulta',
@@ -54,7 +55,8 @@ export class MozoConsultaComponent implements OnInit {
     private consultaService: MensajesService,
     private userSrv: UsuarioService,
     public toast: ToastService,
-    public loadingService: LoadingService
+    public loadingService: LoadingService,
+    private notificationService: PushMailNotificationService
   ) {}
 
   ngOnInit() {
@@ -146,6 +148,17 @@ export class MozoConsultaComponent implements OnInit {
 
       this.loadingService.hideLoading();
       if (this.consultaSeleccionada.estado === EstadoConsulta.respondida) {
+        if (this.usuarioConsulta?.token) {
+          this.notificationService.sendPushNotification(
+            'Respondieron su consulta',
+            `El mozo ha respondido a su consulta.`,
+            this.usuarioConsulta.token
+          );
+        } else {
+          this.toast.showError(
+            'No se pudo enviar la notificación porque falta el token.'
+          );
+        }
         this.toast.showExito('Consulta devuelta con éxito.');
       }
     } catch (error) {

@@ -18,6 +18,9 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 import { Cliente } from 'src/app/clases/cliente';
 import { Usuario } from 'src/app/clases/usuario';
 import { ToastService } from 'src/app/services/toast.service';
+import { LoadingService } from 'src/app/services/loading.service';
+import { LoadingComponent } from 'src/app/componentes/loading/loading.component';
+import { PushMailNotificationService } from 'src/app/services/push-mail-notification.service';
 
 @Component({
   selector: 'app-cliente-consulta',
@@ -36,6 +39,7 @@ import { ToastService } from 'src/app/services/toast.service';
     IonButton,
     IonIcon,
     IonItem,
+    LoadingComponent,
   ],
 })
 export class ClienteConsultaComponent implements OnInit {
@@ -48,7 +52,9 @@ export class ClienteConsultaComponent implements OnInit {
   constructor(
     private consultaService: MensajesService,
     private usuarioService: UsuarioService,
-    public toast: ToastService
+    public toast: ToastService,
+    private notificationSrv: PushMailNotificationService,
+    public loadingService: LoadingService
   ) {
     this.consultaCreada = false;
   }
@@ -57,6 +63,8 @@ export class ClienteConsultaComponent implements OnInit {
     console.log(this.usuario);
     let consulta: Consulta;
     this.cliente = <Cliente>this.usuario;
+
+    console.log(this.cliente);
     //Comprobar si consulto antes
     if (
       this.cliente.consulta != undefined &&
@@ -76,9 +84,10 @@ export class ClienteConsultaComponent implements OnInit {
     console.log(this.textoCliente);
     let cliente = <Cliente>this.usuario;
     this.consulta.textoConsulta = this.textoCliente;
-    this.consulta.nroMesa = 1; //this.cliente.mesa.numero;
+    this.consulta.nroMesa = this.cliente.mesaAsignada;
     this.consulta.idCliente = this.usuario.id;
     this.consulta.hora = new Date();
+    this.loadingService.showLoading();
     let idConsulta = await this.consultaService.addConsulta(this.consulta);
     let indice: number;
     let encontroConsulta = false;
@@ -107,12 +116,20 @@ export class ClienteConsultaComponent implements OnInit {
         }
       }
 
+      this.notificationSrv.sendPushNotificationToRole(
+        'Nueva consulta de cliente',
+        `El cliente de la mesa ${this.cliente.mesaAsignada} realizó una nueva consulta.`,
+        'mozo'
+      );
+
       this.toast.showExito(
         'Consulta enviada. Los mozos se pondrán en contacto a la brevedad',
         'middle'
       );
 
       this.usuarioService.updateUser(cliente.id, cliente);
+
+      this.loadingService.hideLoading();
     });
   }
 

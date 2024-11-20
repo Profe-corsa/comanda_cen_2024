@@ -1,7 +1,13 @@
+<div *ngIf="loadingService.loadingStatus">
+  <app-loading></app-loading>
+</div>
+
 <div id="contenedor">
   <h1>Su consulta:</h1>
   <ion-item *ngIf="!consultaCreada">
-    <ion-label position="floating">Escriba su consulta:</ion-label>
+    <ion-label class="ionLabel" position="floating"
+      >Escriba su consulta:</ion-label
+    >
     <ion-textarea [(ngModel)]="textoCliente"></ion-textarea>
   </ion-item>
   <ion-item *ngIf="consultaCreada == true && consulta != undefined">
@@ -10,7 +16,8 @@
   <ion-label
     class="ion-text-right"
     *ngIf="consultaCreada == true && consulta != undefined"
-    >Estado de la consulta: {{ consulta.estado }}</ion-label
+    >Estado de la consulta:
+    <span>{{ consulta.estado | titlecase }}</span></ion-label
   >
 
   <ion-button color="success" *ngIf="!consultaCreada" (click)="crearConsulta()"
@@ -20,8 +27,8 @@
     >Nueva Consulta</ion-button
   >
 
-  <h1>Respuesta del mozo:</h1>
   <ion-item *ngIf="consultaCreada && consulta.estado == 'respondida'">
+    <h1>Respuesta del mozo:</h1>
     <ion-label position="stacked">Respuesta</ion-label>
     <ion-textarea disabled readonly>{{ consulta.respuesta }}</ion-textarea>
   </ion-item>
