@@ -11,10 +11,17 @@ ion-content {
     margin: 2%;
     padding: 1em;
     text-transform: uppercase;
+}
+  ion-tittle{
+    color: #d96d2d !important;
+    font-weight: bold !important;
+    font-size: 1.8rem !important;
   }
   
-  
 ion-card {
+    --background: white !important;
+    background-color: white;
+    color:black;
     width: 90%; /* Ajusta el ancho de los productos */
     margin: 0 auto;
     height: 100%;
@@ -44,11 +51,15 @@ ion-card {
     text-transform: uppercase;
   }
   .titulos{
+    color: #000;
     font-weight: 800;
     font-size: 2em !important;
     border-top: 1px solid #d96d2d;
     border-bottom: 1px solid #d96d2d;
   }
+  .encabezado {
+    font-family: "Noto Sans JP", sans-serif;
+}
   .titulo-card {
     height: 40%;
     display: flex;
@@ -95,6 +106,8 @@ ion-badge {
   justify-content: space-between;
   align-items: center;
   padding: 10px;
+  background-color: #000000;
+  color: #d96d2d;
 }
 
 .btn-back {
@@ -104,7 +117,7 @@ ion-badge {
   font-size: 2em;
   display: flex;
   align-items: center;
-  color: blue;
+  color: d96d2d;
 }
 
 .precio-total {
