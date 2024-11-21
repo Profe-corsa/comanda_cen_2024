@@ -7,6 +7,7 @@ export enum Estado{
 }
 
 export class Pedido {
+    idPedido: string = '';
     tiempoEstimado: number = 0;
     clienteId: string = '';
     productos: any[] = [];
