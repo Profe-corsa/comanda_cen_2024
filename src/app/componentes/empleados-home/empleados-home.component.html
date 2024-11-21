@@ -21,15 +21,29 @@
     </ion-card>
   </ion-col>
 
-  <ion-col col-12 *ngIf="usuario?.perfil == 'mozo'">
-    <ion-card
-      [routerLink]="['/consulta', usuario.perfil, usuario?.id]"
-      class="ion-text-center ion-padding"
-    >
-      <ion-icon name="chatbubbles-outline"></ion-icon>
-      <h2 class="long-name">Consultas de clientes</h2>
-    </ion-card>
-  </ion-col>
+  <!-- MOZO -->
+  <ion-row>
+    <ion-col col-12 *ngIf="usuario?.perfil == 'mozo'">
+      <ion-card
+        [routerLink]="['/listados', 'pedidos']"
+        class="ion-text-center ion-padding"
+      >
+        <ion-icon name="clipboard"></ion-icon>
+        <h2 class="long-name">Listado de pedidos</h2>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col col-12 *ngIf="usuario?.perfil == 'mozo'">
+      <ion-card
+        [routerLink]="['/consulta', usuario.perfil, usuario?.id]"
+        class="ion-text-center ion-padding"
+      >
+        <ion-icon name="chatbubbles-outline"></ion-icon>
+        <h2 class="long-name">Consultas de clientes</h2>
+      </ion-card>
+    </ion-col>
+  </ion-row>
 </ion-grid>
 <app-alta-producto
   *ngIf="opcionSeleccionada === 'altaProducto'"

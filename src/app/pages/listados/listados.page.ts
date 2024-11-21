@@ -12,6 +12,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { SupervisorListaClientesPendientesComponent } from '../../componentes/supervisor-lista-clientes-pendientes/supervisor-lista-clientes-pendientes.component';
 import { MetreListaEsperaComponent } from '../../componentes/metre-lista-espera/metre-lista-espera.component';
+import { MozoListaPedidosComponent } from 'src/app/componentes/mozo-lista-pedidos/mozo-lista-pedidos.component';
 
 @Component({
   selector: 'app-listados',
@@ -29,6 +30,7 @@ import { MetreListaEsperaComponent } from '../../componentes/metre-lista-espera/
     FormsModule,
     SupervisorListaClientesPendientesComponent,
     MetreListaEsperaComponent,
+    MozoListaPedidosComponent,
   ],
 })
 export class ListadosPage implements OnInit {
