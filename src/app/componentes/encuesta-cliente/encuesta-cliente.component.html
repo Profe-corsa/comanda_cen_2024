@@ -1,0 +1,76 @@
+<div id="contenedor">
+  <form>
+    <!-- Nivel de limpieza -->
+    <ion-label>Nivel de limpieza:</ion-label>
+    <ion-item id="range">
+      <ion-range 
+        [(ngModel)]="limpieza" 
+        name="limpieza" 
+        min="0" 
+        max="10" 
+        color="secondary">
+        <ion-label slot="start">0</ion-label>
+        <ion-label slot="end">10</ion-label>
+      </ion-range>
+      <ion-label id="lbl-limpieza">{{ limpieza }}</ion-label>
+    </ion-item>
+
+    <!-- Predisposición del mozo -->
+    <ion-label>Predisposición del mozo:</ion-label>
+    <ion-item>
+      <ion-select 
+        [(ngModel)]="predisposicion" 
+        name="predisposicion" 
+        placeholder="Seleccione una opción">
+        <ion-select-option value="Excelente">Excelente</ion-select-option>
+        <ion-select-option value="Buena">Buena</ion-select-option>
+        <ion-select-option value="Regular">Regular</ion-select-option>
+        <ion-select-option value="Mala">Mala</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Restaurante limpio -->
+    <ion-list>
+      <ion-radio-group [(ngModel)]="orden" name="orden">
+        <ion-list-header>
+          <ion-label>¿La comida estaba rica?</ion-label>
+        </ion-list-header>
+        <ion-item>
+          <ion-label>Sí</ion-label>
+          <ion-radio value="Sí"></ion-radio>
+        </ion-item>
+        <ion-item>
+          <ion-label>No</ion-label>
+          <ion-radio value="No"></ion-radio>
+        </ion-item>
+      </ion-radio-group>
+    </ion-list>
+
+    <!-- Atención rápida -->
+    <ion-item>
+      <ion-label>¿Lo atendieron rápido?</ion-label>
+      <ion-checkbox 
+        [(ngModel)]="elementosDisponibles" 
+        name="elementosDisponibles" 
+        color="danger">
+      </ion-checkbox>
+    </ion-item>
+
+    <!-- Comentarios adicionales -->
+    <ion-item>
+      <ion-label position="floating">Comentarios adicionales:</ion-label>
+      <ion-textarea 
+        [(ngModel)]="comentariosAdicionales" 
+        name="comentariosAdicionales">
+      </ion-textarea>
+    </ion-item>
+
+    <!-- Botón de enviar -->
+    <ion-button 
+      expand="block" 
+      color="success" 
+      (click)="guardarEncuesta()">
+      Enviar Encuesta
+    </ion-button>
+  </form>
+</div>
