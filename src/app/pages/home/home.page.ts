@@ -69,7 +69,6 @@ export class HomePage {
 
       if (idUsuario == null) {
         idUsuario = this.authService.getCurrentUser()?.uid ?? '';
-        console.log(idUsuario);
       }
 
       this.suscripcion = this.userSrv
