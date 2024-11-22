@@ -40,16 +40,18 @@ swiper-slide {
   
 swiper-slide img {
     width: 100%;
-    height: 100%;
+    height: 20em;
     object-fit: cover;
+    border-radius: 1em;
 }
 .contenedor-detalles{
     padding: 2%;
-    background-color: white;
+    background-color: #000;
     margin: 4%;
-    height: 96%;
+    color: #d96d2d;
     border-radius: 1em;
-    display: flex;
+    display: flex
+;
     flex-direction: column;
     justify-content: space-around;
 }
@@ -80,12 +82,12 @@ ion-content {
     align-items: center;
 }
 .btn-close {
-    color: black;
+    color: #d96d2d;
     font-weight: 800;
     background: transparent;
     border: 2px solid transparent;
-    border-radius: 8px; /* Bordes redondeados */
-    transition: background 0.3s, border 0.3s; /* Transición suave */
+    border-radius: 8px;
+    transition: background 0.3s, border 0.3s;
 }
 
 .btn-close:active {

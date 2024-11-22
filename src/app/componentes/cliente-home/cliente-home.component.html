@@ -53,7 +53,7 @@
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col col-12 *ngIf="usuario?.estado == 'mesaTomada'">
+      <ion-col col-12 *ngIf="usuario?.estado == 'mesaTomada' && !mostrarPrecio">
         <ion-card
           [routerLink]="['/carta', usuario?.id]"
           class="ion-text-center ion-padding">
@@ -64,3 +64,8 @@
     </ion-row>
   </ion-grid>
 </section>
+<footer class="home-footer" *ngIf="mostrarPrecio">
+  <p class="price">{{ pedido.precioTotal | currency }}</p>
+  <p class="subtitle "> ({{ pedido.tiempoEstimado }} m)</p>
+  <p class="title" >{{ pedido.estado }}</p> 
+</footer>

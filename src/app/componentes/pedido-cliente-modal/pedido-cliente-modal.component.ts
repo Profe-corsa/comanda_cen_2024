@@ -19,6 +19,10 @@ import {
 } from '@ionic/angular/standalone';
 import { trashOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
+import { Usuario } from 'src/app/clases/usuario';
+import { UsuarioService } from 'src/app/services/usuario.service';
+import { ToastService } from 'src/app/services/toast.service';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'app-pedido-cliente-modal',
   templateUrl: './pedido-cliente-modal.component.html',
@@ -54,10 +58,13 @@ export class PedidoClienteModalComponent implements OnInit {
   @Input() usuarioId: string | any;
   @Output() productosActualizados = new EventEmitter<any[]>();
   @Output() totalActualizado = new EventEmitter<number>();
+  usuario: Usuario | null = null;
   constructor(
     private modalController: ModalController,
     private dataService: DataService,
-    private router: Router
+    private router: Router,
+    private usuarioService: UsuarioService,
+    private toastService: ToastService,
   ) {
     addIcons({ trashOutline });
   }
@@ -65,27 +72,28 @@ export class PedidoClienteModalComponent implements OnInit {
   ngOnInit() {
     this.agruparProductos();
     this.calcularTotal();
+    if (this.usuarioId) {
+      this.usuarioService.getUser(this.usuarioId).subscribe((userData) => {
+        this.usuario = userData; // Cambia el tipo de `usuario` a `Usuario | null`.
+      });
+    }
   }
 
-  // Agrupar productos por id y calcular la cantidad
+  
   agruparProductos() {
     const mapa = new Map();
 
     this.productos.forEach((producto) => {
       if (mapa.has(producto.id)) {
-        // Incrementar la cantidad si el producto ya está en el mapa
         mapa.get(producto.id).cantidad++;
       } else {
-        // Agregar el producto al mapa con cantidad inicial 1
         mapa.set(producto.id, {
           ...producto,
           cantidad: 1,
-          tiempoEstimado: producto.tiempoPreparacion, // Asegúrate de mantener el tiempoEstimado
+          tiempoEstimado: producto.tiempoPreparacion, 
         });
       }
     });
-
-    // Convertir el mapa a un array
     this.productosAgrupados = Array.from(mapa.values());
   }
 
@@ -103,8 +111,6 @@ export class PedidoClienteModalComponent implements OnInit {
       this.productosAgrupados.splice(index, 1);
     }
     this.actualizarTotal();
-
-    // Emitir cambios
     this.productosActualizados.emit(this.productosAgrupados);
     this.totalActualizado.emit(this.total);
   }
@@ -115,9 +121,6 @@ export class PedidoClienteModalComponent implements OnInit {
       0
     );
   }
-
-  // Cerrar el modal
-  // Cerrar el modal y enviar datos actualizados
   close() {
     this.modalController.dismiss({
       productos: this.productosAgrupados,
@@ -126,28 +129,35 @@ export class PedidoClienteModalComponent implements OnInit {
   }
 
   async realizarPedido() {
-    // Crear un nuevo objeto Pedido
-    const nuevoPedido = new Pedido();
-    nuevoPedido.clienteId = this.usuarioId;
-    nuevoPedido.productos = this.productosAgrupados.map((producto) => ({
-      id: producto.id,
-      nombre: producto.nombre,
-      precio: producto.precio,
-      cantidad: producto.cantidad,
-      tipo: producto.tipo,
-      fotos: producto.fotos,
-      tiempoEstimado: producto.tiempoEstimado,
-    }));
-    nuevoPedido.precioTotal = this.total;
-    nuevoPedido.estado = Estado.pendiente;
-    nuevoPedido.calcularTiempoEstimado();
-    try {
-      await this.dataService.saveObject(nuevoPedido.toJSON(), 'pedidos');
-      console.log('Pedido realizado:' + nuevoPedido);
-      this.modalController.dismiss(nuevoPedido);
-      this.router.navigate(['/home']);
-    } catch (error) {
-      console.error('Error al guardar el pedido:', error);
+    if (this.usuario?.mesaAsignada){
+
+      const nuevoPedido = new Pedido();
+      nuevoPedido.clienteId = this.usuarioId;
+      nuevoPedido.productos = this.productosAgrupados.map((producto) => ({
+        id: producto.id,
+        nombre: producto.nombre,
+        precio: producto.precio,
+        cantidad: producto.cantidad,
+        tipo: producto.tipo,
+        fotos: producto.fotos,
+        tiempoEstimado: producto.tiempoEstimado,
+        estado: 'enPreparacion',
+      }));
+      nuevoPedido.precioTotal = this.total;
+      nuevoPedido.nroMesa = this.usuario.mesaAsignada,//
+      nuevoPedido.estado = Estado.pendiente;
+      nuevoPedido.calcularTiempoEstimado();
+      try {
+        await this.dataService.saveObject(nuevoPedido.toJSON(), 'pedidos');
+        this.toastService.showExito('Pedido realizado');
+        this.modalController.dismiss(nuevoPedido);
+        this.router.navigate(['/home']);
+      } catch (error) {
+        this.toastService.showError('Error al guardar el pedido: '+error);
+      }
+    }
+    else{
+      this.toastService.showError('Ha ocurrido un error al realizar el pedido');
     }
   }
 

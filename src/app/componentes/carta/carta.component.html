@@ -2,6 +2,9 @@
   <button class="btn-back" (click)="volverAtras()">
     <ion-icon name="arrow-back-circle-outline"></ion-icon>
   </button>
+  <ion-tittle class="encabezado">Comanda
+    <span >CEN</span>
+  </ion-tittle>
   <p *ngIf="precioTotal > 0" class="precio-total"><strong>Precio Total: {{ precioTotal | currency }}</strong></p>
 </nav>
 
