@@ -92,29 +92,42 @@ export class UsuarioService {
       throw error;
     }
   }
-  async isFieldValueTrue(
+  async getIfExists(
     collectionName: string,
-    clienteId: string
-  ): Promise<boolean> {
+    clienteId: string,
+    fechaActual: Date
+  ): Promise<any> {
     try {
       const collectionRef = collection(this.firestore, collectionName);
-      const usuariosQuery = query(collectionRef, where('clienteId', '==', clienteId));
-      const querySnapshot = await getDocs(usuariosQuery);
-      const userExists = !querySnapshot.empty;
-      console.log(
-        userExists
-          ? `Se encontró uno o más documentos en ${collectionName} con clienteId = ${clienteId}`
-          : `No se encontró ningún documento en ${collectionName} con clienteId = ${clienteId}`
+      const usuariosQuery = query(
+        collectionRef,
+        where('clienteId', '==', clienteId),
+        where('fecha', '==', fechaActual.toLocaleDateString())
       );
-      return userExists;
+      const querySnapshot = await getDocs(usuariosQuery);
+  
+      if (!querySnapshot.empty) {
+        const record = querySnapshot.docs[0].data();
+        console.log(
+          `Se encontró un documento en ${collectionName} con clienteId = ${clienteId}:`,
+          record
+        );
+        return record;
+      } else {
+        console.log(
+          `No se encontró ningún documento en ${collectionName} con clienteId = ${clienteId}`
+        );
+        return null; // No se encontró ningún documento
+      }
     } catch (error) {
       console.error(
         `Error al buscar documentos en ${collectionName} con clienteId = ${clienteId}:`,
         error
       );
-      return false; // En caso de error, retorna false
+      return null; // En caso de error, retorna null
     }
   }
+  
   
   
   

@@ -32,6 +32,7 @@ import { LoadingComponent } from 'src/app/componentes/loading/loading.component'
 import { PushMailNotificationService } from 'src/app/services/push-mail-notification.service';
 import { Perfiles } from 'src/app/clases/enumerados/perfiles';
 import { EstadoPedidosComponent } from '../estado-pedidos/estado-pedidos.component';
+import { Pedido } from 'src/app/clases/pedido';
 
 @Component({
   selector: 'app-cliente-home',
@@ -51,7 +52,9 @@ import { EstadoPedidosComponent } from '../estado-pedidos/estado-pedidos.compone
 })
 export class ClienteHomeComponent implements OnInit {
   @Input() usuario: Usuario | any;
-  hayPedidos: boolean = false;
+  pedido: Pedido | any = [];
+  mostrarPedido: boolean = false;
+  mostrarPrecio: boolean = false;
   constructor(
     private qrService: QrScannerService,
     private toast: ToastService,
@@ -67,7 +70,10 @@ export class ClienteHomeComponent implements OnInit {
 
   async ngOnInit() {
     console.log('el usuario en home:', this.usuario);
-    this.hayPedidos = await this.usuarioSrv.isFieldValueTrue('pedidos', this.usuario.id);
+    this.pedido = await this.usuarioSrv.getIfExists('pedidos', this.usuario.id, new Date);
+    if (this.pedido) {
+      this.mostrarPrecio = true;
+    }
   }
 
   leerQR() {
@@ -80,6 +86,9 @@ export class ClienteHomeComponent implements OnInit {
       else if (response.startsWith('Mesa ')) {
         const numeroMesa = response.split(' ')[1]; // Extraer el número de mesa
         this.unirseAMesa(numeroMesa);
+        if (this.pedido) {
+          this.mostrarPedido = true;
+        }
       } else {
         this.toast.showError('Tuvimos un error al leer el QR');
       }
