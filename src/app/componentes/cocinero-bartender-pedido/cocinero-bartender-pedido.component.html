@@ -1,0 +1,25 @@
+<div *ngIf="loadingService.loadingStatus">
+  <app-loading></app-loading>
+</div>
+
+<div id="contenedor">
+  <ion-list>
+    <ion-card
+      *ngFor="let pedido of listaPedidos"
+      (click)="finalizarProductos(pedido)"
+    >
+      <ion-label>
+        <h2>Mesa:</h2>
+        <!--{{ pedido.mesa }} -->
+        <ion-list>
+          <ion-item *ngFor="let producto of pedido.productos">
+            <ion-label>
+              - {{ producto.nombre }}:
+              <span>{{ producto.cantidad }}</span>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-label>
+    </ion-card>
+  </ion-list>
+</div>

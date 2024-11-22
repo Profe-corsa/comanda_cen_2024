@@ -73,10 +73,13 @@ ion-toolbar {
 
 ion-list {
   background: transparent !important;
+  margin: 10px !important;
 }
 
 ion-item {
   --background: linear-gradient(to right, #d96d2d, #f4a40a);
+  margin-bottom: 5px;
+  border-radius: 10px;
 }
 
 // ion-button {
@@ -102,4 +105,9 @@ h2 {
 
 p {
   font-size: 1.5rem !important;
+}
+
+ion-card {
+  --background: linear-gradient(to right, #d96d2d, #f4a40a);
+  padding: 10px;
 }

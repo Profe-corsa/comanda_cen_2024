@@ -10,7 +10,13 @@
     >
       <ion-label>
         <!-- <h2>Mesa: {{ pedido.mesa.numero }}</h2> -->
-        <ion-label>Estado: {{ pedido.estado | titlecase }}</ion-label>
+        <ion-label
+          >Estado: <span>{{ pedido.estado | titlecase }}</span></ion-label
+        >
+        <p>
+          Tiempo estimado: <span>{{ pedido.tiempoEstimado }}</span
+          >"
+        </p>
         <!-- <ion-label
           >Hora:
           {{
@@ -18,6 +24,10 @@
           }}</ion-label
         >-->
       </ion-label>
+      <div
+        class="status-indicator"
+        [ngClass]="getStatusClass(pedido.estado)"
+      ></div>
     </ion-item>
   </ion-list>
 </div>
