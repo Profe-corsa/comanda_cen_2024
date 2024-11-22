@@ -13,8 +13,6 @@ import { Pedido, Estado } from 'src/app/clases/pedido';
 import { switchMap, map } from 'rxjs/operators';
 import { forkJoin, Observable, of } from 'rxjs';
 
-
-
 @Component({
   selector: 'app-mozo-home',
   templateUrl: './mozo-home.component.html',
@@ -86,7 +84,7 @@ export class MozoHomeComponent implements OnInit, AfterViewInit {
   }
 
   confirmarPedido(pedido: Pedido) {
-    if (!pedido.idPedido) {
+    if (!pedido.id) {
       this.toast.showError('El pedido no tiene un ID válido.', 'bottom');
       return;
     }
@@ -94,12 +92,12 @@ export class MozoHomeComponent implements OnInit, AfterViewInit {
     pedido.estado = Estado.tomado;
 
     this.dataService
-      .actualizarPedido(pedido.idPedido, pedido)
+      .actualizarPedido(pedido.id, pedido)
       .then(() => {
         this.toast.showExito('Pedido confirmado con éxito.', 'bottom');
         this.derivarSectores(pedido);
         this.pedidosPendientes = this.pedidosPendientes.filter(
-          (p) => p.idPedido !== pedido.idPedido
+          (p) => p.id !== pedido.id
         );
       })
       .catch((err) => {
@@ -110,10 +108,10 @@ export class MozoHomeComponent implements OnInit, AfterViewInit {
 
   derivarSectores(pedido: Pedido) {
     if (pedido.productos.some((prod) => prod.tipo === 'comida')) {
-      this.dataService.derivarASector(pedido.idPedido, 'cocinero');
+      this.dataService.derivarASector(pedido.id, 'cocinero');
     }
     if (pedido.productos.some((prod) => prod.tipo === 'bebida')) {
-      this.dataService.derivarASector(pedido.idPedido, 'bartender');
+      this.dataService.derivarASector(pedido.id, 'bartender');
     }
     this.toast.showExito(
       'Pedido derivado a los sectores correspondientes.',

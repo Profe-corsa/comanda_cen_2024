@@ -13,12 +13,13 @@ import {
   where,
   getDocs,
   DocumentReference,
+  onSnapshot,
 } from '@angular/fire/firestore';
 import { Mesa } from '../clases/mesa';
 import { ToastService } from './toast.service';
 import { Usuario } from '../clases/usuario';
-import { Pedido, Estado } from '../clases/pedido'
-import { Observable } from 'rxjs';
+import { Pedido, Estado } from '../clases/pedido';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { collectionData } from 'rxfire/firestore';
 import { map, switchMap } from 'rxjs/operators';
 
@@ -27,6 +28,7 @@ import { map, switchMap } from 'rxjs/operators';
 })
 export class DataService {
   private coleccion: any;
+  private collectionSubjects: { [key: string]: BehaviorSubject<any[]> } = {};
 
   constructor(private firestore: Firestore, private toast: ToastService) {}
 
@@ -61,11 +63,43 @@ export class DataService {
       throw error;
     }
   }
+
+  //Promesa para obtener datos de una coalección
   async getCollectionData(collectionName: string): Promise<any[]> {
     const collectionRef = collection(this.firestore, collectionName);
     const snapshot = await getDocs(collectionRef);
     return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   }
+
+  suscribirseAColeccion(collectionName: string): void {
+    // Verificar si ya existe un BehaviorSubject para la colección
+    if (!this.collectionSubjects[collectionName]) {
+      this.collectionSubjects[collectionName] = new BehaviorSubject<any[]>([]);
+    }
+
+    const collectionRef = collection(this.firestore, collectionName);
+
+    onSnapshot(collectionRef, (snapshot) => {
+      const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      this.collectionSubjects[collectionName].next(data);
+    });
+  }
+
+  getObservableDeColeccion(collectionName: string): Observable<any[]> {
+    // Asegurar que exista el BehaviorSubject para la colección
+    if (!this.collectionSubjects[collectionName]) {
+      this.collectionSubjects[collectionName] = new BehaviorSubject<any[]>([]);
+    }
+    return this.collectionSubjects[collectionName].asObservable();
+  }
+
+  detenerSuscripcionDeColeccion(collectionName: string): void {
+    if (this.collectionSubjects[collectionName]) {
+      this.collectionSubjects[collectionName].complete();
+      delete this.collectionSubjects[collectionName];
+    }
+  }
+
   //Verifica que el cliente esté en la lista de espera y que tenga el estado pendiente.
   async asignarMesa(numeroMesa: number, idCliente: string): Promise<void> {
     try {
@@ -194,7 +228,6 @@ export class DataService {
   }
 
   // Obtiene todos los clientes en la lista de espera
-
   async obtenerClientesEnEspera(): Promise<any[]> {
     const clientesRef = collection(this.firestore, 'listaDeEspera');
     const usuariosRef = collection(this.firestore, 'usuarios');
@@ -287,5 +320,29 @@ export class DataService {
         );
       })
     );
+  }
+
+  //Metodo para actualizar varios o un solo campo de un documento
+  async updateCollectionObject(
+    collectionName: string,
+    docId: string,
+    updateData: any
+  ): Promise<void> {
+    try {
+      // Crear referencia al documento dentro de la colección especificada
+      const docRef = doc(this.firestore, `${collectionName}/${docId}`);
+
+      // Actualizar múltiples campos al mismo tiempo
+      await updateDoc(docRef, updateData);
+      console.log(
+        `Documento ${docId} en la colección '${collectionName}' actualizado correctamente.`
+      );
+    } catch (error) {
+      console.error(
+        `Error al actualizar el documento ${docId} en la colección '${collectionName}':`,
+        error
+      );
+      throw error;
+    }
   }
 }

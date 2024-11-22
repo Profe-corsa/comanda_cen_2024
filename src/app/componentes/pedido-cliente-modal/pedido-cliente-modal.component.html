@@ -16,11 +16,14 @@
             <h2>{{ producto.nombre }}</h2>
             <p>Precio unitario: {{ producto.precio | currency }}</p>
             <p>Cantidad: {{ producto.cantidad }}</p>
-            <p>Subtotal: {{ producto.precio * producto.cantidad | currency }}</p>
+            <p>
+              Subtotal: {{ producto.precio * producto.cantidad | currency }}
+            </p>
           </ion-label>
-          <ion-button 
-            slot="end" 
-            color="danger" 
+          <ion-button
+            *ngIf="usuarioId != undefined"
+            slot="end"
+            color="danger"
             (click)="eliminarProducto(i)"
             fill="clear"
           >
@@ -29,9 +32,26 @@
         </ion-item>
       </ion-list>
       <ion-footer>
-        <ion-toolbar class="footer">
+        <ion-toolbar class="footer" *ngIf="usuarioId != undefined">
           <ion-title>Total: {{ total | currency }}</ion-title>
-          <ion-button class="btn-pedir" (click)="realizarPedido()">Pedir</ion-button>
+          <ion-button class="btn-pedir" (click)="realizarPedido()"
+            >Pedir</ion-button
+          >
+        </ion-toolbar>
+
+        <ion-toolbar class="footer" *ngIf="usuarioId == undefined">
+          <ion-title>Total: {{ total | currency }}</ion-title>
+          <ion-button
+            class="btn-pedir"
+            (click)="confirmarRechazarPedido('aceptado')"
+            >Aceptar</ion-button
+          >
+          <ion-button
+            class="btn-pedir"
+            color="danger"
+            (click)="confirmarRechazarPedido('rechazado')"
+            >Rechazar</ion-button
+          >
         </ion-toolbar>
       </ion-footer>
     </div>

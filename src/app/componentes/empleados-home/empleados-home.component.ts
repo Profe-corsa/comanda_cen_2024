@@ -6,11 +6,12 @@ import {
   IonRouterLink,
   IonCol,
   IonGrid,
+  IonRow,
 } from '@ionic/angular/standalone';
 import { RouterLink } from '@angular/router';
 import { Usuario } from 'src/app/clases/usuario';
 import { addIcons } from 'ionicons';
-import { man, chatbubblesOutline } from 'ionicons/icons';
+import { man, chatbubblesOutline, clipboard } from 'ionicons/icons';
 import { AltaProductoComponent } from '../alta-producto/alta-producto.component';
 
 @Component({
@@ -19,6 +20,7 @@ import { AltaProductoComponent } from '../alta-producto/alta-producto.component'
   styleUrls: ['./empleados-home.component.scss'],
   standalone: true,
   imports: [
+    IonRow,
     IonGrid,
     CommonModule,
     IonCard,
@@ -34,7 +36,7 @@ export class EmpleadosHomeComponent implements OnInit {
   opcionSeleccionada: string = '';
 
   constructor() {
-    addIcons({ man, chatbubblesOutline });
+    addIcons({ man, clipboard, chatbubblesOutline });
   }
 
   ngOnInit() {}
