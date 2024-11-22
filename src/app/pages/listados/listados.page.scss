@@ -12,7 +12,8 @@ ion-header {
       font-size: 26px; /* Aumenta el tamaño del título */
       text-transform: uppercase;
       text-align: center;
-      color: #ffffff; /* Asegúrate de que el título sea visible */
+
+      margin-left: -50px !important;
     }
   }
 }

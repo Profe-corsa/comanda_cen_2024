@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Estado, Pedido } from 'src/app/clases/pedido';
 import { DataService } from 'src/app/services/data.service';
-import { IonItem, IonLabel } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { ModalController } from '@ionic/angular';
@@ -41,29 +40,31 @@ export class MozoListaPedidosComponent implements OnInit {
 
   //Metodo que se usará para cambiar el estado de un pedido
   //Acción que realiza el mozo
-  async cambiarEstadPedido(pedido: Pedido) {
+  cambiarEstadPedido(pedido: Pedido) {
     if (pedido.estado == Estado.pendiente) {
       this.verDetallePedido(pedido);
-
-      try {
-        this.loadingService.showLoading();
-        await this.dataService
-          .updateCollectionObject('pedidos', pedido.id, pedido)
-          .then(() => {
-            this.procesarPedidoConNotificacion(pedido);
-          })
-          .catch((error) => {
-            this.toast.showError(
-              'Se produjo un error al actualizar el pedido. El motivo: ' + error
-            );
-          });
-        this.loadingService.hideLoading();
-      } catch (error) {
-        this.loadingService.hideLoading();
-        console.error('Error al actualizar el estado del pedido:', error);
-      }
     } else if (pedido.estado == Estado.finalizado) {
       //Accion  para entregarle al cliente
+    }
+  }
+
+  async confirmarCambioEstado(pedido: Pedido) {
+    try {
+      this.loadingService.showLoading();
+      await this.dataService
+        .updateCollectionObject('pedidos', pedido.id, pedido)
+        .then(() => {
+          this.procesarPedidoConNotificacion(pedido);
+        })
+        .catch((error) => {
+          this.toast.showError(
+            'Se produjo un error al actualizar el pedido. El motivo: ' + error
+          );
+        });
+      this.loadingService.hideLoading();
+    } catch (error) {
+      this.loadingService.hideLoading();
+      console.error('Error al actualizar el estado del pedido:', error);
     }
   }
 
@@ -87,9 +88,10 @@ export class MozoListaPedidosComponent implements OnInit {
           );
 
           // Actualiza el estado del pedido en la base de datos
-          if (estadoSeleccionado == 'aceptado')
+          if (estadoSeleccionado == 'aceptado') {
             pedido.estado = Estado.enPreparacion;
-          else if (estadoSeleccionado == 'rechazado')
+            this.confirmarCambioEstado(pedido);
+          } else if (estadoSeleccionado == 'rechazado')
             pedido.estado = Estado.pendiente;
           console.log('Pedido actualizado:', pedido);
         }
@@ -155,6 +157,19 @@ export class MozoListaPedidosComponent implements OnInit {
       console.log(
         'El pedido no contiene bebidas ni comidas. No se envía notificación.'
       );
+    }
+  }
+
+  getStatusClass(estado: string): string {
+    switch (estado.toLowerCase()) {
+      case 'pendiente':
+        return 'pendiente';
+      case 'en preparación':
+        return 'preparando';
+      case 'finalizado':
+        return 'finalizado';
+      default:
+        return 'desconocido'; // Clase para estados no definidos
     }
   }
 }

@@ -44,6 +44,22 @@
       </ion-card>
     </ion-col>
   </ion-row>
+
+  <!-- COCINERO / BARTENDER -->
+  <ion-row>
+    <ion-col
+      col-12
+      *ngIf="usuario?.perfil == 'bartender' || usuario?.perfil == 'cocinero'"
+    >
+      <ion-card
+        [routerLink]="['/listados', 'preparacion']"
+        class="ion-text-center ion-padding"
+      >
+        <ion-icon name="clipboard"></ion-icon>
+        <h2 class="long-name">Pedidos pendientes</h2>
+      </ion-card>
+    </ion-col>
+  </ion-row>
 </ion-grid>
 <app-alta-producto
   *ngIf="opcionSeleccionada === 'altaProducto'"

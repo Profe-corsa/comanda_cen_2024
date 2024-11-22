@@ -345,4 +345,29 @@ export class DataService {
       throw error;
     }
   }
+
+  //Obtiene solo un documento de una coleccion por Id
+  async obtenerDocumentoPorId<T>(
+    coleccion: string,
+    id: string
+  ): Promise<T | null> {
+    try {
+      // Crear referencia al documento
+      const docRef = doc(this.firestore, `${coleccion}/${id}`);
+
+      // Obtener el documento
+      const docSnapshot = await getDoc(docRef);
+
+      // Verificar si el documento existe y devolver los datos
+      return docSnapshot.exists()
+        ? ({ id: docSnapshot.id, ...docSnapshot.data() } as T)
+        : null;
+    } catch (error) {
+      console.error(
+        `Error al obtener el documento con ID ${id} de la colección ${coleccion}:`,
+        error
+      );
+      return null;
+    }
+  }
 }
