@@ -92,7 +92,33 @@ export class UsuarioService {
       throw error;
     }
   }
-
+  async isFieldValueTrue(
+    collectionName: string,
+    clienteId: string
+  ): Promise<boolean> {
+    try {
+      const collectionRef = collection(this.firestore, collectionName);
+      const usuariosQuery = query(collectionRef, where('clienteId', '==', clienteId));
+      const querySnapshot = await getDocs(usuariosQuery);
+      const userExists = !querySnapshot.empty;
+      console.log(
+        userExists
+          ? `Se encontró uno o más documentos en ${collectionName} con clienteId = ${clienteId}`
+          : `No se encontró ningún documento en ${collectionName} con clienteId = ${clienteId}`
+      );
+      return userExists;
+    } catch (error) {
+      console.error(
+        `Error al buscar documentos en ${collectionName} con clienteId = ${clienteId}:`,
+        error
+      );
+      return false; // En caso de error, retorna false
+    }
+  }
+  
+  
+  
+  
   obtenerUsuariosPorPerfil(perfil: string): Observable<Usuario[]> {
     let usuariosQuery;
 

@@ -17,8 +17,7 @@ import {
   list,
   addCircleOutline,
   chatbubblesOutline,
-  qrCodeOutline,
-} from 'ionicons/icons';
+  qrCodeOutline, bagOutline } from 'ionicons/icons';
 
 import { QrScannerService } from '../../services/qrscanner.service';
 import { ToastService } from '../../services/toast.service';
@@ -32,6 +31,7 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { LoadingComponent } from 'src/app/componentes/loading/loading.component';
 import { PushMailNotificationService } from 'src/app/services/push-mail-notification.service';
 import { Perfiles } from 'src/app/clases/enumerados/perfiles';
+import { EstadoPedidosComponent } from '../estado-pedidos/estado-pedidos.component';
 
 @Component({
   selector: 'app-cliente-home',
@@ -51,6 +51,7 @@ import { Perfiles } from 'src/app/clases/enumerados/perfiles';
 })
 export class ClienteHomeComponent implements OnInit {
   @Input() usuario: Usuario | any;
+  hayPedidos: boolean = false;
   constructor(
     private qrService: QrScannerService,
     private toast: ToastService,
@@ -61,18 +62,12 @@ export class ClienteHomeComponent implements OnInit {
     private router: Router,
     private notificationService: PushMailNotificationService
   ) {
-    addIcons({
-      list,
-      qrCodeOutline,
-      chatbubblesOutline,
-      addCircleOutline,
-      restaurantOutline,
-      man,
-    });
+    addIcons({list,qrCodeOutline,chatbubblesOutline,restaurantOutline,bagOutline,addCircleOutline,man,});
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     console.log('el usuario en home:', this.usuario);
+    this.hayPedidos = await this.usuarioSrv.isFieldValueTrue('pedidos', this.usuario.id);
   }
 
   leerQR() {

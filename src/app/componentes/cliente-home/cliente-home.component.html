@@ -62,5 +62,15 @@
         </ion-card>
       </ion-col>
     </ion-row>
+    <ion-row>
+      <ion-col col-12 *ngIf="usuario?.estado == 'mesaTomada' && hayPedidos">
+        <ion-card
+          [routerLink]="['/estado-pedidos', usuario?.id]"
+          class="ion-text-center ion-padding">
+          <ion-icon name="bag-outline"></ion-icon>
+          <h2 class="long-name">Ver pedidos</h2>
+        </ion-card>
+      </ion-col>
+    </ion-row>
   </ion-grid>
 </section>

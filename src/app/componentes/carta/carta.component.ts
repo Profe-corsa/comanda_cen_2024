@@ -15,6 +15,8 @@ import {
   arrowBackCircleOutline,
 } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
+
+
 @Component({
   selector: 'app-carta',
   templateUrl: './carta.component.html',
@@ -27,6 +29,7 @@ export class CartaComponent implements OnInit {
   @Input() id: string | any;
   precioTotal: number = 0;
   productos: any[] = [];
+  
   productosAgregados: any[] = [];
   categorias: { [key: string]: any[] } = {};
   @ViewChild('swiper', { static: false }) swiperRef: ElementRef | undefined;
@@ -45,17 +48,20 @@ export class CartaComponent implements OnInit {
     private modalController: ModalController,
     private toastService: ToastService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    
   ) {
     addIcons({ arrowBackCircleOutline, bagHandleOutline, arrowBackOutline });
   }
 
   ngOnInit() {
     this.traerProductos();
+    
     if (this.productosAgregados.length > 0) {
       this.calcularPrecioTotal();
     }
     this.idUsuario = this.activatedRoute.snapshot.paramMap.get('id');
+    
   }
 
   async traerProductos() {
