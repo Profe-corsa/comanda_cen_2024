@@ -214,24 +214,25 @@ export class ClienteHomeComponent implements OnInit {
       this.loadingService.showLoading();
       if (this.cliente.pedido != undefined) {
         if (this.cliente.pedido.estado == Estado.entregado) {
-          this.cliente.estado = Estados.atendido;
+          //Por el momento el cambio de estado del cliente queda suspendido.
+          // this.cliente.estado = Estados.atendido;
           this.cliente.pedido.estado = Estado.recibido;
 
           console.log('cliente en cliente home', this.cliente);
 
           //Actualizar el pedido en el cliente y en la lista pedidos
-          // await this.dataService.updateCollectionObject(
-          //   'usuarios',
-          //   this.cliente.id,
-          //   this.cliente
-          // );
+          await this.dataService.updateCollectionObject(
+            'usuarios',
+            this.cliente.id,
+            this.cliente
+          );
 
-          // await this.dataService.updateObjectField(
-          //   'pedidos',
-          //   this.cliente.pedido.id,
-          //   'estado',
-          //   this.cliente.pedido.estado
-          // );
+          await this.dataService.updateObjectField(
+            'pedidos',
+            this.cliente.pedido.id,
+            'estado',
+            this.cliente.pedido.estado
+          );
         }
 
         this.toast.showExito('El pedido ha sido recibido', 'bottom');

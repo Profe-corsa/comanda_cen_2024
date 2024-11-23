@@ -30,6 +30,7 @@ export class Pedido {
       estado: this.estado,
       nroMesa: this.nroMesa,
       hora: this.hora,
+      id: this.id,
     };
   }
   calcularTiempoEstimado() {
