@@ -123,7 +123,7 @@ export class CocineroBartenderPedidoComponent implements OnInit {
                 'El pedido de la mesa: ' +
                   pedidoActualizado.id +
                   ' ha sido finalizado y está listo para su entrega.',
-                this.usuario.perfil
+                'mozo'
               );
             }
           }

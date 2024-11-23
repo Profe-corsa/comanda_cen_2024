@@ -54,6 +54,8 @@ export class PedidoClienteModalComponent implements OnInit {
   @Input() usuarioId: string | any;
   @Output() productosActualizados = new EventEmitter<any[]>();
   @Output() totalActualizado = new EventEmitter<number>();
+  @Input() estadoPedido: string = 'default';
+
   constructor(
     private modalController: ModalController,
     private dataService: DataService,

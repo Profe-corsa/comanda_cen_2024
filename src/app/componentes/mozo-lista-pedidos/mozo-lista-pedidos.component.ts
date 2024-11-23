@@ -41,11 +41,12 @@ export class MozoListaPedidosComponent implements OnInit {
   //Metodo que se usará para cambiar el estado de un pedido
   //Acción que realiza el mozo
   cambiarEstadPedido(pedido: Pedido) {
-    if (pedido.estado == Estado.pendiente) {
-      this.verDetallePedido(pedido);
-    } else if (pedido.estado == Estado.finalizado) {
-      //Accion  para entregarle al cliente
-    }
+    // if (pedido.estado == Estado.pendiente) {
+    //   this.verDetallePedido(pedido);
+    // } else if (pedido.estado == Estado.finalizado) {
+    //   //Accion  para entregarle al cliente
+    // }
+    this.verDetallePedido(pedido, pedido.estado);
   }
 
   async confirmarCambioEstado(pedido: Pedido) {
@@ -69,13 +70,13 @@ export class MozoListaPedidosComponent implements OnInit {
   }
 
   //Metodo que se usara para ver el detalle de un pedido
-  async verDetallePedido(pedido: Pedido) {
+  async verDetallePedido(pedido: Pedido, estado: string) {
     try {
-      console.log('Ver detalle del pedido:', pedido);
       const modal = await this.modalController.create({
         component: PedidoClienteModalComponent,
         componentProps: {
           productos: pedido.productos || [], // Valor por defecto si no existen productos
+          estadPedido: estado,
         },
       });
 
@@ -93,7 +94,6 @@ export class MozoListaPedidosComponent implements OnInit {
             this.confirmarCambioEstado(pedido);
           } else if (estadoSeleccionado == 'rechazado')
             pedido.estado = Estado.pendiente;
-          console.log('Pedido actualizado:', pedido);
         }
       });
 
@@ -128,9 +128,9 @@ export class MozoListaPedidosComponent implements OnInit {
           tieneBebidas = true;
           break;
         case 'Comida':
+        case 'Postre':
           tieneComidas = true;
           break;
-        // Ignorar "Postre" y cualquier otro tipo
         default:
           console.warn(`Tipo ignorado: ${tipo}`);
       }

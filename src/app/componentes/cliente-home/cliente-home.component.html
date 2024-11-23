@@ -38,6 +38,7 @@
         </ion-card>
       </ion-col>
     </ion-row>
+
     <ion-row>
       <ion-col
         col-12
@@ -56,9 +57,10 @@
       <ion-col col-12 *ngIf="usuario?.estado == 'mesaTomada'">
         <ion-card
           [routerLink]="['/carta', usuario?.id]"
-          class="ion-text-center ion-padding">
+          class="ion-text-center ion-padding"
+        >
           <ion-icon name="restaurant-outline"></ion-icon>
-          <h2 class="long-name">Ver la carta </h2>
+          <h2 class="long-name">Ver la carta</h2>
         </ion-card>
       </ion-col>
     </ion-row>
