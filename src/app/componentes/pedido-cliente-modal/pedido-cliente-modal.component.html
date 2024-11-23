@@ -1,83 +1,90 @@
 <ion-content>
-  <div class="contenedor-principal">
-    <div class="titulo-close">
-      <p class="titulo">DETALLE PEDIDO</p>
-      <ion-buttons slot="end">
-        <ion-button (click)="close()" class="btn-close">X</ion-button>
-      </ion-buttons>
-    </div>
-    <div class="contenido">
-      <ion-list>
-        <ion-item *ngFor="let producto of productosAgrupados; let i = index">
-          <ion-thumbnail slot="start">
-            <img [src]="producto.fotos[0]" alt="Imagen del producto" />
-          </ion-thumbnail>
-          <ion-label>
-            <h2 class="encabezado">{{ producto.nombre }}</h2>
-            <p>Precio unitario: {{ producto.precio | currency }}</p>
-            <p>Cantidad: {{ producto.cantidad }}</p>
-            <p>
-              Subtotal: {{ producto.precio * producto.cantidad | currency }}
-            </p>
-          </ion-label>
-          <ion-button
-            *ngIf="usuarioId != undefined"
-            slot="end"
-            color="danger"
-            (click)="eliminarProducto(i)"
-            fill="clear"
-            style="width: 3em; height: 3em; font-size: 1.2em"
-          >
-            <ion-icon name="trash-outline"></ion-icon>
-          </ion-button>
-          <div
-            *ngIf="usuarioId == undefined && estadoPedido == 'en preparación'"
-          >
-            <ion-icon
-              name="checkmark-circle-outline"
-              *ngIf="producto.estado != 'en preparación'"
-              color="success"
-            ></ion-icon>
-            <ion-icon
-              name="close-circle-outline"
-              *ngIf="producto.estado == 'en preparación'"
-              color="danger"
-            ></ion-icon>
-          </div>
-        </ion-item>
-      </ion-list>
-      <ion-footer>
-        <ion-toolbar class="footer" *ngIf="usuarioId != undefined">
-          <ion-title>Total: {{ total | currency }}</ion-title>
-          <ion-button class="btn-pedir" (click)="realizarPedido()"
-            >Pedir</ion-button
-          >
-        </ion-toolbar>
-
-        <ion-toolbar
-          class="footer"
-          *ngIf="usuarioId == undefined && estadoPedido == 'pendiente'"
-        >
-          <ion-title>Total: {{ total | currency }}</ion-title>
-          <ion-button
-            class="btn-pedir"
-            (click)="confirmarRechazarPedido('aceptado')"
-            >Aceptar</ion-button
-          >
-          >
-        </ion-toolbar>
-        <ion-toolbar
-          class="footer"
-          *ngIf="usuarioId == undefined && estadoPedido == 'finalizado'"
-        >
-          <ion-title>Total: {{ total | currency }}</ion-title>
-          <ion-button
-            class="btn-pedir"
-            (click)="confirmarRechazarPedido('entregado')"
-            >Entregar</ion-button
-          >
-        </ion-toolbar>
-      </ion-footer>
-    </div>
+  <!-- Mostrar el loading spinner cuando isLoading es true -->
+  <div *ngIf="loadindSrv.loadingStatus">
+    <app-loading></app-loading>
   </div>
+
+  <ion-content>
+    <div class="contenedor-principal">
+      <div class="titulo-close">
+        <p class="titulo">DETALLE PEDIDO</p>
+        <ion-buttons slot="end">
+          <ion-button (click)="close()" class="btn-close">X</ion-button>
+        </ion-buttons>
+      </div>
+      <div class="contenido">
+        <ion-list>
+          <ion-item *ngFor="let producto of productosAgrupados; let i = index">
+            <ion-thumbnail slot="start">
+              <img [src]="producto.fotos[0]" alt="Imagen del producto" />
+            </ion-thumbnail>
+            <ion-label>
+              <h2 class="encabezado">{{ producto.nombre }}</h2>
+              <p>Precio unitario: {{ producto.precio | currency }}</p>
+              <p>Cantidad: {{ producto.cantidad }}</p>
+              <p>
+                Subtotal: {{ producto.precio * producto.cantidad | currency }}
+              </p>
+            </ion-label>
+            <ion-button
+              *ngIf="usuarioId != undefined"
+              slot="end"
+              color="danger"
+              (click)="eliminarProducto(i)"
+              fill="clear"
+              style="width: 3em; height: 3em; font-size: 1.2em"
+            >
+              <ion-icon name="trash-outline"></ion-icon>
+            </ion-button>
+            <div
+              *ngIf="usuarioId == undefined && estadoPedido == 'en preparación'"
+            >
+              <ion-icon
+                name="checkmark-circle-outline"
+                *ngIf="producto.estado != 'en preparación'"
+                color="success"
+              ></ion-icon>
+              <ion-icon
+                name="close-circle-outline"
+                *ngIf="producto.estado == 'en preparación'"
+                color="danger"
+              ></ion-icon>
+            </div>
+          </ion-item>
+        </ion-list>
+        <ion-footer>
+          <ion-toolbar class="footer" *ngIf="usuarioId != undefined">
+            <ion-title>Total: {{ total | currency }}</ion-title>
+            <ion-button class="btn-pedir" (click)="realizarPedido()"
+              >Pedir</ion-button
+            >
+          </ion-toolbar>
+
+          <ion-toolbar
+            class="footer"
+            *ngIf="usuarioId == undefined && estadoPedido == 'pendiente'"
+          >
+            <ion-title>Total: {{ total | currency }}</ion-title>
+            <ion-button
+              class="btn-pedir"
+              (click)="confirmarRechazarPedido('aceptado')"
+              >Aceptar</ion-button
+            >
+            >
+          </ion-toolbar>
+          <ion-toolbar
+            class="footer"
+            *ngIf="usuarioId == undefined && estadoPedido == 'finalizado'"
+          >
+            <ion-title>Total: {{ total | currency }}</ion-title>
+            <ion-button
+              class="btn-pedir"
+              (click)="confirmarRechazarPedido('entregado')"
+              >Entregar</ion-button
+            >
+          </ion-toolbar>
+        </ion-footer>
+      </div>
+    </div>
+  </ion-content>
 </ion-content>

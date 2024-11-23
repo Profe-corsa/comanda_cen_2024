@@ -33,7 +33,7 @@ export class DataService {
 
   constructor(private firestore: Firestore, private toast: ToastService) {}
 
-  async saveObject(objeto: any, collectionName: string): Promise<any> {
+  async saveObject(objeto: any, collectionName: string): Promise<string> {
     try {
       const collectionRef = collection(
         this.firestore,

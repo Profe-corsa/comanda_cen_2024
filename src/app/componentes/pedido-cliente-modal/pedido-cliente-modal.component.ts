@@ -29,6 +29,9 @@ import { ToastService } from 'src/app/services/toast.service';
 import { Observable } from 'rxjs';
 import { Producto } from 'src/app/clases/producto';
 import { Cliente } from 'src/app/clases/cliente';
+import { LoadingService } from 'src/app/services/loading.service';
+import { LoadingComponent } from 'src/app/componentes/loading/loading.component';
+
 @Component({
   selector: 'app-pedido-cliente-modal',
   templateUrl: './pedido-cliente-modal.component.html',
@@ -47,6 +50,7 @@ import { Cliente } from 'src/app/clases/cliente';
     IonItem,
     IonToolbar,
     IonThumbnail,
+    LoadingComponent,
   ],
 })
 export class PedidoClienteModalComponent implements OnInit {
@@ -73,7 +77,8 @@ export class PedidoClienteModalComponent implements OnInit {
     private dataService: DataService,
     private router: Router,
     private usuarioService: UsuarioService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    public loadindSrv: LoadingService
   ) {
     addIcons({ trashOutline, checkmarkCircleOutline, closeCircleOutline });
   }
@@ -157,22 +162,32 @@ export class PedidoClienteModalComponent implements OnInit {
         (nuevoPedido.estado = Estado.pendiente);
       nuevoPedido.calcularTiempoEstimado();
       try {
-        nuevoPedido.id = await this.dataService.saveObject(
+        this.loadindSrv.showLoading();
+        // Guardar el pedido y obtener el ID
+        const pedidoId = await this.dataService.saveObject(
           nuevoPedido.toJSON(),
           'pedidos'
         );
 
-        //Agregado del pedido al usuario
-        const pedidoCompleto = nuevoPedido;
+        if (!pedidoId) {
+          throw new Error('No se pudo obtener el ID del pedido');
+        }
+
+        nuevoPedido.id = pedidoId;
+
+        // Actualizar el cliente con el pedido
         await this.usuarioService.updateUserField(
           cliente.id,
           'pedido',
-          pedidoCompleto.toJSON()
+          nuevoPedido.toJSON()
         );
+        this.loadindSrv.hideLoading();
         this.toastService.showExito('Pedido realizado');
+
         this.modalController.dismiss(nuevoPedido);
         this.router.navigate(['/home']);
       } catch (error) {
+        this.loadindSrv.hideLoading();
         this.toastService.showError('Error al guardar el pedido: ' + error);
       }
     } else {
