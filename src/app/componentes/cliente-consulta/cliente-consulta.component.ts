@@ -21,6 +21,9 @@ import { ToastService } from 'src/app/services/toast.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { LoadingComponent } from 'src/app/componentes/loading/loading.component';
 import { PushMailNotificationService } from 'src/app/services/push-mail-notification.service';
+import { Estados } from 'src/app/clases/enumerados/Estados';
+import { Estado } from 'src/app/clases/pedido';
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-cliente-consulta',
@@ -54,13 +57,13 @@ export class ClienteConsultaComponent implements OnInit {
     private usuarioService: UsuarioService,
     public toast: ToastService,
     private notificationSrv: PushMailNotificationService,
-    public loadingService: LoadingService
+    public loadingService: LoadingService,
+    private dataService: DataService
   ) {
     this.consultaCreada = false;
   }
 
   ngOnInit() {
-    console.log(this.usuario);
     let consulta: Consulta;
     this.cliente = <Cliente>this.usuario;
 

@@ -9,6 +9,7 @@ import { Usuario } from 'src/app/clases/usuario';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataService } from 'src/app/services/data.service';
 import { Pedido, Estado } from 'src/app/clases/pedido';
+import { UsuarioService } from 'src/app/services/usuario.service';
 
 @Component({
   selector: 'app-cocinero-bartender-pedido',
@@ -26,7 +27,8 @@ export class CocineroBartenderPedidoComponent implements OnInit {
     private toast: ToastService,
     private pushNotification: PushMailNotificationService,
     private authSrv: AuthService,
-    private dataService: DataService
+    private dataService: DataService,
+    private usuarioSrv: UsuarioService
   ) {
     //Obtenemos al usuario logueado con el servicio.
     this.usuario = this.authSrv.getUserLogueado();
@@ -82,7 +84,6 @@ export class CocineroBartenderPedidoComponent implements OnInit {
           'pedidos',
           pedido.id
         );
-      console.log(pedidoActualizado);
       if (!pedidoActualizado) {
         this.toast.showError(
           'No se encontró el pedido en la base de datos.',
@@ -116,6 +117,13 @@ export class CocineroBartenderPedidoComponent implements OnInit {
           pedidoActualizado
         )
         .then(() => {
+          // Actualizar el estado del pedido en el usuario
+          this.actualizarEstadoPedidoCliente(
+            pedidoActualizado,
+            pedidoActualizado.estado
+          );
+
+          // Enviar notificación de pedido finalizado al mozo
           if (todosFinalizados) {
             if (this.usuario) {
               this.pushNotification.sendPushNotificationToRole(
@@ -145,6 +153,43 @@ export class CocineroBartenderPedidoComponent implements OnInit {
     } finally {
       // Ocultar el loading
       this.loadingService.hideLoading();
+    }
+  }
+
+  async actualizarEstadoPedidoCliente(
+    pedido: Pedido,
+    nuevoEstado: Estado
+  ): Promise<void> {
+    try {
+      // Buscar el usuario asociado al pedido
+      const usuario = await this.usuarioSrv.getUserPromise(pedido.clienteId);
+      console.log('obtener usuario en actualizacion', usuario);
+
+      if (usuario) {
+        // Verificar que el usuario tiene un pedido asociado
+        if (usuario.pedido && usuario.pedido.clienteId === pedido.clienteId) {
+          // Actualizar el estado del pedido
+          usuario.pedido.estado = nuevoEstado;
+
+          // Guardar cambios en Firestore
+          await this.usuarioSrv.updateUser(usuario.id, {
+            pedido: usuario.pedido,
+          });
+
+          console.log('El estado del pedido se actualizó correctamente.');
+        } else {
+          console.log(
+            'El usuario no tiene un pedido asociado con el clienteId dado.'
+          );
+        }
+      } else {
+        console.log('No se encontró el usuario asociado al pedido.');
+      }
+    } catch (error) {
+      console.error(
+        'Error al actualizar el estado del pedido en el usuario:',
+        error
+      );
     }
   }
 }

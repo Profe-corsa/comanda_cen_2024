@@ -1,0 +1,38 @@
+<nav class="nav-bar">
+  <button class="btn-back" (click)="volverAtras()">
+    <ion-icon name="arrow-back-circle-outline"></ion-icon>
+  </button>
+  <ion-title class="encabezado">Comanda
+    <span >CEN</span>
+  </ion-title>
+</nav>
+<div class="contenedor">
+  <article class="contenido">
+    <div class="card" *ngFor="let pedido of pedidos" (click)="toggleDetails(pedido)">
+      <div class="card-header">
+          <div class="card-flex">
+            <p class="card-title" >{{ pedido.estado }}</p> 
+            <p class="card-subtitle "> ({{ pedido.tiempoEstimado }} m) </p>
+          </div>
+          
+        <p class="card-price">{{ pedido.precioTotal | currency }}</p>
+        <div
+        class="status-indicator"
+        [ngClass]="getStatusClass(pedido.estado)"
+      ></div>
+      </div>
+      <div class="card-body" *ngIf="pedido.showDetails">
+        <p><strong>Tiempo estimado:</strong> {{ pedido.tiempoEstimado }} mins</p>
+          <div *ngFor="let producto of pedido.productos">
+            <p>
+              <span class="producto-imagen">
+                <img *ngIf="producto.fotos.length > 0" [src]="producto.fotos[0]" alt="Imagen producto" class="producto-imagen"/>
+              </span>
+              {{ producto.nombre }} x {{ producto.cantidad }}
+            </p>
+          </div>
+        </div>
+      </div>
+      
+  </article>
+</div>

@@ -65,4 +65,11 @@ export const routes: Routes = [
         (m) => m.MozoHomeComponent
       ),
   },
+  {
+    path: 'estado-pedidos/:id',
+    loadComponent: () =>
+      import('./componentes/estado-pedidos/estado-pedidos.component').then(
+        (m) => m.EstadoPedidosComponent
+      ),
+  },
 ];

@@ -18,6 +18,8 @@ import {
   addCircleOutline,
   chatbubblesOutline,
   qrCodeOutline,
+  bagOutline,
+  fastFoodOutline,
 } from 'ionicons/icons';
 
 import { QrScannerService } from '../../services/qrscanner.service';
@@ -32,6 +34,9 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { LoadingComponent } from 'src/app/componentes/loading/loading.component';
 import { PushMailNotificationService } from 'src/app/services/push-mail-notification.service';
 import { Perfiles } from 'src/app/clases/enumerados/perfiles';
+import { EstadoPedidosComponent } from '../estado-pedidos/estado-pedidos.component';
+import { Estado, Pedido } from 'src/app/clases/pedido';
+import { Cliente } from 'src/app/clases/cliente';
 
 @Component({
   selector: 'app-cliente-home',
@@ -51,6 +56,10 @@ import { Perfiles } from 'src/app/clases/enumerados/perfiles';
 })
 export class ClienteHomeComponent implements OnInit {
   @Input() usuario: Usuario | any;
+  pedido: Pedido | any = [];
+  mostrarPedido: boolean = false;
+  mostrarPrecio: boolean = false;
+  cliente: Cliente | any;
   constructor(
     private qrService: QrScannerService,
     private toast: ToastService,
@@ -65,14 +74,27 @@ export class ClienteHomeComponent implements OnInit {
       list,
       qrCodeOutline,
       chatbubblesOutline,
-      addCircleOutline,
       restaurantOutline,
+      fastFoodOutline,
+      bagOutline,
+      addCircleOutline,
       man,
     });
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    //Instancia del cliente
+    this.cliente = <Cliente>this.usuario;
+
     console.log('el usuario en home:', this.usuario);
+    this.pedido = await this.usuarioSrv.getIfExists(
+      'pedidos',
+      this.usuario.id,
+      new Date()
+    );
+    if (this.pedido) {
+      this.mostrarPrecio = true;
+    }
   }
 
   leerQR() {
@@ -85,6 +107,9 @@ export class ClienteHomeComponent implements OnInit {
       else if (response.startsWith('Mesa ')) {
         const numeroMesa = response.split(' ')[1]; // Extraer el número de mesa
         this.unirseAMesa(numeroMesa);
+        if (this.pedido) {
+          this.mostrarPedido = true;
+        }
       } else {
         this.toast.showError('Tuvimos un error al leer el QR');
       }
@@ -183,10 +208,47 @@ export class ClienteHomeComponent implements OnInit {
     }
   }
 
+  async confirmarRecepcionPedido() {
+    // Comprobar que el mozo indicó que el cliente recibió el pedido
+    try {
+      this.loadingService.showLoading();
+      if (this.cliente.pedido != undefined) {
+        if (this.cliente.pedido.estado == Estado.entregado) {
+          this.cliente.estado = Estados.atendido;
+          this.cliente.pedido.estado = Estado.recibido;
+
+          console.log('cliente en cliente home', this.cliente);
+
+          //Actualizar el pedido en el cliente y en la lista pedidos
+          // await this.dataService.updateCollectionObject(
+          //   'usuarios',
+          //   this.cliente.id,
+          //   this.cliente
+          // );
+
+          // await this.dataService.updateObjectField(
+          //   'pedidos',
+          //   this.cliente.pedido.id,
+          //   'estado',
+          //   this.cliente.pedido.estado
+          // );
+        }
+
+        this.toast.showExito('El pedido ha sido recibido', 'bottom');
+      }
+      this.loadingService.hideLoading();
+    } catch (error) {
+      this.loadingService.hideLoading();
+      this.toast.showError(
+        'Hubo un error al confirmar la recepción del pedido ' + error,
+        'bottom'
+      );
+    }
+  }
+
   async cerrarSesion() {
     this.loadingService.showLoading();
     await this.authService.logOut();
     this.loadingService.hideLoading();
-    this.router.navigate(['/login']);
   }
 }

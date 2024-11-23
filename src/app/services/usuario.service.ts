@@ -78,7 +78,7 @@ export class UsuarioService {
     return docData(userDocRef, { idField: 'id' }) as Observable<Usuario>;
   }
 
-  async getUserPromise(idUsuario: string): Promise<Usuario | undefined> {
+  async getUserPromise(idUsuario: string): Promise<any | undefined> {
     try {
       // Crea la referencia al documento del usuario
       const userDocRef = doc(this.firestore, `usuarios/${idUsuario}`);
@@ -90,6 +90,41 @@ export class UsuarioService {
     } catch (error) {
       console.error('Error al obtener el usuario con promesa:', error);
       throw error;
+    }
+  }
+  async getIfExists(
+    collectionName: string,
+    clienteId: string,
+    fechaActual: Date
+  ): Promise<any> {
+    try {
+      const collectionRef = collection(this.firestore, collectionName);
+      const usuariosQuery = query(
+        collectionRef,
+        where('clienteId', '==', clienteId),
+        where('fecha', '==', fechaActual.toLocaleDateString())
+      );
+      const querySnapshot = await getDocs(usuariosQuery);
+
+      if (!querySnapshot.empty) {
+        const record = querySnapshot.docs[0].data();
+        console.log(
+          `Se encontró un documento en ${collectionName} con clienteId = ${clienteId}:`,
+          record
+        );
+        return record;
+      } else {
+        console.log(
+          `No se encontró ningún documento en ${collectionName} con clienteId = ${clienteId}`
+        );
+        return null; // No se encontró ningún documento
+      }
+    } catch (error) {
+      console.error(
+        `Error al buscar documentos en ${collectionName} con clienteId = ${clienteId}:`,
+        error
+      );
+      return null; // En caso de error, retorna null
     }
   }
 

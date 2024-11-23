@@ -6,15 +6,23 @@ ion-content {
     padding: 16px;
 }
 .contenedor {
-    background-color: white;
-    border-radius: 1em;
-    margin: 2%;
-    padding: 1em;
-    text-transform: uppercase;
+  background-color: #000;
+  border-radius: 1em;
+  margin: 2%;
+  padding: 1em;
+  text-transform: uppercase;
+}
+
+  ion-tittle{
+    color: #d96d2d !important;
+    font-weight: bold !important;
+    font-size: 1.8rem !important;
   }
   
-  
 ion-card {
+    --background: white !important;
+    background-color: white;
+    color:black;
     width: 90%; /* Ajusta el ancho de los productos */
     margin: 0 auto;
     height: 100%;
@@ -31,6 +39,9 @@ ion-card {
     justify-content: stretch;
     align-items: center;
     text-align: center;
+    color: #d96d2d;
+    background-color: #000;
+    box-shadow: 0 1px 4px #d96d2d;
     width: 100%;
   }
   
@@ -42,8 +53,10 @@ ion-card {
   }
   .mayusculas{
     text-transform: uppercase;
+    color:#d96d2d;
   }
   .titulos{
+    color: #d96d2d;
     font-weight: 800;
     font-size: 2em !important;
     border-top: 1px solid #d96d2d;
@@ -95,6 +108,8 @@ ion-badge {
   justify-content: space-between;
   align-items: center;
   padding: 10px;
+  background-color: #000000;
+  color: #d96d2d;
 }
 
 .btn-back {
@@ -104,7 +119,18 @@ ion-badge {
   font-size: 2em;
   display: flex;
   align-items: center;
-  color: blue;
+  color: #d96d2d;
+}
+.encabezado {
+  font-family: "Noto Sans JP", sans-serif;
+  color: #d96d2d !important;
+  font-weight: bold !important;
+  font-size: 1.8rem !important;
+}
+.encabezado span{
+  color: #d96d2d !important;
+  font-weight: bold !important;
+  font-size: 1.8rem !important;
 }
 
 .precio-total {

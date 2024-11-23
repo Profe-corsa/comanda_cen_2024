@@ -9,6 +9,8 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { LoadingComponent } from 'src/app/componentes/loading/loading.component';
 import { PushMailNotificationService } from 'src/app/services/push-mail-notification.service';
 import { ToastService } from 'src/app/services/toast.service';
+import { UsuarioService } from 'src/app/services/usuario.service';
+import { Cliente } from 'src/app/clases/cliente';
 
 @Component({
   selector: 'app-mozo-lista-pedidos',
@@ -25,7 +27,8 @@ export class MozoListaPedidosComponent implements OnInit {
     private modalController: ModalController,
     public loadingService: LoadingService,
     private notificationService: PushMailNotificationService,
-    private toast: ToastService
+    private toast: ToastService,
+    private usurioService: UsuarioService
   ) {}
 
   ngOnInit() {
@@ -35,17 +38,24 @@ export class MozoListaPedidosComponent implements OnInit {
     this.dataService.getObservableDeColeccion(listado).subscribe((datos) => {
       console.log(`Datos actualizados en la colección ${listado}:`, datos);
       this.listaPedidos = datos;
+      this.listaPedidos.sort(this.ordernarHorario);
     });
+  }
+
+  ordernarHorario(a: any, b: any) {
+    if (!a.hora && !b.hora) return 0; // Ambos no tienen hora, no se altera el orden
+    if (!a.hora) return 1; // Si `a` no tiene hora, va al fondo
+    if (!b.hora) return -1; // Si `b` no tiene hora, `a` va antes
+
+    if (a.horaPedido > b.horaPedido) return -1;
+    if (b.horaPedido > a.horaPedido) return 1; //Cambio de lugar
+
+    return 0;
   }
 
   //Metodo que se usará para cambiar el estado de un pedido
   //Acción que realiza el mozo
   cambiarEstadPedido(pedido: Pedido) {
-    // if (pedido.estado == Estado.pendiente) {
-    //   this.verDetallePedido(pedido);
-    // } else if (pedido.estado == Estado.finalizado) {
-    //   //Accion  para entregarle al cliente
-    // }
     this.verDetallePedido(pedido, pedido.estado);
   }
 
@@ -55,7 +65,10 @@ export class MozoListaPedidosComponent implements OnInit {
       await this.dataService
         .updateCollectionObject('pedidos', pedido.id, pedido)
         .then(() => {
-          this.procesarPedidoConNotificacion(pedido);
+          this.actualizarEstadoPedidoCliente(pedido, pedido.estado);
+          if (pedido.estado == Estado.enPreparacion) {
+            this.procesarPedidoConNotificacion(pedido);
+          }
         })
         .catch((error) => {
           this.toast.showError(
@@ -69,14 +82,52 @@ export class MozoListaPedidosComponent implements OnInit {
     }
   }
 
+  async actualizarEstadoPedidoCliente(
+    pedido: Pedido,
+    nuevoEstado: Estado
+  ): Promise<void> {
+    try {
+      // Buscar el usuario asociado al pedido
+      const usuario = await this.usurioService.getUserPromise(pedido.clienteId);
+      console.log('obtener usuario en actualizacion', usuario);
+
+      if (usuario) {
+        // Verificar que el usuario tiene un pedido asociado
+        if (usuario.pedido && usuario.pedido.clienteId === pedido.clienteId) {
+          // Actualizar el estado del pedido
+          usuario.pedido.estado = nuevoEstado;
+
+          // Guardar cambios en Firestore
+          await this.usurioService.updateUser(usuario.id, {
+            pedido: usuario.pedido,
+          });
+
+          console.log('El estado del pedido se actualizó correctamente.');
+        } else {
+          console.log(
+            'El usuario no tiene un pedido asociado con el clienteId dado.'
+          );
+        }
+      } else {
+        console.log('No se encontró el usuario asociado al pedido.');
+      }
+    } catch (error) {
+      console.error(
+        'Error al actualizar el estado del pedido en el usuario:',
+        error
+      );
+    }
+  }
+
   //Metodo que se usara para ver el detalle de un pedido
   async verDetallePedido(pedido: Pedido, estado: string) {
+    console.log('estado del pedido', estado);
     try {
       const modal = await this.modalController.create({
         component: PedidoClienteModalComponent,
         componentProps: {
           productos: pedido.productos || [], // Valor por defecto si no existen productos
-          estadPedido: estado,
+          estadoPedido: estado,
         },
       });
 
@@ -92,8 +143,9 @@ export class MozoListaPedidosComponent implements OnInit {
           if (estadoSeleccionado == 'aceptado') {
             pedido.estado = Estado.enPreparacion;
             this.confirmarCambioEstado(pedido);
-          } else if (estadoSeleccionado == 'rechazado')
-            pedido.estado = Estado.pendiente;
+          } else if (estadoSeleccionado == 'entregado')
+            pedido.estado = Estado.entregado;
+          this.confirmarCambioEstado(pedido);
         }
       });
 
@@ -168,6 +220,8 @@ export class MozoListaPedidosComponent implements OnInit {
         return 'preparando';
       case 'finalizado':
         return 'finalizado';
+      case 'entregado':
+        return 'entregado';
       default:
         return 'desconocido'; // Clase para estados no definidos
     }

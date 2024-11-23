@@ -1,9 +1,12 @@
 export enum Estado {
-  pendiente = 'pendiente',
+  pendiente = 'pendiente', //Estado inicial del pedido instanciado.
   tomado = 'tomado',
-  enPreparacion = 'en preparación',
-  pendienteDePago = 'pendiente de pago',
+  enPreparacion = 'en preparación', //El mozo acepto el pedido y va a las respectivas àreas
+  pendienteDePago = 'pendiente de pago', //El Cliente pidiò la cuenta
   finalizado = 'finalizado',
+  entregado = 'entregado', //Cuando el mozo se lo lleva a la mesa
+  recibido = 'recibido', //El cliente tiene el pedido en la mesa
+  pagado = 'pagado', //Finalizò el pago del pedido
 }
 
 export class Pedido {
@@ -13,6 +16,11 @@ export class Pedido {
   productos: any[] = [];
   precioTotal: number = 0;
   estado: Estado = Estado.pendiente;
+  nroMesa: string = '';
+  hora: any;
+  constructor() {
+    this.hora = new Date();
+  }
   toJSON() {
     return {
       tiempoEstimado: this.tiempoEstimado,
@@ -20,6 +28,8 @@ export class Pedido {
       productos: this.productos,
       precioTotal: this.precioTotal,
       estado: this.estado,
+      nroMesa: this.nroMesa,
+      hora: this.hora,
     };
   }
   calcularTiempoEstimado() {
