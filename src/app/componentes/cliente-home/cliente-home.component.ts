@@ -54,7 +54,8 @@ export class ClienteHomeComponent implements OnInit {
   @Input() usuario: Usuario | any;
   pedido: Pedido | any = [];
   mostrarPedido: boolean = false;
-  mostrarPrecio: boolean = false;
+  mostrarEstado: boolean = false;
+  mostrarJuegos: boolean = false;
   constructor(
     private qrService: QrScannerService,
     private toast: ToastService,
@@ -72,7 +73,7 @@ export class ClienteHomeComponent implements OnInit {
     console.log('el usuario en home:', this.usuario);
     this.pedido = await this.usuarioSrv.getIfExists('pedidos', this.usuario.id, new Date);
     if (this.pedido) {
-      this.mostrarPrecio = true;
+      this.mostrarPedido = true;
     }
   }
 
@@ -84,17 +85,29 @@ export class ClienteHomeComponent implements OnInit {
       }
       // Verificar si el QR es de una mesa (formato "Mesa 1", "Mesa 2", etc.)
       else if (response.startsWith('Mesa ')) {
-        const numeroMesa = response.split(' ')[1]; // Extraer el número de mesa
-        this.unirseAMesa(numeroMesa);
+       
         if (this.pedido) {
+          if (this.mostrarPedido){
+            if(this.mostrarEstado){
+              this.mostrarJuegos = true;
+            }
+            this.mostrarEstado = true;
+          }
           this.mostrarPedido = true;
+          this.actualizarPedido();
+        }
+        else {
+          const numeroMesa = response.split(' ')[1]; 
+          this.unirseAMesa(numeroMesa);
         }
       } else {
         this.toast.showError('Tuvimos un error al leer el QR');
       }
     });
   }
-
+  async actualizarPedido(){
+    this.pedido = await this.usuarioSrv.getIfExists('pedidos', this.usuario.id, new Date);
+  }
   async agregarAListaEspera() {
     try {
       this.loadingService.showLoading();

@@ -41,7 +41,7 @@
     <ion-row>
       <ion-col
         col-12
-        *ngIf="usuario?.estado == undefined || usuario?.estado == 'mesaTomada'"
+        *ngIf="usuario?.estado == undefined || usuario?.estado == 'mesaTomada'" 
       >
         <ion-card
           [routerLink]="['/consulta', usuario.perfil, usuario?.id]"
@@ -53,7 +53,7 @@
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col col-12 *ngIf="usuario?.estado == 'mesaTomada' && !mostrarPrecio">
+      <ion-col col-12 *ngIf="usuario?.estado == 'mesaTomada' && !mostrarPedido">
         <ion-card
           [routerLink]="['/carta', usuario?.id]"
           class="ion-text-center ion-padding">
@@ -64,8 +64,8 @@
     </ion-row>
   </ion-grid>
 </section>
-<footer class="home-footer" *ngIf="mostrarPrecio">
+<footer class="home-footer" *ngIf="mostrarPedido">
   <p class="price">{{ pedido.precioTotal | currency }}</p>
   <p class="subtitle "> ({{ pedido.tiempoEstimado }} m)</p>
-  <p class="title" >{{ pedido.estado }}</p> 
+  <p *ngIf="mostrarEstado" class="title" >{{ pedido.estado }}</p> 
 </footer>
