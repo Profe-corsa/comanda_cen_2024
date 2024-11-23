@@ -1,9 +1,12 @@
 export enum Estado {
-  pendiente = 'pendiente',
+  pendiente = 'pendiente', //Estado inicial del pedido instanciado.
   tomado = 'tomado',
-  enPreparacion = 'en preparación',
-  pendienteDePago = 'pendiente de pago',
+  enPreparacion = 'en preparación', //El mozo acepto el pedido y va a las respectivas àreas
+  pendienteDePago = 'pendiente de pago', //El Cliente pidiò la cuenta
   finalizado = 'finalizado',
+  entregado = 'entregado', //Cuando el mozo se lo lleva a la mesa
+  recibido = 'recibido', //El cliente tiene el pedido en la mesa
+  pagado = 'pagado', //Finalizò el pago del pedido
 }
 
 export class Pedido {
@@ -14,12 +17,9 @@ export class Pedido {
   precioTotal: number = 0;
   estado: Estado = Estado.pendiente;
   nroMesa: string = '';
-  fecha : string;
-  hora : string;
+  hora: any;
   constructor() {
-    const now = new Date();
-    this.fecha = now.toLocaleDateString(); // Formato local: DD/MM/YYYY o similar
-    this.hora = now.toLocaleTimeString(); // Formato local: HH:MM:SS AM/PM
+    this.hora = new Date();
   }
   toJSON() {
     return {
@@ -29,7 +29,6 @@ export class Pedido {
       precioTotal: this.precioTotal,
       estado: this.estado,
       nroMesa: this.nroMesa,
-      fecha: this.fecha,
       hora: this.hora,
     };
   }

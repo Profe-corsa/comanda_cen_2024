@@ -17,12 +17,18 @@ import {
   IonTitle,
   IonIcon,
 } from '@ionic/angular/standalone';
-import { trashOutline } from 'ionicons/icons';
+import {
+  trashOutline,
+  checkmarkCircleOutline,
+  closeCircleOutline,
+} from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { Usuario } from 'src/app/clases/usuario';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { Observable } from 'rxjs';
+import { Producto } from 'src/app/clases/producto';
+import { Cliente } from 'src/app/clases/cliente';
 @Component({
   selector: 'app-pedido-cliente-modal',
   templateUrl: './pedido-cliente-modal.component.html',
@@ -44,7 +50,7 @@ import { Observable } from 'rxjs';
   ],
 })
 export class PedidoClienteModalComponent implements OnInit {
-  @Input() productos: any[] = []; // Recibimos los productos desde el componente padre
+  @Input() productos: Producto[] = []; // Recibimos los productos desde el componente padre
   productosAgrupados: {
     id: string;
     nombre: string;
@@ -53,20 +59,23 @@ export class PedidoClienteModalComponent implements OnInit {
     fotos: string[];
     tiempoEstimado: number;
     tipo: string;
+    estado: string;
   }[] = [];
   total: number = 0;
   @Input() usuarioId: string | any;
   @Output() productosActualizados = new EventEmitter<any[]>();
   @Output() totalActualizado = new EventEmitter<number>();
   usuario: Usuario | null = null;
+  @Input() estadoPedido: string = 'default';
+
   constructor(
     private modalController: ModalController,
     private dataService: DataService,
     private router: Router,
     private usuarioService: UsuarioService,
-    private toastService: ToastService,
+    private toastService: ToastService
   ) {
-    addIcons({ trashOutline });
+    addIcons({ trashOutline, checkmarkCircleOutline, closeCircleOutline });
   }
 
   ngOnInit() {
@@ -79,7 +88,6 @@ export class PedidoClienteModalComponent implements OnInit {
     }
   }
 
-  
   agruparProductos() {
     const mapa = new Map();
 
@@ -90,7 +98,7 @@ export class PedidoClienteModalComponent implements OnInit {
         mapa.set(producto.id, {
           ...producto,
           cantidad: 1,
-          tiempoEstimado: producto.tiempoPreparacion, 
+          tiempoEstimado: producto.tiempoPreparacion,
         });
       }
     });
@@ -129,7 +137,8 @@ export class PedidoClienteModalComponent implements OnInit {
   }
 
   async realizarPedido() {
-    if (this.usuario?.mesaAsignada){
+    if (this.usuario?.mesaAsignada) {
+      let cliente = <Cliente>this.usuario;
 
       const nuevoPedido = new Pedido();
       nuevoPedido.clienteId = this.usuarioId;
@@ -141,22 +150,32 @@ export class PedidoClienteModalComponent implements OnInit {
         tipo: producto.tipo,
         fotos: producto.fotos,
         tiempoEstimado: producto.tiempoEstimado,
-        estado: 'enPreparacion',
+        estado: Estado.enPreparacion,
       }));
       nuevoPedido.precioTotal = this.total;
-      nuevoPedido.nroMesa = this.usuario.mesaAsignada,//
-      nuevoPedido.estado = Estado.pendiente;
+      (nuevoPedido.nroMesa = this.usuario.mesaAsignada), //
+        (nuevoPedido.estado = Estado.pendiente);
       nuevoPedido.calcularTiempoEstimado();
       try {
-        await this.dataService.saveObject(nuevoPedido.toJSON(), 'pedidos');
+        nuevoPedido.id = await this.dataService.saveObject(
+          nuevoPedido.toJSON(),
+          'pedidos'
+        );
+
+        //Agregado del pedido al usuario
+        const pedidoCompleto = nuevoPedido;
+        await this.usuarioService.updateUserField(
+          cliente.id,
+          'pedido',
+          pedidoCompleto.toJSON()
+        );
         this.toastService.showExito('Pedido realizado');
         this.modalController.dismiss(nuevoPedido);
         this.router.navigate(['/home']);
       } catch (error) {
-        this.toastService.showError('Error al guardar el pedido: '+error);
+        this.toastService.showError('Error al guardar el pedido: ' + error);
       }
-    }
-    else{
+    } else {
       this.toastService.showError('Ha ocurrido un error al realizar el pedido');
     }
   }

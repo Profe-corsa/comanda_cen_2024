@@ -38,6 +38,7 @@
         </ion-card>
       </ion-col>
     </ion-row>
+
     <ion-row>
       <ion-col
         col-12
@@ -53,12 +54,24 @@
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col col-12 *ngIf="usuario?.estado == 'mesaTomada' && !mostrarPrecio">
+      <ion-col col-12 *ngIf="usuario?.estado == 'mesaTomada'">
         <ion-card
           [routerLink]="['/carta', usuario?.id]"
-          class="ion-text-center ion-padding">
+          class="ion-text-center ion-padding"
+        >
           <ion-icon name="restaurant-outline"></ion-icon>
-          <h2 class="long-name">Ver la carta </h2>
+          <h2 class="long-name">Ver la carta</h2>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col col-12 *ngIf="cliente?.pedido.estado == 'entregado'">
+        <ion-card
+          (click)="confirmarRecepcionPedido()"
+          class="ion-text-center ion-padding"
+        >
+          <ion-icon name="fast-food-outline"></ion-icon>
+          <h2 class="long-name">Confirmar recepción de pedido</h2>
         </ion-card>
       </ion-col>
     </ion-row>
@@ -66,6 +79,6 @@
 </section>
 <footer class="home-footer" *ngIf="mostrarPrecio">
   <p class="price">{{ pedido.precioTotal | currency }}</p>
-  <p class="subtitle "> ({{ pedido.tiempoEstimado }} m)</p>
-  <p class="title" >{{ pedido.estado }}</p> 
+  <p class="subtitle">({{ pedido.tiempoEstimado }} m)</p>
+  <p class="title">{{ pedido.estado }}</p>
 </footer>
