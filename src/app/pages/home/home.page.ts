@@ -13,7 +13,6 @@ import { Subscription } from 'rxjs';
 import { Usuario } from 'src/app/clases/usuario';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UsuarioService } from 'src/app/services/usuario.service';
-import { ToastService } from 'src/app/services/toast.service';
 import { addIcons } from 'ionicons';
 import { exitOutline } from 'ionicons/icons';
 import { Cliente } from 'src/app/clases/cliente';
@@ -50,7 +49,6 @@ export class HomePage {
   constructor(
     private authService: AuthService,
     private userSrv: UsuarioService,
-    private toast: ToastService,
     private activatedRoute: ActivatedRoute,
     private appComponent: AppComponent,
     private loadingService: LoadingService
@@ -68,29 +66,27 @@ export class HomePage {
       idUsuario = paramMap.get('usuarioAnonimo')!;
 
       if (idUsuario == null) {
-        idUsuario = this.authService.getCurrentUser()?.uid ?? '';
+        // idUsuario = this.authService.getUserLogueado()?.id ?? '';
+        this.usuario = this.authService.getUserLogueado();
       }
-
-      this.suscripcion = this.userSrv
-        .getUser(idUsuario)
-        .subscribe(async (data) => {
-          this.usuario = data;
-
-          if (this.usuario.perfil == 'cliente') {
-            //Se supone que los clientes van a tener un trato preferencial y van a poder hacer reservas
-            //(SEGUIR DESARROLLANDO)
-            cliente = this.usuario as Cliente;
-          }
-        });
     });
+    //   this.suscripcion = this.userSrv
+    //     .getUser(idUsuario)
+    //     .subscribe(async (data) => {
+    //       this.usuario = data;
+
+    //       if (this.usuario.perfil == 'cliente') {
+    //         //Se supone que los clientes van a tener un trato preferencial y van a poder hacer reservas
+    //         //(SEGUIR DESARROLLANDO)
+    //         cliente = this.usuario as Cliente;
+    //       }
+    //     });
+    // });
   }
 
   async logout() {
     this.loadingService.showLoading();
-
     this.appComponent.playCloseSound();
-    this.suscripcion.unsubscribe();
-
     await this.authService.logOut();
     this.loadingService.hideLoading();
   }

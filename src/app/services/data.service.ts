@@ -33,36 +33,37 @@ export class DataService {
 
   constructor(private firestore: Firestore, private toast: ToastService) {}
 
-  async saveObject(objeto: any, collectionName: string): Promise<void> {
+  async saveObject(objeto: any, collectionName: string): Promise<any> {
     try {
       const collectionRef = collection(
         this.firestore,
         collectionName
       ) as CollectionReference;
 
-      // Verifica si el objeto ya tiene un ID. Si no, crea uno nuevo con `addDoc`
+      let docId: string;
+
       if (!objeto.id) {
         // Usa addDoc para crear el documento y obtener el uid generado
         const docRef = await addDoc(collectionRef, objeto);
+        docId = docRef.id;
+
         // Actualiza el campo `id` en el documento
-        await updateDoc(docRef, { id: docRef.id });
+        await updateDoc(docRef, { id: docId });
       } else {
         // Si el objeto ya tiene un ID, usa setDoc para actualizarlo
         const docRef = doc(collectionRef, objeto.id);
         await setDoc(docRef, objeto);
+        docId = objeto.id;
       }
-      if (collectionName === 'pedidos'){
-        this.toast.showExito(
-          `Se guardó un registro en la colección: ${collectionName}`,
-          'top'
-        );
-      }
-      else {
-        this.toast.showExito(
-          `Se guardó un registro en la colección: ${collectionName}`,
-          'middle'
-        );
-      }
+
+      // Mostrar mensajes de éxito dependiendo de la colección
+      const posicionToast = collectionName === 'pedidos' ? 'top' : 'middle';
+      this.toast.showExito(
+        `Se guardó un registro en la colección: ${collectionName}`,
+        posicionToast
+      );
+
+      return docId; // Devuelve el ID del documento
     } catch (error) {
       this.toast.showError(
         `Error al guardar el objeto en la colección ${collectionName}`,
@@ -353,6 +354,34 @@ export class DataService {
       throw error;
     }
   }
+
+  async updateObjectField(
+    collectionName: string,
+    docId: string,
+    fieldName: string,
+    fieldValue: any
+  ): Promise<void> {
+    try {
+      const docRef = doc(this.firestore, `${collectionName}/${docId}`);
+
+      // Crea un objeto con el campo a actualizar
+      const updateObject = {
+        [fieldName]: fieldValue,
+      };
+
+      await updateDoc(docRef, updateObject);
+      console.log(
+        `Campo ${fieldName} del usuario ${docId} actualizado correctamente.`
+      );
+    } catch (error) {
+      console.error(
+        `Error al actualizar el campo ${fieldName} del usuario ${docId}:`,
+        error
+      );
+      throw error;
+    }
+  }
+
   async getDocumentsByTwoFieldsAndOrder(
     collectionName: string,
     field1: string,
@@ -362,7 +391,7 @@ export class DataService {
     orderByField: string
   ) {
     const pedidosRef = collection(this.firestore, collectionName);
-    
+
     // Crear una consulta con varios filtros y ordenación
     const q = query(
       pedidosRef,
@@ -380,7 +409,7 @@ export class DataService {
 
     return pedidos;
   }
-  
+
   async getDocumentsByField(
     collectionName: string,
     fieldName: string,
@@ -389,25 +418,28 @@ export class DataService {
     try {
       // Obtén la referencia a la colección pasada por parámetro
       const collectionRef = collection(this.firestore, collectionName);
-  
+
       // Crea una consulta para buscar documentos donde el campo especificado tenga el valor proporcionado
-      const queryByField = query(collectionRef, where(fieldName, '==', fieldValue));
-  
+      const queryByField = query(
+        collectionRef,
+        where(fieldName, '==', fieldValue)
+      );
+
       // Ejecuta la consulta
       const querySnapshot = await getDocs(queryByField);
-  
+
       // Si hay documentos, mapea los resultados a un array de objetos
       const documents = querySnapshot.docs.map((doc) => ({
         id: doc.id, // Incluye el ID del documento
         ...doc.data(), // Incluye los datos del documento
       }));
-  
+
       console.log(
         documents.length > 0
           ? `Se encontraron ${documents.length} documentos en ${collectionName} con ${fieldName} = ${fieldValue}`
           : `No se encontró ningún documento en ${collectionName} con ${fieldName} = ${fieldValue}`
       );
-  
+
       return documents;
     } catch (error) {
       console.error(
@@ -417,7 +449,7 @@ export class DataService {
       return []; // En caso de error, retorna un array vacío
     }
   }
-  
+
   //Obtiene solo un documento de una coleccion por Id
   async obtenerDocumentoPorId<T>(
     coleccion: string,

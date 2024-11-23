@@ -78,7 +78,7 @@ export class UsuarioService {
     return docData(userDocRef, { idField: 'id' }) as Observable<Usuario>;
   }
 
-  async getUserPromise(idUsuario: string): Promise<Usuario | undefined> {
+  async getUserPromise(idUsuario: string): Promise<any | undefined> {
     try {
       // Crea la referencia al documento del usuario
       const userDocRef = doc(this.firestore, `usuarios/${idUsuario}`);
@@ -105,7 +105,7 @@ export class UsuarioService {
         where('fecha', '==', fechaActual.toLocaleDateString())
       );
       const querySnapshot = await getDocs(usuariosQuery);
-  
+
       if (!querySnapshot.empty) {
         const record = querySnapshot.docs[0].data();
         console.log(
@@ -127,11 +127,7 @@ export class UsuarioService {
       return null; // En caso de error, retorna null
     }
   }
-  
-  
-  
-  
-  
+
   obtenerUsuariosPorPerfil(perfil: string): Observable<Usuario[]> {
     let usuariosQuery;
 

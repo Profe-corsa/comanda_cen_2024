@@ -17,12 +17,10 @@
           Tiempo estimado: <span>{{ pedido.tiempoEstimado }}</span
           >"
         </p>
-        <!-- <ion-label
-          >Hora:
-          {{
-            pedido.horaPedido.toDate() | date : "dd/MM/yyyy HH:mm"
-          }}</ion-label
-        >-->
+        <ion-label
+          >Pedido hecho a las
+          {{ pedido.hora.toDate() | date : "dd/MM/yyyy HH:mm" }}</ion-label
+        >
       </ion-label>
       <div
         class="status-indicator"
