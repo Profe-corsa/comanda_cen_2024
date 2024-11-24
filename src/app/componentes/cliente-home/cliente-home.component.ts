@@ -19,8 +19,7 @@ import {
   chatbubblesOutline,
   qrCodeOutline,
   bagOutline,
-  fastFoodOutline,
-} from 'ionicons/icons';
+  fastFoodOutline, gameControllerOutline } from 'ionicons/icons';
 
 import { QrScannerService } from '../../services/qrscanner.service';
 import { ToastService } from '../../services/toast.service';
@@ -34,7 +33,6 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { LoadingComponent } from 'src/app/componentes/loading/loading.component';
 import { PushMailNotificationService } from 'src/app/services/push-mail-notification.service';
 import { Perfiles } from 'src/app/clases/enumerados/perfiles';
-import { EstadoPedidosComponent } from '../estado-pedidos/estado-pedidos.component';
 import { Estado, Pedido } from 'src/app/clases/pedido';
 import { Cliente } from 'src/app/clases/cliente';
 
@@ -71,16 +69,7 @@ export class ClienteHomeComponent implements OnInit {
     private router: Router,
     private notificationService: PushMailNotificationService
   ) {
-    addIcons({
-      list,
-      qrCodeOutline,
-      chatbubblesOutline,
-      restaurantOutline,
-      fastFoodOutline,
-      bagOutline,
-      addCircleOutline,
-      man,
-    });
+    addIcons({list,qrCodeOutline,chatbubblesOutline,restaurantOutline,fastFoodOutline,gameControllerOutline,bagOutline,addCircleOutline,man,});
   }
 
   async ngOnInit() {
@@ -88,12 +77,7 @@ export class ClienteHomeComponent implements OnInit {
     this.cliente = <Cliente>this.usuario;
 
     console.log('el usuario en home:', this.usuario);
-    this.pedido = await this.usuarioSrv.getIfExists(
-      'pedidos',
-      this.usuario.id,
-      new Date()
-    );
-    if (this.pedido) {
+    if (this.cliente.pedido) {
       this.mostrarPedido = true;
     }
   }
@@ -106,10 +90,9 @@ export class ClienteHomeComponent implements OnInit {
       }
       // Verificar si el QR es de una mesa (formato "Mesa 1", "Mesa 2", etc.)
       else if (response.startsWith('Mesa ')) {
-       
-        if (this.pedido) {
-          if (this.mostrarPedido){
-            if(this.mostrarEstado){
+        if (this.cliente.pedido) {
+          if (this.mostrarPedido) {
+            if(this.mostrarEstado) {
               this.mostrarJuegos = true;
             }
             this.mostrarEstado = true;
