@@ -72,4 +72,18 @@ export const routes: Routes = [
         (m) => m.EstadoPedidosComponent
       ),
   },
+  {
+    path: 'menu-juegos',
+    loadComponent: () =>
+      import('./componentes/menu-juegos/menu-juegos.component').then(
+        (m) => m.MenuJuegosComponent
+      ),
+  },
+  {
+    path: 'shuffle-cups',
+    loadComponent: () =>
+      import('./componentes/shuffle-cups/shuffle-cups.component').then(
+        (m) => m.ShuffleCupsComponent
+      ),
+  },
 ];

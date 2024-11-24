@@ -66,12 +66,21 @@
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col col-12 *ngIf="usuario?.estado == 'mesaTomada' && !mostrarPedido">
+      <ion-col col-12 *ngIf="mostrarJuegos">
         <ion-card
           [routerLink]="['/carta', usuario?.id]"
           class="ion-text-center ion-padding">
           <ion-icon name="game-controller-outline"></ion-icon>
           <h2 class="long-name">Ver los juegos</h2>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col col-12 *ngIf="cliente?.pedido.estado == 'recibido'">
+        <ion-card
+          class="ion-text-center ion-padding">
+          <ion-icon name="fast-food-outline"></ion-icon>
+          <h2 class="long-name">Pedir la cuenta</h2>
         </ion-card>
       </ion-col>
     </ion-row>

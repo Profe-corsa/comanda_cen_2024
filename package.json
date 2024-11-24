@@ -34,6 +34,7 @@
     "@ionic/angular": "^8.0.0",
     "@ionic/pwa-elements": "^3.3.0",
     "firebase": "^10.14.1",
+    "gsap": "^3.12.5",
     "ionicons": "^7.2.1",
     "rxjs": "~7.8.0",
     "swiper": "^11.1.14",

@@ -94,10 +94,15 @@ export class ClienteHomeComponent implements OnInit {
           if (this.mostrarPedido) {
             if(this.mostrarEstado) {
               this.mostrarJuegos = true;
+              this.toast.showExito("si llega a mostrar los juegos")
             }
-            this.mostrarEstado = true;
+            else{
+              this.mostrarEstado = true;
+            }
           }
-          this.mostrarPedido = true;
+          else{
+            this.mostrarPedido = true;
+          }
           this.actualizarPedido();
         }
         else {
