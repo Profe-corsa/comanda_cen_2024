@@ -1,0 +1,18 @@
+<div class="game-container">
+  <p class="instructions">Find the ball under the cloche</p>
+  <div class="shell-game">
+    <div class="cloche-container">
+      <div id="cloche1" class="cloche cloche-1" (click)="revealCloche(1)"></div>
+      <div id="cloche2" class="cloche cloche-2" (click)="revealCloche(2)"></div>
+      <div id="cloche3" class="cloche cloche-3" (click)="revealCloche(3)"></div>
+      <div id="pico1" class="pico pico-1" ></div>
+      <div id="pico2" class="pico pico-2" ></div>
+      <div id="pico3" class="pico pico-3" ></div>
+      <div id="plato1" class="plato plato-1" ></div>
+      <div id="plato2" class="plato plato-2" ></div>
+      <div id="plato3" class="plato plato-3" ></div>
+      <div id="ball"></div>
+    </div>
+  </div>
+  <button id="btnStart" (click)="startGame()">START</button>
+</div>

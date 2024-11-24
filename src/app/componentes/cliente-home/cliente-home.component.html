@@ -1,19 +1,16 @@
 <div *ngIf="loadingService.loadingStatus">
   <app-loading></app-loading>
 </div>
-
 <section class="ion-text-center ion-margin-bottom">
   <ion-grid>
     <ion-row>
       <ion-col
         col-12
-        *ngIf="usuario?.estado == undefined || usuario?.estado == 'aprobado'"
-      >
+        *ngIf="usuario?.estado == undefined || usuario?.estado == 'aprobado'">
         <ion-card
           (click)="leerQR()"
           class="ion-text-center ion-padding"
-          color="000"
-        >
+          color="000">
           <ion-icon name="list"></ion-icon>
           <h2 class="long-name">Lista de Espera</h2>
         </ion-card>
@@ -26,39 +23,33 @@
           usuario?.estado == undefined ||
           usuario?.estado == 'puedeTomarMesa' ||
           usuario?.estado == 'mesaTomada'
-        "
-      >
+        ">
         <ion-card
           (click)="leerQR()"
           class="ion-text-center ion-padding"
-          color="000"
-        >
+          color="000">
           <ion-icon name="qr-code-outline"></ion-icon>
           <h2 class="long-name">QR de la mesa</h2>
         </ion-card>
       </ion-col>
     </ion-row>
-
     <ion-row>
       <ion-col
         col-12
-        *ngIf="usuario?.estado == undefined || usuario?.estado == 'mesaTomada'"
-      >
+        *ngIf="usuario?.estado == undefined || usuario?.estado == 'mesaTomada'" >
         <ion-card
           [routerLink]="['/consulta', usuario.perfil, usuario?.id]"
-          class="ion-text-center ion-padding"
-        >
+          class="ion-text-center ion-padding">
           <ion-icon name="chatbubbles-outline"></ion-icon>
           <h2 class="long-name">Consultar al mozo</h2>
         </ion-card>
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col col-12 *ngIf="usuario?.estado == 'mesaTomada'">
+      <ion-col col-12 *ngIf="usuario?.estado == 'mesaTomada' && !mostrarPedido">
         <ion-card
           [routerLink]="['/carta', usuario?.id]"
-          class="ion-text-center ion-padding"
-        >
+          class="ion-text-center ion-padding">
           <ion-icon name="restaurant-outline"></ion-icon>
           <h2 class="long-name">Ver la carta</h2>
         </ion-card>
@@ -68,17 +59,35 @@
       <ion-col col-12 *ngIf="cliente?.pedido.estado == 'entregado'">
         <ion-card
           (click)="confirmarRecepcionPedido()"
-          class="ion-text-center ion-padding"
-        >
+          class="ion-text-center ion-padding">
           <ion-icon name="fast-food-outline"></ion-icon>
           <h2 class="long-name">Confirmar recepción de pedido</h2>
         </ion-card>
       </ion-col>
     </ion-row>
+    <ion-row>
+      <ion-col col-12 *ngIf="mostrarJuegos">
+        <ion-card
+          [routerLink]="['/carta', usuario?.id]"
+          class="ion-text-center ion-padding">
+          <ion-icon name="game-controller-outline"></ion-icon>
+          <h2 class="long-name">Ver los juegos</h2>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col col-12 *ngIf="cliente?.pedido.estado == 'recibido'">
+        <ion-card
+          class="ion-text-center ion-padding">
+          <ion-icon name="fast-food-outline"></ion-icon>
+          <h2 class="long-name">Pedir la cuenta</h2>
+        </ion-card>
+      </ion-col>
+    </ion-row>
   </ion-grid>
 </section>
-<footer class="home-footer" *ngIf="mostrarPrecio">
-  <p class="price">{{ pedido.precioTotal | currency }}</p>
-  <p class="subtitle">({{ pedido.tiempoEstimado }} m)</p>
-  <p class="title">{{ pedido.estado }}</p>
+<footer class="home-footer" *ngIf="mostrarPedido">
+  <p class="price">{{ cliente.pedido.precioTotal | currency }}</p>
+  <p class="subtitle "> ({{ cliente.pedido.tiempoEstimado }} m)</p>
+  <p *ngIf="mostrarEstado" class="title" >{{ cliente.pedido.estado }}</p> 
 </footer>
