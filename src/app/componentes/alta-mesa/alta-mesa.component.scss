@@ -96,6 +96,9 @@ ion-grid {
 
 /* Botones de acción */
 .action-buttons {
+  // display: flex;
+  // flex-direction: column;
+  // justify-content: center;
   margin-top: 24px;
 
   ion-button {
@@ -155,5 +158,13 @@ ion-fab-list {
   .action-buttons ion-button,
   .action-buttons .register-button {
     font-size: 16px;
+  }
+}
+
+.selectTipo {
+  margin-top: 15px;
+
+  label {
+    margin-left: -100px !important;
   }
 }

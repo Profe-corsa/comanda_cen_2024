@@ -143,9 +143,10 @@ export class MozoListaPedidosComponent implements OnInit {
           if (estadoSeleccionado == 'aceptado') {
             pedido.estado = Estado.enPreparacion;
             this.confirmarCambioEstado(pedido);
-          } else if (estadoSeleccionado == 'entregado')
+          } else if (estadoSeleccionado == 'entregado') {
             pedido.estado = Estado.entregado;
-          this.confirmarCambioEstado(pedido);
+            this.confirmarCambioEstado(pedido);
+          }
         }
       });
 
