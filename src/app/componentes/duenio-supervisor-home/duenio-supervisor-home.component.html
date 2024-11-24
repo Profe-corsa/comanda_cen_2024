@@ -1,22 +1,16 @@
 <ion-row>
-  <ion-col col-4>
+  <ion-col col-6>
     <ion-card
-      [routerLink]="['/listados', 'clientesPendientes']"
+      [routerLink]="['/registro', 'empleado']"
       class="ion-text-center ion-padding"
     >
-      <ion-icon name="man"></ion-icon>
-      <h2 class="long-name">Clientes pendientes de aprobación</h2>
-    </ion-card>
-  </ion-col>
-  <ion-col col-4>
-    <ion-card class="ion-text-center ion-padding">
-      <ion-icon name="restaurant-outline"></ion-icon>
-      <h2 class="long-name">Confirmar Reserva</h2>
+      <ion-icon name="add-circle-outline"></ion-icon>
+      <h2 class="long-name">Registrar nuevo empleado</h2>
     </ion-card>
   </ion-col>
 </ion-row>
 <ion-row>
-  <ion-col col-4>
+  <ion-col col-6>
     <ion-card
       [routerLink]="['/registro', 'alta-mesa']"
       class="ion-text-center ion-padding"
@@ -25,15 +19,33 @@
       <h2 class="long-name">Alta de Mesas</h2>
     </ion-card>
   </ion-col>
+  <ion-col col-6>
+    <ion-card
+      [routerLink]="['/listados', 'mesas']"
+      class="ion-text-center ion-padding"
+    >
+      <ion-icon name="add-circle-outline"></ion-icon>
+      <h2 class="long-name">Listado de Mesas</h2>
+    </ion-card>
+  </ion-col>
+</ion-row>
+
+<ion-row>
+  <ion-col col-12>
+    <ion-card
+      [routerLink]="['/listados', 'clientesPendientes']"
+      class="ion-text-center ion-padding"
+    >
+      <ion-icon name="man"></ion-icon>
+      <h2 class="long-name">Clientes pendientes de aprobación</h2>
+    </ion-card>
+  </ion-col>
 </ion-row>
 <ion-row>
-  <ion-col col-4>
-  <ion-card 
-    [routerLink]="['/registro','empleado']"
-    class="ion-text-center ion-padding"
-  >
-    <ion-icon name="add-circle-outline"></ion-icon>
-    <h2 class="long-name">registrar nuevo empleado</h2>
-  </ion-card>
-</ion-col>
+  <ion-col col-12>
+    <ion-card class="ion-text-center ion-padding">
+      <ion-icon name="restaurant-outline"></ion-icon>
+      <h2 class="long-name">Confirmar Reserva</h2>
+    </ion-card>
+  </ion-col>
 </ion-row>
