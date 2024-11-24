@@ -1,0 +1,29 @@
+<div id="contenedor">
+  <ion-grid>
+    <ion-row>
+      <!-- Mostrar las mesas en formato grid de 2 columnas -->
+      <ion-col size="6" *ngFor="let mesa of mesas" class="mesa-card">
+        <ion-card (click)="seleccionarMesa(mesa)">
+          <ion-card-content>
+            <div
+              class="mesa-icon"
+              [ngClass]="
+                mesa.estado === 'Disponible' ? 'disponible' : 'ocupada'
+              "
+            >
+              <img
+                [src]="
+                  mesa.estado === 'Disponible'
+                    ? 'assets/mesa_ok.png'
+                    : 'assets/mesa_error.png'
+                "
+                alt="Mesa {{ mesa.numero }}"
+              />
+            </div>
+            <h3 class="mesa-label">Mesa {{ mesa.numero }}</h3>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</div>

@@ -19,6 +19,7 @@ import { MozoListaPedidosComponent } from 'src/app/componentes/mozo-lista-pedido
 import { CocineroBartenderPedidoComponent } from 'src/app/componentes/cocinero-bartender-pedido/cocinero-bartender-pedido.component';
 import { addIcons } from 'ionicons';
 import { arrowBackCircleOutline } from 'ionicons/icons';
+import { MesasListaComponent } from '../../componentes/mesas-lista/mesas-lista.component';
 
 @Component({
   selector: 'app-listados',
@@ -41,6 +42,7 @@ import { arrowBackCircleOutline } from 'ionicons/icons';
     MetreListaEsperaComponent,
     MozoListaPedidosComponent,
     CocineroBartenderPedidoComponent,
+    MesasListaComponent,
   ],
 })
 export class ListadosPage implements OnInit {

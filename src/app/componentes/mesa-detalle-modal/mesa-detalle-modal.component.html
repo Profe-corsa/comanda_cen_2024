@@ -1,0 +1,23 @@
+<ion-content>
+  <div class="contenedor-principal">
+    <div class="titulo-close">
+      <p class="titulo">DETALLE MESA {{ mesa?.numero }}</p>
+      <ion-buttons slot="end">
+        <ion-button (click)="close()" class="btn-close">X</ion-button>
+      </ion-buttons>
+    </div>
+    <div class="contenido">
+      <ion-list>
+        <ion-item>
+          <ion-thumbnail slot="start">
+            <img [src]="mesa?.foto" alt="Imagen del producto" />
+          </ion-thumbnail>
+          <ion-label>
+            <p>Tipo: {{ mesa?.tipo }}</p>
+            <p>Cantidad comensales: {{ mesa?.nroComensales }}</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </div>
+  </div>
+</ion-content>

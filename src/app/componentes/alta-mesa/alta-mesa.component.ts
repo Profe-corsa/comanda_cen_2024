@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -8,7 +8,7 @@ import {
 import { Mesa } from '../../clases/mesa'; // Ajusta la ruta a tu modelo Mesa
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { QrScannerService } from '../../services/qrscanner.service'; // Servicio para generar el QR
+// import { QrScannerService } from '../../services/qrscanner.service'; // Servicio para generar el QR
 import { CommonModule } from '@angular/common';
 import {
   IonContent,
@@ -22,9 +22,16 @@ import {
   IonTitle,
   IonLabel,
   IonCard,
+  IonCol,
+  IonGrid,
+  IonRow,
+  IonIcon,
+  IonText,
 } from '@ionic/angular/standalone';
 import { DataService } from 'src/app/services/data.service';
-import { Route, Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
+import { addIcons } from 'ionicons';
+import { caretBackCircle } from 'ionicons/icons';
 
 @Component({
   selector: 'app-alta-mesa',
@@ -32,6 +39,10 @@ import { Route, Router, RouterLink } from '@angular/router';
   styleUrls: ['./alta-mesa.component.scss'],
   standalone: true,
   imports: [
+    IonText,
+    IonIcon,
+    IonRow,
+    IonCol,
     IonCard,
     IonLabel,
     IonTitle,
@@ -45,7 +56,8 @@ import { Route, Router, RouterLink } from '@angular/router';
     ReactiveFormsModule,
     IonSelect,
     IonSelectOption,
-    RouterLink,
+    IonGrid,
+    IonRow,
   ],
 })
 export class AltaMesaComponent {
@@ -59,6 +71,8 @@ export class AltaMesaComponent {
     private dataSrv: DataService,
     private route: Router
   ) {
+    addIcons({ caretBackCircle });
+
     this.mesaForm = this.fb.group({
       numero: [null, [Validators.required]],
       nroComensales: [null, [Validators.required]],
@@ -89,5 +103,9 @@ export class AltaMesaComponent {
       });
       // this.qrCode = this.qrCodeGenerator.scanCode(mesaData.numero.toString());
     }
+  }
+
+  volver() {
+    this.route.navigate(['home']);
   }
 }
