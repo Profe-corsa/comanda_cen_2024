@@ -1,3 +1,8 @@
+<ng-content *ngIf="verEncuestas; else realizarEncuesta">
+  <app-listado-encuestas></app-listado-encuestas>
+</ng-content>
+
+<ng-template #realizarEncuesta>
 <div id="contenedor">
   <form>
     <!-- Nivel de limpieza -->
@@ -74,3 +79,5 @@
     </ion-button>
   </form>
 </div>
+
+</ng-template>

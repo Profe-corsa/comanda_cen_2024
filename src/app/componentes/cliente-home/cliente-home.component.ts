@@ -19,7 +19,7 @@ import {
   chatbubblesOutline,
   qrCodeOutline,
   bagOutline,
-  fastFoodOutline, gameControllerOutline } from 'ionicons/icons';
+  fastFoodOutline, gameControllerOutline, bookOutline } from 'ionicons/icons';
 
 import { QrScannerService } from '../../services/qrscanner.service';
 import { ToastService } from '../../services/toast.service';
@@ -35,6 +35,7 @@ import { PushMailNotificationService } from 'src/app/services/push-mail-notifica
 import { Perfiles } from 'src/app/clases/enumerados/perfiles';
 import { Estado, Pedido } from 'src/app/clases/pedido';
 import { Cliente } from 'src/app/clases/cliente';
+//import { EncuestaClienteComponent } from '../encuesta-cliente/encuesta-cliente.component';
 
 @Component({
   selector: 'app-cliente-home',
@@ -50,6 +51,7 @@ import { Cliente } from 'src/app/clases/cliente';
     CommonModule,
     RouterLink,
     LoadingComponent,
+    //EncuestaClienteComponent
   ],
 })
 export class ClienteHomeComponent implements OnInit {
@@ -58,6 +60,7 @@ export class ClienteHomeComponent implements OnInit {
   mostrarPedido: boolean = false;
   mostrarEstado: boolean = false;
   mostrarJuegos: boolean = false;
+  mostrarEncuesta: boolean = false;
   cliente: Cliente | any;
   constructor(
     private qrService: QrScannerService,
@@ -69,7 +72,7 @@ export class ClienteHomeComponent implements OnInit {
     private router: Router,
     private notificationService: PushMailNotificationService
   ) {
-    addIcons({list,qrCodeOutline,chatbubblesOutline,restaurantOutline,fastFoodOutline,gameControllerOutline,bagOutline,addCircleOutline,man,});
+    addIcons({list,qrCodeOutline,chatbubblesOutline,restaurantOutline,bookOutline,fastFoodOutline,gameControllerOutline,bagOutline,addCircleOutline,man,});
   }
 
   async ngOnInit() {

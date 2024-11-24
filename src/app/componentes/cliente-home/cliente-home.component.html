@@ -46,12 +46,22 @@
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col col-12 *ngIf="usuario?.estado == 'mesaTomada' && !mostrarPedido">
+      <ion-col col-12 *ngIf="usuario?.estado === 'mesaTomada' && !mostrarPedido">
         <ion-card
           [routerLink]="['/carta', usuario?.id]"
           class="ion-text-center ion-padding">
           <ion-icon name="restaurant-outline"></ion-icon>
           <h2 class="long-name">Ver la carta</h2>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+        <ion-row>
+      <ion-col col-12 *ngIf="usuario?.estado === 'mesaTomada'">
+        <ion-card
+          [routerLink]="['/encuesta-cliente', usuario.id]"
+          class="ion-text-center ion-padding">
+          <ion-icon name="book-outline"></ion-icon>
+          <h2 class="long-name">Ver encuesta</h2>
         </ion-card>
       </ion-col>
     </ion-row>

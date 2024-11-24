@@ -2,9 +2,12 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Pregunta, Encuesta, TipoEncuesta } from 'src/app/clases/encuesta';
 import { EncuestaService } from '../../services/encuesta.service';
 import { Usuario } from 'src/app/clases/usuario';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IonSelectOption, IonSelect, IonLabel, IonItem, IonRange, IonList, IonRadioGroup, IonListHeader, IonRadio, IonCheckbox, IonTextarea, IonButton } from "@ionic/angular/standalone";
 import { FormsModule } from '@angular/forms';
+import { AuthService } from 'src/app/services/auth.service';
+import { ListadoEncuestasComponent } from '../listado-encuestas/listado-encuestas.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-encuesta-cliente',
@@ -12,23 +15,40 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./encuesta-cliente.component.scss'],
   standalone: true,
   imports: [IonButton, IonTextarea, IonCheckbox, IonRadio, IonListHeader, IonRadioGroup, IonList, IonRange, IonItem, IonLabel,
-    IonSelect, IonSelectOption, FormsModule
+    IonSelect, IonSelectOption, FormsModule, ListadoEncuestasComponent, CommonModule
   ],
 })
 export class EncuestaClienteComponent implements OnInit {
-  @Input() usuario: Usuario; // Usuario recibido como Input
+  usuario: Usuario | any; // Usuario recibido como Input
   limpieza: number = 0;
   predisposicion: string = '';
   orden: string = '';
   elementosDisponibles: boolean = false;
   comentariosAdicionales: string = '';
+  verEncuestas: boolean = true;
 
   constructor(
     private encuestaService: EncuestaService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.usuario = this.authService.getUserLogueado();
+    console.log('user', this.usuario);
+    const usuarioEncuestaAux = localStorage.getItem("UsuarioEncuesta");
+    if (usuarioEncuestaAux){
+      const usuarioEncuesta = JSON.parse(usuarioEncuestaAux);
+      if (usuarioEncuesta.usuarioId == this.usuario.id){
+        //Ya realizo la encuesta
+        this.verEncuestas = true;
+      }else{
+        this.verEncuestas = false;
+      }
+    }else{
+      this.verEncuestas = false;
+    } 
+  }
 
   guardarEncuesta(): void {
     // Construir las preguntas basadas en las respuestas del usuario
@@ -52,7 +72,13 @@ export class EncuestaClienteComponent implements OnInit {
       TipoEncuesta.cliente,
       this.usuario
     );
+        console.log('user2', this.usuario);
 
+    const usuarioEncuesta = {
+      usuarioId : this.usuario.id,
+      fecha : new Date()
+    }
+    localStorage.setItem("UsuarioEncuesta",JSON.stringify(usuarioEncuesta));
     // Guardar la encuesta utilizando el servicio
     this.encuestaService
       .createEncuesta(encuesta)
@@ -67,6 +93,6 @@ export class EncuestaClienteComponent implements OnInit {
 
   redirigirCliente(): void {
     // Redirigir al cliente a la página de inicio
-    this.router.navigate(['/home', this.usuario.id]);
+    this.router.navigate(['/home']);
   }
 }
