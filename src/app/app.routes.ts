@@ -73,6 +73,27 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'menu-juegos',
+    loadComponent: () =>
+      import('./componentes/menu-juegos/menu-juegos.component').then(
+        (m) => m.MenuJuegosComponent
+      ),
+  },
+  {
+    path: 'shuffle-cups',
+    loadComponent: () =>
+      import('./componentes/shuffle-cups/shuffle-cups.component').then(
+        (m) => m.ShuffleCupsComponent
+      ),
+  },
+  {
+    path: 'encuesta-cliente/:id',
+    loadComponent: () =>
+      import('./componentes/encuesta-cliente/encuesta-cliente.component').then(
+        (m) => m.EncuestaClienteComponent
+      ),
+  },
+  {
     path: 'reservas/:id',
     loadComponent: () =>
       import('./pages/reservas/reservas.page').then((m) => m.ReservasPage),

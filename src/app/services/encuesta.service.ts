@@ -1,14 +1,18 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { Firestore, collection, addDoc } from '@angular/fire/firestore';
 import { Encuesta } from '../clases/encuesta';
+import { DataService } from './data.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EncuestaService {
   private collectionName = 'encuestas';
-
-  constructor(private firestore: AngularFirestore) {}
+  private encuestasCollection;
+  
+  constructor(private firestore: Firestore, private dataService: DataService) {
+    this.encuestasCollection = collection(this.firestore, 'encuestas');
+  }
 
   // Crear una nueva encuesta
   createEncuesta(encuesta: Encuesta): Promise<any> {
@@ -25,37 +29,12 @@ export class EncuestaService {
       fecha: new Date(), // Agregar la fecha de creación
     };
 
-    return this.firestore.collection(this.collectionName).add(encuestaData);
+    return addDoc(this.encuestasCollection, { ...encuesta });
   }
 
   // Obtener todas las encuestas
   getEncuestas() {
-    return this.firestore.collection(this.collectionName).snapshotChanges();
+    return this.dataService.getCollectionData('encuestas');
   }
 
-  // Obtener encuestas por tipo
-  getEncuestasByTipo(tipo: string) {
-    return this.firestore
-      .collection(this.collectionName, (ref) => ref.where('tipo', '==', tipo))
-      .snapshotChanges();
-  }
-
-  // Obtener encuestas por usuario
-  getEncuestasByUsuario(usuarioId: string) {
-    return this.firestore
-      .collection(this.collectionName, (ref) =>
-        ref.where('usuario.id', '==', usuarioId)
-      )
-      .snapshotChanges();
-  }
-
-  // Eliminar una encuesta
-  deleteEncuesta(id: string): Promise<void> {
-    return this.firestore.collection(this.collectionName).doc(id).delete();
-  }
-
-  // Actualizar una encuesta
-  updateEncuesta(id: string, data: Partial<Encuesta>): Promise<void> {
-    return this.firestore.collection(this.collectionName).doc(id).update(data);
-  }
 }

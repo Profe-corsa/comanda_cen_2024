@@ -20,6 +20,8 @@ import {
   qrCodeOutline,
   bagOutline,
   fastFoodOutline,
+  gameControllerOutline,
+  bookOutline,
   calendarOutline,
 } from 'ionicons/icons';
 
@@ -35,9 +37,9 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { LoadingComponent } from 'src/app/componentes/loading/loading.component';
 import { PushMailNotificationService } from 'src/app/services/push-mail-notification.service';
 import { Perfiles } from 'src/app/clases/enumerados/perfiles';
-import { EstadoPedidosComponent } from '../estado-pedidos/estado-pedidos.component';
 import { Estado, Pedido } from 'src/app/clases/pedido';
 import { Cliente } from 'src/app/clases/cliente';
+//import { EncuestaClienteComponent } from '../encuesta-cliente/encuesta-cliente.component';
 
 @Component({
   selector: 'app-cliente-home',
@@ -53,13 +55,16 @@ import { Cliente } from 'src/app/clases/cliente';
     CommonModule,
     RouterLink,
     LoadingComponent,
+    //EncuestaClienteComponent
   ],
 })
 export class ClienteHomeComponent implements OnInit {
   @Input() usuario: Usuario | any;
   pedido: Pedido | any = [];
   mostrarPedido: boolean = false;
-  mostrarPrecio: boolean = false;
+  mostrarEstado: boolean = false;
+  mostrarJuegos: boolean = false;
+  mostrarEncuesta: boolean = false;
   cliente: Cliente | any;
   constructor(
     private qrService: QrScannerService,
@@ -76,8 +81,9 @@ export class ClienteHomeComponent implements OnInit {
       qrCodeOutline,
       chatbubblesOutline,
       restaurantOutline,
+      bookOutline,
       fastFoodOutline,
-      calendarOutline,
+      gameControllerOutline,
       bagOutline,
       addCircleOutline,
       man,
@@ -89,13 +95,8 @@ export class ClienteHomeComponent implements OnInit {
     this.cliente = <Cliente>this.usuario;
 
     console.log('el usuario en home:', this.usuario);
-    this.pedido = await this.usuarioSrv.getIfExists(
-      'pedidos',
-      this.usuario.id,
-      new Date()
-    );
-    if (this.pedido) {
-      this.mostrarPrecio = true;
+    if (this.cliente.pedido) {
+      this.mostrarPedido = true;
     }
   }
 
@@ -107,17 +108,34 @@ export class ClienteHomeComponent implements OnInit {
       }
       // Verificar si el QR es de una mesa (formato "Mesa 1", "Mesa 2", etc.)
       else if (response.startsWith('Mesa ')) {
-        const numeroMesa = response.split(' ')[1]; // Extraer el número de mesa
-        this.unirseAMesa(numeroMesa);
-        if (this.pedido) {
-          this.mostrarPedido = true;
+        if (this.cliente.pedido) {
+          if (this.mostrarPedido) {
+            if (this.mostrarEstado) {
+              this.mostrarJuegos = true;
+              this.toast.showExito('si llega a mostrar los juegos');
+            } else {
+              this.mostrarEstado = true;
+            }
+          } else {
+            this.mostrarPedido = true;
+          }
+          this.actualizarPedido();
+        } else {
+          const numeroMesa = response.split(' ')[1];
+          this.unirseAMesa(numeroMesa);
         }
       } else {
         this.toast.showError('Tuvimos un error al leer el QR');
       }
     });
   }
-
+  async actualizarPedido() {
+    this.pedido = await this.usuarioSrv.getIfExists(
+      'pedidos',
+      this.usuario.id,
+      new Date()
+    );
+  }
   async agregarAListaEspera() {
     try {
       this.loadingService.showLoading();

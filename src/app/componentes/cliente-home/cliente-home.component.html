@@ -1,7 +1,6 @@
 <div *ngIf="loadingService.loadingStatus">
   <app-loading></app-loading>
 </div>
-
 <section class="ion-text-center ion-margin-bottom">
   <ion-grid>
     <ion-row>
@@ -38,7 +37,6 @@
         </ion-card>
       </ion-col>
     </ion-row>
-
     <ion-row>
       <ion-col
         col-12
@@ -54,13 +52,27 @@
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col col-12 *ngIf="usuario?.estado == 'mesaTomada'">
+      <ion-col
+        col-12
+        *ngIf="usuario?.estado === 'mesaTomada' && !mostrarPedido"
+      >
         <ion-card
           [routerLink]="['/carta', usuario?.id]"
           class="ion-text-center ion-padding"
         >
           <ion-icon name="restaurant-outline"></ion-icon>
           <h2 class="long-name">Ver la carta</h2>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col col-12 *ngIf="usuario?.estado === 'mesaTomada'">
+        <ion-card
+          [routerLink]="['/encuesta-cliente', usuario.id]"
+          class="ion-text-center ion-padding"
+        >
+          <ion-icon name="book-outline"></ion-icon>
+          <h2 class="long-name">Ver encuesta</h2>
         </ion-card>
       </ion-col>
     </ion-row>
@@ -72,6 +84,25 @@
         >
           <ion-icon name="fast-food-outline"></ion-icon>
           <h2 class="long-name">Confirmar recepción de pedido</h2>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col col-12 *ngIf="mostrarJuegos">
+        <ion-card
+          [routerLink]="['/carta', usuario?.id]"
+          class="ion-text-center ion-padding"
+        >
+          <ion-icon name="game-controller-outline"></ion-icon>
+          <h2 class="long-name">Ver los juegos</h2>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col col-12 *ngIf="cliente?.pedido.estado == 'recibido'">
+        <ion-card class="ion-text-center ion-padding">
+          <ion-icon name="fast-food-outline"></ion-icon>
+          <h2 class="long-name">Pedir la cuenta</h2>
         </ion-card>
       </ion-col>
     </ion-row>
@@ -88,8 +119,8 @@
     </ion-row>
   </ion-grid>
 </section>
-<footer class="home-footer" *ngIf="mostrarPrecio">
-  <p class="price">{{ pedido.precioTotal | currency }}</p>
-  <p class="subtitle">({{ pedido.tiempoEstimado }} m)</p>
-  <p class="title">{{ pedido.estado }}</p>
+<footer class="home-footer" *ngIf="mostrarPedido">
+  <p class="price">{{ cliente.pedido.precioTotal | currency }}</p>
+  <p class="subtitle">({{ cliente.pedido.tiempoEstimado }} m)</p>
+  <p *ngIf="mostrarEstado" class="title">{{ cliente.pedido.estado }}</p>
 </footer>

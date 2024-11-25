@@ -1,0 +1,24 @@
+<nav class="nav-bar">
+  <button class="btn-back" (click)="volverAtras()">
+    <ion-icon name="arrow-back-circle-outline"></ion-icon>
+  </button>
+  <ion-title class="encabezado">Comanda
+    <span >CEN</span>
+  </ion-title>
+</nav>
+<section class="ion-text-center ion-margin-bottom">
+  <ion-grid>
+    <ion-row>
+      <ion-col col-12>
+        <ion-card
+          class="ion-text-center ion-padding"
+          color="000"
+          (click)="redireccionar('shuffle-cups')"
+          >
+          <ion-icon name="qr-code-outline"></ion-icon>
+          <h2 class="long-name">Vasos Revueltos</h2>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</section>
