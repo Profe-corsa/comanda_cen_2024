@@ -19,7 +19,11 @@ import {
   chatbubblesOutline,
   qrCodeOutline,
   bagOutline,
-  fastFoodOutline, gameControllerOutline, bookOutline } from 'ionicons/icons';
+  fastFoodOutline,
+  gameControllerOutline,
+  bookOutline,
+  calendarOutline,
+} from 'ionicons/icons';
 
 import { QrScannerService } from '../../services/qrscanner.service';
 import { ToastService } from '../../services/toast.service';
@@ -72,7 +76,18 @@ export class ClienteHomeComponent implements OnInit {
     private router: Router,
     private notificationService: PushMailNotificationService
   ) {
-    addIcons({list,qrCodeOutline,chatbubblesOutline,restaurantOutline,bookOutline,fastFoodOutline,gameControllerOutline,bagOutline,addCircleOutline,man,});
+    addIcons({
+      list,
+      qrCodeOutline,
+      chatbubblesOutline,
+      restaurantOutline,
+      bookOutline,
+      fastFoodOutline,
+      gameControllerOutline,
+      bagOutline,
+      addCircleOutline,
+      man,
+    });
   }
 
   async ngOnInit() {
@@ -95,21 +110,18 @@ export class ClienteHomeComponent implements OnInit {
       else if (response.startsWith('Mesa ')) {
         if (this.cliente.pedido) {
           if (this.mostrarPedido) {
-            if(this.mostrarEstado) {
+            if (this.mostrarEstado) {
               this.mostrarJuegos = true;
-              this.toast.showExito("si llega a mostrar los juegos")
-            }
-            else{
+              this.toast.showExito('si llega a mostrar los juegos');
+            } else {
               this.mostrarEstado = true;
             }
-          }
-          else{
+          } else {
             this.mostrarPedido = true;
           }
           this.actualizarPedido();
-        }
-        else {
-          const numeroMesa = response.split(' ')[1]; 
+        } else {
+          const numeroMesa = response.split(' ')[1];
           this.unirseAMesa(numeroMesa);
         }
       } else {
@@ -117,8 +129,12 @@ export class ClienteHomeComponent implements OnInit {
       }
     });
   }
-  async actualizarPedido(){
-    this.pedido = await this.usuarioSrv.getIfExists('pedidos', this.usuario.id, new Date);
+  async actualizarPedido() {
+    this.pedido = await this.usuarioSrv.getIfExists(
+      'pedidos',
+      this.usuario.id,
+      new Date()
+    );
   }
   async agregarAListaEspera() {
     try {

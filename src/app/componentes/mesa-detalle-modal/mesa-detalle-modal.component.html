@@ -8,14 +8,18 @@
     </div>
     <div class="contenido">
       <ion-list>
-        <ion-item>
-          <ion-thumbnail slot="start">
-            <img [src]="mesa?.foto" alt="Imagen del producto" />
-          </ion-thumbnail>
-          <ion-label>
-            <p>Tipo: {{ mesa?.tipo }}</p>
-            <p>Cantidad comensales: {{ mesa?.nroComensales }}</p>
-          </ion-label>
+        <ion-item class="itemflex">
+          <div>
+            <ion-thumbnail slot="start">
+              <img [src]="mesa?.foto" alt="Imagen del producto" />
+            </ion-thumbnail>
+          </div>
+          <div>
+            <ion-label>
+              <p>Tipo: {{ mesa?.tipo }}</p>
+              <p>Cantidad comensales: {{ mesa?.nroComensales }}</p>
+            </ion-label>
+          </div>
         </ion-item>
       </ion-list>
     </div>
