@@ -4,8 +4,8 @@
       <ion-icon name="arrow-back-circle-outline"></ion-icon>
     </ion-button>
     <ion-title
-      >Lista de {{ object === 'preparacion' ? 'Preparación' : object
-      }}</ion-title
+      >Lista de {{ object === 'preparacion' ? 'Preparación' : object || object
+      === 'clientesPendientes' ? 'clientes pendientes' : object }}</ion-title
     >
   </ion-toolbar>
 </ion-header>

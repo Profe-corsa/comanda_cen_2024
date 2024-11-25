@@ -20,6 +20,7 @@ import {
   qrCodeOutline,
   bagOutline,
   fastFoodOutline,
+  calendarOutline,
 } from 'ionicons/icons';
 
 import { QrScannerService } from '../../services/qrscanner.service';
@@ -76,6 +77,7 @@ export class ClienteHomeComponent implements OnInit {
       chatbubblesOutline,
       restaurantOutline,
       fastFoodOutline,
+      calendarOutline,
       bagOutline,
       addCircleOutline,
       man,

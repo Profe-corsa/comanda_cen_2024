@@ -23,6 +23,7 @@ import { Pedido, Estado } from '../clases/pedido';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { collectionData } from 'rxfire/firestore';
 import { map, switchMap } from 'rxjs/operators';
+import { Reserva } from '../clases/Reserva';
 
 @Injectable({
   providedIn: 'root',
@@ -57,11 +58,11 @@ export class DataService {
       }
 
       // Mostrar mensajes de éxito dependiendo de la colección
-      const posicionToast = collectionName === 'pedidos' ? 'top' : 'middle';
-      this.toast.showExito(
-        `Se guardó un registro en la colección: ${collectionName}`,
-        posicionToast
-      );
+      // const posicionToast = collectionName === 'pedidos' ? 'top' : 'middle';
+      // this.toast.showExito(
+      //   `Se guardó un registro en la colección: ${collectionName}`,
+      //   posicionToast
+      // );
 
       return docId; // Devuelve el ID del documento
     } catch (error) {
@@ -376,6 +377,43 @@ export class DataService {
     } catch (error) {
       console.error(
         `Error al actualizar el campo ${fieldName} del usuario ${docId}:`,
+        error
+      );
+      throw error;
+    }
+  }
+
+  async updateObjectFieldSerializable(
+    collectionName: string,
+    docId: string,
+    fieldName: string,
+    fieldValue: any
+  ): Promise<void> {
+    try {
+      const docRef = doc(this.firestore, `${collectionName}/${docId}`);
+
+      // Valida y serializa el campo si es necesario
+      const serializableFieldValue =
+        fieldValue instanceof Reserva
+          ? fieldValue.toPlainObject()
+          : Array.isArray(fieldValue)
+          ? fieldValue.map((item) =>
+              item instanceof Reserva ? item.toPlainObject() : item
+            )
+          : fieldValue;
+
+      // Crea un objeto con el campo a actualizar
+      const updateObject = {
+        [fieldName]: serializableFieldValue,
+      };
+
+      await updateDoc(docRef, updateObject);
+      console.log(
+        `Campo ${fieldName} del documento ${docId} actualizado correctamente.`
+      );
+    } catch (error) {
+      console.error(
+        `Error al actualizar el campo ${fieldName} del documento ${docId}:`,
         error
       );
       throw error;

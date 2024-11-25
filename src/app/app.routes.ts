@@ -72,4 +72,9 @@ export const routes: Routes = [
         (m) => m.EstadoPedidosComponent
       ),
   },
+  {
+    path: 'reservas/:id',
+    loadComponent: () =>
+      import('./pages/reservas/reservas.page').then((m) => m.ReservasPage),
+  },
 ];
