@@ -1,3 +1,12 @@
-<p>
-  Graficos de encuestas
-</p>
+<div id="contenedor-graficos">
+<div *ngFor="let grafico of graficos" class="contenedor-grafico">
+  <canvas
+    baseChart
+    [data]="grafico.data"
+    [options]="grafico.opciones"
+    [type]="grafico.tipo">
+  </canvas>
+</div>
+
+
+</div>

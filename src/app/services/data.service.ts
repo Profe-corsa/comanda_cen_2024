@@ -261,6 +261,7 @@ export class DataService {
     const clientesEnEspera = listaDeEspera.filter((cliente) => {
       const usuario = usuarios.find((u) => u.id === cliente.id);
       return usuario?.estado === 'enEspera';
+
     });
 
     return clientesEnEspera;
