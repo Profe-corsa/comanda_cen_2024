@@ -68,10 +68,6 @@
         col-12
         *ngIf="usuario?.estado === 'mesaTomada' && !mostrarPedido"
       >
-      <ion-col
-        col-12
-        *ngIf="usuario?.estado === 'mesaTomada' && !mostrarPedido"
-      >
         <ion-card
           [routerLink]="['/carta', usuario?.id]"
           class="ion-text-center ion-padding"

@@ -138,12 +138,9 @@ export class ClienteHomeComponent implements OnInit {
               this.mostrarEstado = true;
             }
           } else {
-          } else {
             this.mostrarPedido = true;
           }
           this.actualizarPedido();
-        } else {
-          const numeroMesa = response.split(' ')[1];
         } else {
           const numeroMesa = response.split(' ')[1];
           this.unirseAMesa(numeroMesa);
@@ -153,12 +150,6 @@ export class ClienteHomeComponent implements OnInit {
       }
     });
   }
-  async actualizarPedido() {
-    this.pedido = await this.usuarioSrv.getIfExists(
-      'pedidos',
-      this.usuario.id,
-      new Date()
-    );
   async actualizarPedido() {
     this.pedido = await this.usuarioSrv.getIfExists(
       'pedidos',
