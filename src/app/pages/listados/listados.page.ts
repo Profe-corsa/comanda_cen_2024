@@ -20,6 +20,7 @@ import { CocineroBartenderPedidoComponent } from 'src/app/componentes/cocinero-b
 import { addIcons } from 'ionicons';
 import { arrowBackCircleOutline } from 'ionicons/icons';
 import { MesasListaComponent } from '../../componentes/mesas-lista/mesas-lista.component';
+import { DuenioSupervisorListaEsperaComponent } from '../../componentes/duenio-supervisor-lista-espera/duenio-supervisor-lista-espera.component';
 
 @Component({
   selector: 'app-listados',
@@ -43,10 +44,12 @@ import { MesasListaComponent } from '../../componentes/mesas-lista/mesas-lista.c
     MozoListaPedidosComponent,
     CocineroBartenderPedidoComponent,
     MesasListaComponent,
+    DuenioSupervisorListaEsperaComponent,
   ],
 })
 export class ListadosPage implements OnInit {
   object: any;
+  txtHeader: string = '';
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router) {
     {
@@ -56,6 +59,19 @@ export class ListadosPage implements OnInit {
 
   ngOnInit() {
     this.object = this.activatedRoute.snapshot.paramMap.get('object');
+
+    this.txtHeader = this.cambiarTextoHeader(this.object);
+  }
+
+  cambiarTextoHeader(object: string): string {
+    switch (object) {
+      case 'clientesPendientes':
+        return 'clientes pendientes';
+      case 'preparacion':
+        return 'preparación';
+      default:
+        return object;
+    }
   }
 
   inicio() {

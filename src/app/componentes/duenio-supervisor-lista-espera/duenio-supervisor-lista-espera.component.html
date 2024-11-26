@@ -1,0 +1,44 @@
+<div *ngIf="loadingService.loadingStatus">
+  <app-loading></app-loading>
+</div>
+
+<div id="contenedor">
+  <ion-list>
+    <ion-item-sliding *ngFor="let reserva of listaReservas">
+      <ion-item-options side="start" *ngIf="reserva.estado == 'pendiente'">
+        <ion-item-option
+          color="danger"
+          (click)="cambiarEstadoReserva('rechazada', reserva)"
+          ><ion-icon name="trash-outline"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+      <ion-item>
+        <ion-avatar *ngIf="reserva.cliente.foto != undefined" slot="start">
+          <img [src]="[reserva.cliente.foto]" />
+        </ion-avatar>
+        <ion-label>
+          <h2 class="encabezado">
+            {{ reserva.cliente.nombre | titlecase }}
+            {{ reserva.cliente.apellido | titlecase }}
+          </h2>
+          <h3>Comensales: {{ reserva.comensales }}</h3>
+          <h3>Mesa N°{{ reserva.mesa.numero }}</h3>
+          <h3>
+            Fecha: {{ reserva.fecha.toDate() | date : "dd/MM/yyyy HH:mm" }}
+          </h3>
+        </ion-label>
+        <div
+          class="status-indicator"
+          [ngClass]="getStatusClass(reserva.estado)"
+        ></div>
+      </ion-item>
+      <ion-item-options side="end" *ngIf="reserva.estado == 'pendiente'">
+        <ion-item-option
+          color="success"
+          (click)="cambiarEstadoReserva('aceptada', reserva)"
+          ><ion-icon name="checkmark-outline"></ion-icon
+        ></ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+</div>
