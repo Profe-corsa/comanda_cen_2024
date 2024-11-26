@@ -22,9 +22,15 @@
             {{ reserva.cliente.apellido | titlecase }}
           </h2>
           <h3>Comensales: {{ reserva.comensales }}</h3>
-          <h3>Mesa N°{{ reserva.mesa.numero }}</h3>
+          <h3>Mesa {{ reserva.mesa.numero }}</h3>
           <h3>
             Fecha: {{ reserva.fecha.toDate() | date : "dd/MM/yyyy HH:mm" }}
+          </h3>
+          <h3>
+            Estado:
+            <span [ngClass]="getStatusClass(reserva.estado)">{{
+              reserva.estado | titlecase
+            }}</span>
           </h3>
         </ion-label>
         <div

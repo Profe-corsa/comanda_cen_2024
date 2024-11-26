@@ -66,6 +66,17 @@
       </ion-col>
     </ion-row>
     <ion-row>
+      <ion-col col-12>
+        <ion-card
+          [routerLink]="['/reservas', usuario?.id]"
+          class="ion-text-center ion-padding"
+        >
+          <ion-icon name="calendar-outline"></ion-icon>
+          <h2 class="long-name">Reservar</h2>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
       <ion-col col-12 *ngIf="usuario?.estado === 'mesaTomada'">
         <ion-card
           [routerLink]="['/encuesta-cliente', usuario.id]"
@@ -76,6 +87,7 @@
         </ion-card>
       </ion-col>
     </ion-row>
+    @if (cliente.pedido != undefined) {
     <ion-row>
       <ion-col col-12 *ngIf="cliente?.pedido.estado == 'entregado'">
         <ion-card
@@ -106,17 +118,7 @@
         </ion-card>
       </ion-col>
     </ion-row>
-    <ion-row>
-      <ion-col col-12>
-        <ion-card
-          [routerLink]="['/reservas', usuario?.id]"
-          class="ion-text-center ion-padding"
-        >
-          <ion-icon name="calendar-outline"></ion-icon>
-          <h2 class="long-name">Reservar</h2>
-        </ion-card>
-      </ion-col>
-    </ion-row>
+    }
   </ion-grid>
 </section>
 <footer class="home-footer" *ngIf="mostrarPedido">
