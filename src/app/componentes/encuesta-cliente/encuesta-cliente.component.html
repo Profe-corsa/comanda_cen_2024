@@ -1,3 +1,17 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-button slot="start" fill="clear" (click)="inicio()">
+      <ion-icon name="arrow-back-circle-outline"></ion-icon>
+    </ion-button>
+    <ion-title>Encuestas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ng-content *ngIf="verEncuestas; else realizarEncuesta">
+  <app-listado-encuestas></app-listado-encuestas>
+</ng-content>
+
+<ng-template #realizarEncuesta>
 <div id="contenedor">
   <form>
     <!-- Nivel de limpieza -->
@@ -74,3 +88,5 @@
     </ion-button>
   </form>
 </div>
+
+</ng-template>

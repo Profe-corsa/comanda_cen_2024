@@ -87,13 +87,6 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'shuffle-cups',
-    loadComponent: () =>
-      import('./componentes/shuffle-cups/shuffle-cups.component').then(
-        (m) => m.ShuffleCupsComponent
-      ),
-  },
-  {
     path: 'modal-pagar-pedido',
     loadComponent: () =>
       import('./componentes/modal-pagar-pedido/modal-pagar-pedido.component').then(
@@ -106,5 +99,17 @@ export const routes: Routes = [
       import('./componentes/modal-propina/modal-propina.component').then(
         (m) => m.ModalPropinaComponent
       ),
+  },
+  {
+    path: 'encuesta-cliente/:id',
+    loadComponent: () =>
+      import('./componentes/encuesta-cliente/encuesta-cliente.component').then(
+        (m) => m.EncuestaClienteComponent
+      ),
+  },
+  {
+    path: 'reservas/:id',
+    loadComponent: () =>
+      import('./pages/reservas/reservas.page').then((m) => m.ReservasPage),
   },
 ];

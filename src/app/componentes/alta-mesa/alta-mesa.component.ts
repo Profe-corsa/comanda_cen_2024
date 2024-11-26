@@ -32,6 +32,7 @@ import { DataService } from 'src/app/services/data.service';
 import { Router } from '@angular/router';
 import { addIcons } from 'ionicons';
 import { caretBackCircle } from 'ionicons/icons';
+import { CamaraService } from 'src/app/services/camara.service';
 
 @Component({
   selector: 'app-alta-mesa',
@@ -64,10 +65,12 @@ export class AltaMesaComponent {
   mesaForm: FormGroup;
   foto: SafeUrl | undefined;
   qrCode: SafeUrl | undefined;
+  mesaFoto: string = '';
 
   constructor(
     private fb: FormBuilder,
-    private sanitizer: DomSanitizer,
+    // private sanitizer: DomSanitizer,
+    private camaraService: CamaraService,
     private dataSrv: DataService,
     private route: Router
   ) {
@@ -80,20 +83,32 @@ export class AltaMesaComponent {
     });
   }
 
-  async tomarFoto() {
-    const photo = await Camera.getPhoto({
-      resultType: CameraResultType.DataUrl,
-      source: CameraSource.Camera,
-      quality: 90,
-    });
-    this.foto = this.sanitizer.bypassSecurityTrustUrl(photo.dataUrl!);
+  // async tomarFoto() {
+  //   const photo = await Camera.getPhoto({
+  //     resultType: CameraResultType.DataUrl,
+  //     source: CameraSource.Camera,
+  //     quality: 90,
+  //   });
+  //   this.foto = this.sanitizer.bypassSecurityTrustUrl(photo.dataUrl!);
+  // }
+
+  tomarFoto() {
+    try {
+      const imageName = 'mesa_' + Date.now().toString();
+      this.camaraService.tomarFoto('clientes', imageName).then((urlFoto) => {
+        //Guardar la url en el objeto usuario
+        this.mesaFoto = urlFoto;
+      });
+    } catch (error) {
+      console.error('Error al tomar la foto:', error);
+    }
   }
 
   async onSubmit() {
     if (this.mesaForm.valid) {
       const mesaData: Mesa = {
         ...this.mesaForm.value,
-        foto: (this.foto as string) ?? '',
+        foto: this.mesaFoto ?? '',
         estado: 'Disponible',
         reservas: [],
       };
@@ -101,7 +116,6 @@ export class AltaMesaComponent {
       await this.dataSrv.saveObject(mesaData, 'mesas').then(() => {
         this.route.navigate(['home']);
       });
-      // this.qrCode = this.qrCodeGenerator.scanCode(mesaData.numero.toString());
     }
   }
 

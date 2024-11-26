@@ -1,0 +1,9 @@
+#contenedor-graficos{
+    overflow-y: scroll;
+    height: calc(100vh - 56px);
+}
+
+.contenedor-grafico{
+    max-width: 400px;
+    margin: auto;
+}

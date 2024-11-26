@@ -19,7 +19,11 @@ import {
   chatbubblesOutline,
   qrCodeOutline,
   bagOutline,
-  fastFoodOutline, gameControllerOutline } from 'ionicons/icons';
+  fastFoodOutline,
+  gameControllerOutline,
+  bookOutline,
+  calendarOutline,
+} from 'ionicons/icons';
 
 import { QrScannerService } from '../../services/qrscanner.service';
 import { ToastService } from '../../services/toast.service';
@@ -37,6 +41,7 @@ import { Estado, Pedido } from 'src/app/clases/pedido';
 import { Cliente } from 'src/app/clases/cliente';
 import { ModalController } from '@ionic/angular';
 import { ModalPagarPedidoComponent } from '../modal-pagar-pedido/modal-pagar-pedido.component';
+//import { EncuestaClienteComponent } from '../encuesta-cliente/encuesta-cliente.component';
 @Component({
   selector: 'app-cliente-home',
   templateUrl: './cliente-home.component.html',
@@ -51,6 +56,7 @@ import { ModalPagarPedidoComponent } from '../modal-pagar-pedido/modal-pagar-ped
     CommonModule,
     RouterLink,
     LoadingComponent,
+    //EncuestaClienteComponent
   ],
 })
 export class ClienteHomeComponent implements OnInit {
@@ -60,6 +66,7 @@ export class ClienteHomeComponent implements OnInit {
   mostrarEstado: boolean = false;
   mostrarJuegos: boolean = true;
   mostrarEstadisticas: boolean = false;
+  mostrarEncuesta: boolean = false;
   cliente: Cliente | any;
   constructor(
     private qrService: QrScannerService,
@@ -72,7 +79,19 @@ export class ClienteHomeComponent implements OnInit {
     private notificationService: PushMailNotificationService,
     private modalController: ModalController
   ) {
-    addIcons({list,qrCodeOutline,chatbubblesOutline,restaurantOutline,fastFoodOutline,gameControllerOutline,bagOutline,addCircleOutline,man,});
+    addIcons({
+      list,
+      qrCodeOutline,
+      chatbubblesOutline,
+      restaurantOutline,
+      bookOutline,
+      fastFoodOutline,
+      gameControllerOutline,
+      calendarOutline,
+      bagOutline,
+      addCircleOutline,
+      man,
+    });
   }
 
   async ngOnInit() {
@@ -101,19 +120,16 @@ export class ClienteHomeComponent implements OnInit {
                 this.mostrarEstadisticas = true;
               }
               this.mostrarJuegos = true;
-              this.toast.showExito("si llega a mostrar los juegos")
-            }
-            else{
+
+            } else {
               this.mostrarEstado = true;
             }
-          }
-          else{
+          } else {
             this.mostrarPedido = true;
           }
           this.actualizarPedido();
-        }
-        else {
-          const numeroMesa = response.split(' ')[1]; 
+        } else {
+          const numeroMesa = response.split(' ')[1];
           this.unirseAMesa(numeroMesa);
         }
       } else {
@@ -121,8 +137,12 @@ export class ClienteHomeComponent implements OnInit {
       }
     });
   }
-  async actualizarPedido(){
-    this.pedido = await this.usuarioSrv.getIfExists('pedidos', this.usuario.id, new Date);
+  async actualizarPedido() {
+    this.pedido = await this.usuarioSrv.getIfExists(
+      'pedidos',
+      this.usuario.id,
+      new Date()
+    );
   }
   async agregarAListaEspera() {
     try {

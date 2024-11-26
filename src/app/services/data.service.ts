@@ -15,6 +15,7 @@ import {
   DocumentReference,
   onSnapshot,
   orderBy,
+  deleteField,
 } from '@angular/fire/firestore';
 import { Mesa } from '../clases/mesa';
 import { ToastService } from './toast.service';
@@ -23,6 +24,7 @@ import { Pedido, Estado } from '../clases/pedido';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { collectionData } from 'rxfire/firestore';
 import { map, switchMap } from 'rxjs/operators';
+import { Reserva } from '../clases/Reserva';
 
 @Injectable({
   providedIn: 'root',
@@ -57,11 +59,11 @@ export class DataService {
       }
 
       // Mostrar mensajes de éxito dependiendo de la colección
-      const posicionToast = collectionName === 'pedidos' ? 'top' : 'middle';
-      this.toast.showExito(
-        `Se guardó un registro en la colección: ${collectionName}`,
-        posicionToast
-      );
+      // const posicionToast = collectionName === 'pedidos' ? 'top' : 'middle';
+      // this.toast.showExito(
+      //   `Se guardó un registro en la colección: ${collectionName}`,
+      //   posicionToast
+      // );
 
       return docId; // Devuelve el ID del documento
     } catch (error) {
@@ -259,6 +261,7 @@ export class DataService {
     const clientesEnEspera = listaDeEspera.filter((cliente) => {
       const usuario = usuarios.find((u) => u.id === cliente.id);
       return usuario?.estado === 'enEspera';
+
     });
 
     return clientesEnEspera;
@@ -382,6 +385,43 @@ export class DataService {
     }
   }
 
+  async updateObjectFieldSerializable(
+    collectionName: string,
+    docId: string,
+    fieldName: string,
+    fieldValue: any
+  ): Promise<void> {
+    try {
+      const docRef = doc(this.firestore, `${collectionName}/${docId}`);
+
+      // Valida y serializa el campo si es necesario
+      const serializableFieldValue =
+        fieldValue instanceof Reserva
+          ? fieldValue.toPlainObject()
+          : Array.isArray(fieldValue)
+          ? fieldValue.map((item) =>
+              item instanceof Reserva ? item.toPlainObject() : item
+            )
+          : fieldValue;
+
+      // Crea un objeto con el campo a actualizar
+      const updateObject = {
+        [fieldName]: serializableFieldValue,
+      };
+
+      await updateDoc(docRef, updateObject);
+      console.log(
+        `Campo ${fieldName} del documento ${docId} actualizado correctamente.`
+      );
+    } catch (error) {
+      console.error(
+        `Error al actualizar el campo ${fieldName} del documento ${docId}:`,
+        error
+      );
+      throw error;
+    }
+  }
+
   async getDocumentsByTwoFieldsAndOrder(
     collectionName: string,
     field1: string,
@@ -472,6 +512,93 @@ export class DataService {
         error
       );
       return null;
+    }
+  }
+
+  /**
+   * Elimina un campo específico de un documento en la colección.
+   * @param collectionName Nombre de la colección.
+   * @param docId ID del documento.
+   * @param fieldName Nombre del campo a eliminar.
+   */
+  async deleteObjectField(
+    collectionName: string,
+    docId: string,
+    fieldName: string
+  ): Promise<void> {
+    try {
+      const docRef = doc(this.firestore, `${collectionName}/${docId}`);
+
+      // Prepara el objeto de actualización para eliminar el campo
+      const updateObject = {
+        [fieldName]: deleteField(), // Indica que se debe eliminar el campo
+      };
+
+      await updateDoc(docRef, updateObject);
+      console.log(
+        `Campo ${fieldName} eliminado del documento ${docId} en la colección ${collectionName}`
+      );
+    } catch (error) {
+      console.error(
+        `Error al eliminar el campo ${fieldName} del documento ${docId}:`,
+        error
+      );
+      throw error;
+    }
+  }
+
+  /**
+   * Elimina un elemento específico de un array dentro de un documento en la colección.
+   * @param collectionName Nombre de la colección.
+   * @param docId ID del documento.
+   * @param arrayFieldName Nombre del campo array.
+   * @param predicate Función que determina qué elemento eliminar.
+   */
+  async deleteArrayElement<T>(
+    collectionName: string,
+    docId: string,
+    arrayFieldName: string,
+    predicate: (item: T) => boolean
+  ): Promise<void> {
+    try {
+      const docRef = doc(this.firestore, `${collectionName}/${docId}`);
+
+      // Obtiene el documento actual para leer el array
+      const docSnapshot = await getDoc(docRef);
+
+      if (docSnapshot.exists()) {
+        const data = docSnapshot.data();
+        const array = data ? data[arrayFieldName] : null;
+
+        if (Array.isArray(array)) {
+          // Filtra los elementos que no cumplen con el predicado
+          const updatedArray = array.filter((item: T) => !predicate(item));
+
+          // Actualiza el documento con el array modificado
+          const updateObject = {
+            [arrayFieldName]: updatedArray,
+          };
+
+          await updateDoc(docRef, updateObject);
+          console.log(
+            `Elemento eliminado del array ${arrayFieldName} en el documento ${docId}`
+          );
+        } else {
+          console.warn(
+            `El campo ${arrayFieldName} no es un array o no existe en el documento ${docId}.`
+          );
+        }
+      } else {
+        console.warn(
+          `El documento ${docId} no existe en la colección ${collectionName}.`
+        );
+      }
+    } catch (error) {
+      console.error(
+        `Error al eliminar elemento del array ${arrayFieldName} en el documento ${docId}:`,
+        error
+      );
+      throw error;
     }
   }
 }
