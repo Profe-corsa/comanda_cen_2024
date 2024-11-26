@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Clasifícanos</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrarModal()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-text-center">
+  <h2>Elige tu grado de satisfacción:</h2>
+  <div class="estrellas">
+    <ion-button *ngFor="let estrella of estrellas; let i = index"
+                [color]="satisfaccionSeleccionada >= i + 1 ? 'warning' : 'medium'"
+                fill="clear"
+                (click)="seleccionarSatisfaccion(i + 1)">
+      <ion-icon name="star-outline"></ion-icon>
+    </ion-button>
+  </div>
+  <div class="ion-padding">
+    <h3>{{ textoSatisfaccion }}</h3>
+  </div>
+</ion-content>

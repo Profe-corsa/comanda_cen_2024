@@ -86,16 +86,4 @@ export const routes: Routes = [
         (m) => m.ShuffleCupsComponent
       ),
   },
-  {
-    path: 'encuesta-cliente/:id',
-    loadComponent: () =>
-      import('./componentes/encuesta-cliente/encuesta-cliente.component').then(
-        (m) => m.EncuestaClienteComponent
-      ),
-  },
-  {
-    path: 'reservas/:id',
-    loadComponent: () =>
-      import('./pages/reservas/reservas.page').then((m) => m.ReservasPage),
-  },
 ];
