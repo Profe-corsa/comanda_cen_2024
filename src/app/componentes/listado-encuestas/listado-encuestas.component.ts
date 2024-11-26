@@ -9,7 +9,7 @@ import {
 } from 'chart.js';
 import { CommonModule } from '@angular/common';
 import { NgChartsModule } from 'ng2-charts';
-import { IonHeader, IonToolbar, IonButton, IonIcon, IonTitle, IonBackButton, IonNav } from "@ionic/angular/standalone";
+import { IonHeader, IonToolbar, IonButton, IonIcon, IonTitle, IonBackButton, IonNav, IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, IonCardHeader } from "@ionic/angular/standalone";
 
 // Registrar los componentes necesarios de Chart.js
 Chart.register(...registerables);
@@ -19,7 +19,7 @@ Chart.register(...registerables);
   templateUrl: './listado-encuestas.component.html',
   styleUrls: ['./listado-encuestas.component.scss'],
   standalone: true,
-  imports: [IonNav, IonBackButton,
+  imports: [IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonCard, IonNav, IonBackButton,
     IonTitle,
     IonIcon,
     IonButton,
@@ -32,7 +32,7 @@ Chart.register(...registerables);
 export class ListadoEncuestasComponent implements OnInit {
   encuestas: any[] = []; // Datos de las encuestas
   graficos: { tipo: ChartType; opciones: ChartOptions; data: ChartData }[] = []; // Configuración de gráficos
-
+  comentarios: string[] = [];
   constructor(private encuestaService: EncuestaService) { }
 
   ngOnInit() {
@@ -46,6 +46,7 @@ export class ListadoEncuestasComponent implements OnInit {
       this.encuestas = data.map((encuesta: any) => encuesta.preguntas);
       // Procesa los datos para generar los gráficos
       this.procesarDatosParaGraficos();
+      this.verComentarios();
     });
   }
 
@@ -135,7 +136,77 @@ export class ListadoEncuestasComponent implements OnInit {
       },
     });
 
-    // Agrega lógica similar para otros gráficos como línea, radar, etc.
+    const restaurantLabel = ['Sí', 'No'];
+    const restaurantData = restaurantLabel.map(
+      (label) =>
+        this.encuestas.filter((encuesta) =>
+          encuesta?.find(
+            (p: any) =>
+              p.pregunta === '¿Restaurante limpio?' && p.respuesta === label
+          )
+        ).length
+    );
+
+    this.graficos.push({
+      tipo: 'pie', // Tipo de gráfico
+      opciones: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: '¿Restaurante limpio?',
+          },
+        },
+      }, // Opciones
+      data: {
+        labels: ['Sí', 'No'], // Etiquetas
+        datasets: [
+          {
+            data: restaurantData, // Datos procesados
+            backgroundColor: ['#FF6384', '#36A2EB'],
+          },
+        ],
+      },
+    });
+
+    // Gráfico de barras: ¿Atención rápida?
+    const atencionLabels = ['sí', 'no'];
+    const atencionData = atencionLabels.map(
+      (label) =>
+        this.encuestas.filter((encuesta) =>
+          encuesta?.find(
+            (p: any) =>
+              p.pregunta === '¿Atención rápida?' && p.respuesta === label
+          )
+        ).length
+    );
+    this.graficos.push({
+      tipo: 'bar', // Tipo de gráfico
+      opciones: {
+        responsive: true,
+        indexAxis: 'y',
+        plugins: {
+          title: {
+            display: true,
+            text: '¿Atención rápida?',
+          },
+        },
+      }, // Opciones
+      data: {
+        labels: atencionLabels, // Etiquetas
+        datasets: [
+          {
+            label: 'sí/no',
+            data: atencionData, // Datos procesados
+            backgroundColor: ['#36A2EB', '#FFCE56'],
+          },
+        ],
+      },
+    });
   }
 
+  verComentarios() {
+    this.comentarios = this.encuestas.map((encuesta: any[]) => encuesta.find(
+      item => item.pregunta === "Comentarios adicionales")?.respuesta);
+  }
 }
