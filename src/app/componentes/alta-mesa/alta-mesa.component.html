@@ -22,29 +22,6 @@
           </div>
         </div>
 
-        <!-- <div
-            *ngIf="
-              registerForm.get('email')?.invalid &&
-              (registerForm.get('email')?.dirty ||
-                registerForm.get('email')?.touched)
-            "
-            class="error-message"
-          >
-            <ion-text
-              color="danger"
-              *ngIf="registerForm.get('email')?.errors?.['required']"
-            >
-              Email es requerido.
-            </ion-text>
-            <ion-text
-              color="danger"
-              *ngIf="registerForm.get('email')?.errors?.['email']"
-            >
-              Email no es válido.
-            </ion-text>
-          </div>
-        </div> -->
-
         <div class="form-group">
           <div class="input-wrapper">
             <!-- <ion-icon name="lock-closed-outline"></ion-icon> -->
@@ -89,10 +66,10 @@
           </div> -->
         </div>
 
-        <div class="form-group" *ngIf="foto">
+        <div class="form-group" *ngIf="mesaFoto">
           <div class="input-wrapper">
-            <div>
-              <img [src]="foto" alt="Foto de la mesa" />
+            <div class="contenedor-foto">
+              <img [src]="mesaFoto" alt="Foto de la mesa" />
             </div>
           </div>
         </div>

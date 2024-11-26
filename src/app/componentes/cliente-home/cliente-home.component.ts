@@ -84,6 +84,7 @@ export class ClienteHomeComponent implements OnInit {
       bookOutline,
       fastFoodOutline,
       gameControllerOutline,
+      calendarOutline,
       bagOutline,
       addCircleOutline,
       man,

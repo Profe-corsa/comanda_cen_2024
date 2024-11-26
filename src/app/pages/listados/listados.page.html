@@ -3,10 +3,7 @@
     <ion-button slot="start" fill="clear" (click)="inicio()">
       <ion-icon name="arrow-back-circle-outline"></ion-icon>
     </ion-button>
-    <ion-title
-      >Lista de {{ object === 'preparacion' ? 'Preparación' : object || object
-      === 'clientesPendientes' ? 'clientes pendientes' : object }}</ion-title
-    >
+    <ion-title>Lista de {{ txtHeader }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -20,4 +17,7 @@
     *ngIf="object == 'preparacion'"
   ></app-cocinero-bartender-pedido>
   <app-mesas-lista *ngIf="object == 'mesas'"></app-mesas-lista>
+  <app-duenio-supervisor-lista-espera
+    *ngIf="object == 'reservas'"
+  ></app-duenio-supervisor-lista-espera>
 </ion-content>
