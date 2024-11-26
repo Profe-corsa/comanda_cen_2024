@@ -86,4 +86,25 @@ export const routes: Routes = [
         (m) => m.ShuffleCupsComponent
       ),
   },
+  {
+    path: 'shuffle-cups',
+    loadComponent: () =>
+      import('./componentes/shuffle-cups/shuffle-cups.component').then(
+        (m) => m.ShuffleCupsComponent
+      ),
+  },
+  {
+    path: 'modal-pagar-pedido',
+    loadComponent: () =>
+      import('./componentes/modal-pagar-pedido/modal-pagar-pedido.component').then(
+        (m) => m.ModalPagarPedidoComponent
+      ),
+  },
+  {
+    path: 'modal-propina',
+    loadComponent: () =>
+      import('./componentes/modal-propina/modal-propina.component').then(
+        (m) => m.ModalPropinaComponent
+      ),
+  },
 ];
