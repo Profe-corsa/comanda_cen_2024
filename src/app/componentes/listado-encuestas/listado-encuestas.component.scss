@@ -1,9 +1,22 @@
-#contenedor-graficos{
+#contenedor-global{
     overflow-y: scroll;
     height: calc(100vh - 56px);
+}
+
+#contenedor-graficos{
+    display: flex;
+    flex-wrap: wrap;
+
+
 }
 
 .contenedor-grafico{
     max-width: 400px;
     margin: auto;
+}
+ion-card{
+    
+    .card-cometario{
+        --background: linear-gradient(to right, #d96d2d, #f4a40a);
+    }
 }
