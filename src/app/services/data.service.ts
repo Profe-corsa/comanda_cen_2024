@@ -134,7 +134,7 @@ export class DataService {
       console.log(usuarioData);
       if (usuarioData && usuarioData['estado'] !== 'enEspera') {
         throw new Error(
-          'El cliente no está pendiente para ser asignado a una mesa.'
+          'El cliente no está en espera para ser asignado a una mesa.'
         );
       }
 
@@ -379,6 +379,28 @@ export class DataService {
     } catch (error) {
       console.error(
         `Error al actualizar el campo ${fieldName} del usuario ${docId}:`,
+        error
+      );
+      throw error;
+    }
+  }
+
+  async updateObjectFields(
+    collectionName: string,
+    docId: string,
+    updateData: any
+  ): Promise<void> {
+    try {
+      const docRef = doc(this.firestore, `${collectionName}/${docId}`);
+
+      // Actualizar múltiples campos al mismo tiempo
+      await updateDoc(docRef, updateData);
+      console.log(
+        `Campos del ${collectionName} con ID: ${docId} actualizados correctamente.`
+      );
+    } catch (error) {
+      console.error(
+        `Error al actualizar los campos de la colección ${collectionName} con ID ${docId}:`,
         error
       );
       throw error;

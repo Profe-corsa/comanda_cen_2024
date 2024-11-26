@@ -41,6 +41,7 @@ import { Estado, Pedido } from 'src/app/clases/pedido';
 import { Cliente } from 'src/app/clases/cliente';
 import { ModalController } from '@ionic/angular';
 import { ModalPagarPedidoComponent } from '../modal-pagar-pedido/modal-pagar-pedido.component';
+import { EstadoReserva, Reserva } from 'src/app/clases/Reserva';
 //import { EncuestaClienteComponent } from '../encuesta-cliente/encuesta-cliente.component';
 @Component({
   selector: 'app-cliente-home',
@@ -111,6 +112,8 @@ export class ClienteHomeComponent implements OnInit {
     //Instancia del cliente
     this.cliente = <Cliente>this.usuario;
 
+    console.log('Cliente en home comp', this.cliente);
+
     console.log('el usuario en home:', this.usuario);
     if (this.cliente.pedido) {
       this.mostrarPedido = true;
@@ -127,13 +130,11 @@ export class ClienteHomeComponent implements OnInit {
       else if (response.startsWith('Mesa ')) {
         if (this.cliente.pedido) {
           if (this.mostrarPedido) {
-            if(this.mostrarEstado) {
-              if (this.mostrarJuegos)
-              {
+            if (this.mostrarEstado) {
+              if (this.mostrarJuegos) {
                 this.mostrarEstadisticas = true;
               }
               this.mostrarJuegos = true;
-
             } else {
               this.mostrarEstado = true;
             }
@@ -212,36 +213,122 @@ export class ClienteHomeComponent implements OnInit {
         (mesa) => mesa.idClienteAsignado === idCliente
       );
 
-      // Verificar si la mesa encontrada es diferente a la escaneada
-      if (mesaAsignada && mesaAsignada.numero != parseInt(numeroMesa)) {
-        this.loadingService.hideLoading();
-        this.toast.showError(
-          'Esta no es la mesa que se le asignó. Debe escanear el QR de la mesa ' +
-            mesaAsignada.numero
-        );
-        return;
-      }
+      console.log('mesa asignada', mesaAsignada);
 
-      // Si se encontró la mesa asignada y es la correcta
-      if (
-        mesaAsignada &&
-        mesaAsignada.numero === parseInt(numeroMesa) &&
-        this.usuario.mesaAsignada === ''
-      ) {
-        // Actualizar los campos del usuario (por ejemplo: estado y numeroMesa)
-        await this.usuarioSrv.updateUserFields(idCliente, {
-          estado: Estados.mesaTomada,
-          mesaAsignada: numeroMesa,
-        });
-        this.loadingService.hideLoading();
-        this.toast.showExito('Te has unido a la mesa ' + numeroMesa);
-      }
-      //Agregar opciones para seguir trabajando con el cliente
-      else {
-        this.loadingService.hideLoading();
-        this.toast.showError(
-          'No se encontró ninguna mesa asignada al cliente.'
+      if (mesaAsignada !== undefined) {
+        console.log('entro a mesa asignada');
+        // Verificar si la mesa encontrada es diferente a la escaneada
+        if (mesaAsignada.numero != parseInt(numeroMesa)) {
+          this.loadingService.hideLoading();
+          this.toast.showError(
+            'Esta no es la mesa que se le asignó. Debe escanear el QR de la mesa ' +
+              mesaAsignada.numero
+          );
+          return;
+        }
+
+        // Si se encontró la mesa asignada en la lista de espera y es la correcta
+        if (
+          mesaAsignada &&
+          mesaAsignada.numero === parseInt(numeroMesa) &&
+          this.usuario.mesaAsignada === '' &&
+          mesaAsignada?.estado === 'Disponible' &&
+          this.usuario.estado === Estados.puedeTomarMesa
+        ) {
+          // Actualizar los campos del usuario (por ejemplo: estado y numeroMesa)
+          await this.usuarioSrv.updateUserFields(idCliente, {
+            estado: Estados.mesaTomada,
+            mesaAsignada: numeroMesa,
+          });
+
+          await this.dataService.updateObjectFields('mesas', mesaAsignada.id, {
+            estado: 'Ocupada',
+            idClienteAsignado: idCliente,
+          });
+          this.loadingService.hideLoading();
+          this.toast.showExito('Te has unido a la mesa ' + numeroMesa);
+        }
+        //Agregar opciones para seguir trabajando con el cliente
+        else {
+          this.loadingService.hideLoading();
+          this.toast.showError(
+            'No se encontró ninguna mesa asignada al cliente o la mesa está ocupada.',
+            'middle',
+            5000
+          );
+        }
+      } else {
+        console.log('entro a la reserva');
+        // Buscar la mesa que tiene el idClienteAsignado
+        const mesaReservada = mesas.find(
+          (mesa) => mesa.id === this.cliente.reserva.mesa.id
         );
+
+        console.log('mesa reservada:', mesaReservada);
+        //El cliente tiene una reserva
+        if (
+          this.cliente.reserva &&
+          this.cliente.reserva.mesa.numero === parseInt(numeroMesa) &&
+          mesaReservada?.estado === 'Disponible' &&
+          this.usuario.estado === Estados.puedeTomarMesa
+        ) {
+          console.log('entro a la reserva 2');
+          //El cliente toma la mesa
+          await this.usuarioSrv.updateUserFields(idCliente, {
+            estado: Estados.mesaTomada,
+          });
+
+          console.log('cliente mesa ID:', this.cliente.reserva.mesa.id);
+          // Cambia el estado de la mesa a ocupada
+          await this.dataService.updateObjectFields(
+            'mesas',
+            this.cliente.reserva.mesa.id,
+            {
+              estado: 'Ocupada',
+              idClienteAsignado: idCliente,
+            }
+          );
+
+          console.log('cliente mesa ID:', this.cliente.reserva.mesa.id);
+          // Eliminar la reserva del array de reservas en la mesa
+          await this.dataService.deleteArrayElement<Reserva>(
+            'mesas',
+            this.cliente.reserva.mesa.id,
+            'reservas',
+            (r) => r.id === this.cliente.reserva.id
+          );
+
+          //Finaliza la reserva
+          await this.dataService.updateObjectFields(
+            'reservas',
+            this.cliente.reserva.id,
+            {
+              estado: EstadoReserva.finalizada,
+            }
+          );
+
+          // Eliminar la reserva a nivel del cliente
+          // Se realiza al final para poder tener las referencias de la reserva.
+          await this.dataService.deleteObjectField(
+            'usuarios',
+            idCliente,
+            'reserva'
+          );
+
+          this.loadingService.hideLoading();
+          this.toast.showExito(
+            'Te has unido a la mesa ' + numeroMesa + ' que habías reservado.',
+            'middle',
+            5000
+          );
+        } else {
+          this.loadingService.hideLoading();
+          this.toast.showError(
+            'No se encontró ninguna mesa reservada al cliente o la mesa está ocupada.',
+            'middle',
+            5000
+          );
+        }
       }
     } catch (error) {
       this.loadingService.hideLoading();
@@ -287,7 +374,7 @@ export class ClienteHomeComponent implements OnInit {
       );
     }
   }
-  async pedirCuenta(){
+  async pedirCuenta() {
     const modal = await this.modalController.create({
       component: ModalPagarPedidoComponent,
       componentProps: {
