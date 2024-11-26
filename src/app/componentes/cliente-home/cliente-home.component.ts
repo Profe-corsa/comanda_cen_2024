@@ -39,9 +39,10 @@ import { PushMailNotificationService } from 'src/app/services/push-mail-notifica
 import { Perfiles } from 'src/app/clases/enumerados/perfiles';
 import { Estado, Pedido } from 'src/app/clases/pedido';
 import { Cliente } from 'src/app/clases/cliente';
+import { ModalController } from '@ionic/angular';
+import { ModalPagarPedidoComponent } from '../modal-pagar-pedido/modal-pagar-pedido.component';
 import { EstadoReserva, Reserva } from 'src/app/clases/Reserva';
 //import { EncuestaClienteComponent } from '../encuesta-cliente/encuesta-cliente.component';
-
 @Component({
   selector: 'app-cliente-home',
   templateUrl: './cliente-home.component.html',
@@ -64,7 +65,8 @@ export class ClienteHomeComponent implements OnInit {
   pedido: Pedido | any = [];
   mostrarPedido: boolean = false;
   mostrarEstado: boolean = false;
-  mostrarJuegos: boolean = false;
+  mostrarJuegos: boolean = true;
+  mostrarEstadisticas: boolean = false;
   mostrarEncuesta: boolean = false;
   cliente: Cliente | any;
   constructor(
@@ -75,8 +77,22 @@ export class ClienteHomeComponent implements OnInit {
     private dataService: DataService,
     public loadingService: LoadingService,
     private router: Router,
-    private notificationService: PushMailNotificationService
+    private notificationService: PushMailNotificationService,
+    private modalController: ModalController
   ) {
+    addIcons({
+      list,
+      qrCodeOutline,
+      chatbubblesOutline,
+      restaurantOutline,
+      bookOutline,
+      fastFoodOutline,
+      gameControllerOutline,
+      calendarOutline,
+      bagOutline,
+      addCircleOutline,
+      man,
+    });
     addIcons({
       list,
       qrCodeOutline,
@@ -115,8 +131,10 @@ export class ClienteHomeComponent implements OnInit {
         if (this.cliente.pedido) {
           if (this.mostrarPedido) {
             if (this.mostrarEstado) {
+              if (this.mostrarJuegos) {
+                this.mostrarEstadisticas = true;
+              }
               this.mostrarJuegos = true;
-              this.toast.showExito('si llega a mostrar los juegos');
             } else {
               this.mostrarEstado = true;
             }
@@ -355,6 +373,15 @@ export class ClienteHomeComponent implements OnInit {
         'bottom'
       );
     }
+  }
+  async pedirCuenta() {
+    const modal = await this.modalController.create({
+      component: ModalPagarPedidoComponent,
+      componentProps: {
+        pedido: this.cliente.pedido,
+      },
+    });
+    return await modal.present();
   }
 
   async cerrarSesion() {

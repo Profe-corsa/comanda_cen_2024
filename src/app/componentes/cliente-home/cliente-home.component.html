@@ -27,6 +27,7 @@
           usuario?.estado == 'mesaTomada'
         "
       >
+        " >
         <ion-card
           (click)="leerQR()"
           class="ion-text-center ion-padding"
@@ -66,6 +67,17 @@
       </ion-col>
     </ion-row>
     <ion-row>
+      <ion-col col-12 *ngIf="usuario?.estado === 'mesaTomada'">
+        <ion-card
+          [routerLink]="['/encuesta-cliente', usuario.id]"
+          class="ion-text-center ion-padding"
+        >
+          <ion-icon name="book-outline"></ion-icon>
+          <h2 class="long-name">Ver encuesta</h2>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
       <ion-col col-12>
         <ion-card
           [routerLink]="['/reservas', usuario?.id]"
@@ -87,6 +99,7 @@
         </ion-card>
       </ion-col>
     </ion-row>
+
     @if (cliente.pedido != undefined) {
     <ion-row>
       <ion-col col-12 *ngIf="cliente?.pedido.estado == 'entregado'">
@@ -94,11 +107,50 @@
           (click)="confirmarRecepcionPedido()"
           class="ion-text-center ion-padding"
         >
+          class="ion-text-center ion-padding" >
           <ion-icon name="fast-food-outline"></ion-icon>
           <h2 class="long-name">Confirmar recepción de pedido</h2>
         </ion-card>
       </ion-col>
     </ion-row>
+
+    <ion-row>
+      <ion-col
+        col-12
+        *ngIf="cliente?.pedido.estado == 'recibido' && mostrarJuegos"
+      >
+        <ion-card (click)="pedirCuenta()" class="ion-text-center ion-padding">
+          <ion-icon name="fast-food-outline"></ion-icon>
+          <h2 class="long-name">Pedir la cuenta</h2>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col
+        col-12
+        *ngIf="cliente?.pedido.estado == 'recibido' && mostrarJuegos"
+      >
+        <ion-card class="ion-text-center ion-padding">
+          <ion-icon name="fast-food-outline"></ion-icon>
+          <h2 class="long-name">Realizar encuesta</h2>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <!-- aca poner una condicion que verifiqie si el cliente realizo la encuesta -->
+      <ion-col
+        col-12
+        *ngIf="cliente?.pedido.estado == 'recibido' && mostrarEstadisticas"
+      >
+        <ion-card class="ion-text-center ion-padding">
+          <ion-icon name="fast-food-outline"></ion-icon>
+          <h2 class="long-name">Ver estadisticas</h2>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    }
     <ion-row>
       <ion-col col-12 *ngIf="mostrarJuegos">
         <ion-card
@@ -110,19 +162,26 @@
         </ion-card>
       </ion-col>
     </ion-row>
-    <ion-row>
-      <ion-col col-12 *ngIf="cliente?.pedido.estado == 'recibido'">
-        <ion-card class="ion-text-center ion-padding">
-          <ion-icon name="fast-food-outline"></ion-icon>
-          <h2 class="long-name">Pedir la cuenta</h2>
+
+    <ion-row
+      *ngIf="usuario?.estado === 'aprobado' && usuario.perfil == 'cliente'"
+    >
+      <ion-col col-12>
+        <ion-card
+          [routerLink]="['/reservas', usuario?.id]"
+          class="ion-text-center ion-padding"
+        >
+          <ion-icon name="calendar-outline"></ion-icon>
+          <h2 class="long-name">Reservar</h2>
         </ion-card>
       </ion-col>
     </ion-row>
-    }
   </ion-grid>
 </section>
 <footer class="home-footer" *ngIf="mostrarPedido">
   <p class="price">{{ cliente.pedido.precioTotal | currency }}</p>
+  <p class="subtitle">({{ cliente.pedido.tiempoEstimado }} m)</p>
+  <p *ngIf="mostrarEstado" class="title">{{ cliente.pedido.estado }}</p>
   <p class="subtitle">({{ cliente.pedido.tiempoEstimado }} m)</p>
   <p *ngIf="mostrarEstado" class="title">{{ cliente.pedido.estado }}</p>
 </footer>
