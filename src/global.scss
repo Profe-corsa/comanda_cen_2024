@@ -102,3 +102,7 @@ ion-card {
   --background: linear-gradient(to right, #d96d2d, #f4a40a);
   padding: 10px;
 }
+
+.custom-toast::part(message) {
+  font-size: 1.2rem;
+}

@@ -54,6 +54,30 @@
             </div>
           </ion-item>
         </ion-list>
+
+        <!-- NUEVA SECCIÓN DE DETALLE DE PAGO -->
+        <div class="detalle-pago" *ngIf="estadoPedido == 'pagado'">
+          <div class="detalle-item">
+            <span class="encabezado">Subtotal:</span>
+            <span>{{ total | currency }}</span>
+          </div>
+          <div class="detalle-item">
+            <span class="encabezado">Propina:</span>
+            <span style="margin-left: 5rem">{{ propina | currency }}</span>
+            <span style="color: greenyellow"
+              >( +{{ propinaPorcentaje }}% )</span
+            >
+          </div>
+          <div class="detalle-item">
+            <span class="encabezado">Total:</span>
+            <span>{{ montoIngresado | currency }}</span>
+          </div>
+          <div class="detalle-item">
+            <span class="encabezado">Cantidad pagada:</span>
+            <span>{{ montoIngresado | currency }}</span>
+          </div>
+        </div>
+
         <ion-footer>
           <ion-toolbar class="footer" *ngIf="usuarioId != undefined">
             <ion-title>Total: {{ total | currency }}</ion-title>
@@ -72,7 +96,6 @@
               (click)="confirmarRechazarPedido('aceptado')"
               >Aceptar</ion-button
             >
-            >
           </ion-toolbar>
           <ion-toolbar
             class="footer"
@@ -83,6 +106,29 @@
               class="btn-pedir"
               (click)="confirmarRechazarPedido('entregado')"
               >Entregar</ion-button
+            >
+          </ion-toolbar>
+
+          <ion-toolbar
+            class="footer"
+            *ngIf="usuarioId == undefined && estadoPedido == 'cuentaPedida'"
+          >
+            <ion-title>Total: {{ total | currency }}</ion-title>
+            <ion-button
+              class="btn-pedir"
+              (click)="confirmarRechazarPedido('cuentaEnviada')"
+              >Enviar Cuenta</ion-button
+            >
+          </ion-toolbar>
+
+          <ion-toolbar
+            class="footer"
+            *ngIf="usuarioId == undefined && estadoPedido == 'pagado'"
+          >
+            <ion-button
+              class="btn-pedir"
+              (click)="confirmarRechazarPedido('pagado')"
+              >Finalizar Pedido</ion-button
             >
           </ion-toolbar>
         </ion-footer>

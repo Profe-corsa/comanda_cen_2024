@@ -1,5 +1,17 @@
 import { Component, Input, OnInit } from '@angular/core';
-import {IonButton, IonContent, IonHeader, IonList, IonItem, IonLabel, IonNote, IonButtons, IonTitle, IonToolbar, IonInput } from '@ionic/angular/standalone' 
+import {
+  IonButton,
+  IonContent,
+  IonHeader,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonNote,
+  IonButtons,
+  IonTitle,
+  IonToolbar,
+  IonInput,
+} from '@ionic/angular/standalone';
 import { ModalController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { Estado, Pedido } from 'src/app/clases/pedido';
@@ -15,9 +27,24 @@ import { UsuarioService } from 'src/app/services/usuario.service';
   templateUrl: './modal-pagar-pedido.component.html',
   styleUrls: ['./modal-pagar-pedido.component.scss'],
   standalone: true,
-  imports: [IonInput, IonToolbar, IonTitle, IonButtons, IonNote, IonLabel, IonItem, IonList, IonHeader, IonContent, IonButton, IonInput, CommonModule, FormsModule]
+  imports: [
+    IonInput,
+    IonToolbar,
+    IonTitle,
+    IonButtons,
+    IonNote,
+    IonLabel,
+    IonItem,
+    IonList,
+    IonHeader,
+    IonContent,
+    IonButton,
+    IonInput,
+    CommonModule,
+    FormsModule,
+  ],
 })
-export class ModalPagarPedidoComponent implements OnInit{
+export class ModalPagarPedidoComponent implements OnInit {
   @Input() pedido: any;
   propina = 0;
   puedePagar: boolean = false;
@@ -29,11 +56,10 @@ export class ModalPagarPedidoComponent implements OnInit{
     private toast: ToastService,
     private qrService: QrScannerService,
     private firestore: Firestore,
-    private usuarioSrv: UsuarioService,
-  ) {
-  }
-  ngOnInit(){
-    this.precioTotal= this.pedido.precioTotal;
+    private usuarioSrv: UsuarioService
+  ) {}
+  ngOnInit() {
+    this.precioTotal = this.pedido.precioTotal;
   }
   cerrarModal() {
     this.modalController.dismiss();
@@ -41,11 +67,10 @@ export class ModalPagarPedidoComponent implements OnInit{
 
   leerQR() {
     this.qrService.scanCode().then((qrData) => {
-      if (qrData === 'propina'){
+      if (qrData === 'propina') {
         this.abrirModalPropina();
-      }
-      else {
-        this.toast.showError('El QR que escaneó no es el de propina')
+      } else {
+        this.toast.showError('El QR que escaneó no es el de propina');
       }
     });
   }
@@ -61,23 +86,30 @@ export class ModalPagarPedidoComponent implements OnInit{
     modal.onDidDismiss().then((data) => {
       if (data.data) {
         this.propina = data.data.propinaPorcentaje;
-        this.precioTotal = this.pedido.precioTotal+((this.pedido.precioTotal * this.propina)/ 100);
+        this.precioTotal =
+          this.pedido.precioTotal +
+          (this.pedido.precioTotal * this.propina) / 100;
       }
     });
 
     return await modal.present();
   }
 
-  pagarPedido() {
-    if (this.puedePagar){
-      const totalConPropina =
-        this.pedido.precioTotal + (this.pedido.precioTotal * this.propina) / 100;
+  async pagarPedido() {
+    if (this.puedePagar) {
+      const propina = (this.pedido.precioTotal * this.propina) / 100;
+      const totalConPropina = this.pedido.precioTotal + propina;
       this.toast.showExito(`Pagando un total de: ${totalConPropina}`);
-      this.actualizarEstadoPedidoCliente(this.pedido, Estado.pagado);
+
+      this.pedido.propina = propina;
+      this.pedido.pagado = totalConPropina;
+
+      console.log('pagarPedido', this.pedido);
+
+      await this.actualizarEstadoPedidoCliente(this.pedido, Estado.pagado);
       this.cerrarModal();
-    }
-    else {
-      this.toast.showError("Por favor, ingrese el monto.")
+    } else {
+      this.toast.showError('Por favor, ingrese el monto.');
     }
   }
   async actualizarEstadoPedidoCliente(
@@ -87,31 +119,35 @@ export class ModalPagarPedidoComponent implements OnInit{
     try {
       // Buscar el usuario asociado al pedido
       const usuario = this.usuarioSrv.getUser(pedido.clienteId);
-        if (usuario) {
-          // Verificar que el usuario tiene un pedido asociado
-          if (pedido) {
-            // Actualizar el estado del pedido
-            pedido.estado = nuevoEstado;
-            const pedidoRef = doc(this.firestore, `pedidos/${pedido.id}`);
-            // Guardar cambios en Firestore
-            await this.usuarioSrv.updateUser(pedido.clienteId, {
-              pedido: pedido,
-            });
-            await updateDoc(pedidoRef, { estado: `${nuevoEstado}` });
-            console.log('El estado del pedido se actualizó correctamente.');
-          } else {
-            console.log(
-              'El usuario no tiene un pedido asociado con el clienteId dado.'
-            );
-          }
+      if (usuario) {
+        // Verificar que el usuario tiene un pedido asociado
+        if (pedido) {
+          // Actualizar el estado del pedido
+          pedido.estado = nuevoEstado;
+          const pedidoRef = doc(this.firestore, `pedidos/${pedido.id}`);
+          // Guardar cambios en Firestore
+          await this.usuarioSrv.updateUser(pedido.clienteId, {
+            pedido: pedido,
+          });
+          await updateDoc(pedidoRef, {
+            estado: `${nuevoEstado}`,
+            propina: pedido.propina,
+            pagado: pedido.pagado,
+          });
+          console.log('El estado del pedido se actualizó correctamente.');
         } else {
-          console.log('No se encontró el usuario asociado al pedido.');
+          console.log(
+            'El usuario no tiene un pedido asociado con el clienteId dado.'
+          );
         }
-      } catch (error) {
-        console.error(
-          'Error al actualizar el estado del pedido en el usuario:',
-          error
-        );
+      } else {
+        console.log('No se encontró el usuario asociado al pedido.');
       }
+    } catch (error) {
+      console.error(
+        'Error al actualizar el estado del pedido en el usuario:',
+        error
+      );
     }
+  }
 }

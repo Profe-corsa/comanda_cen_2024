@@ -93,4 +93,9 @@ export const routes: Routes = [
         (m) => m.EncuestaClienteComponent
       ),
   },
+  {
+    path: 'reservas/:id',
+    loadComponent: () =>
+      import('./pages/reservas/reservas.page').then((m) => m.ReservasPage),
+  },
 ];

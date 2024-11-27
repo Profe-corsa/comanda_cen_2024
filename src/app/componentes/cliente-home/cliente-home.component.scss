@@ -1,5 +1,5 @@
 section {
-  margin-top: 2vh;
+  // margin-top: 2vh;
 }
 
 ion-icon {
@@ -40,7 +40,7 @@ h2 {
 }
 
 .price {
-  font-size: 1em !important;
+  font-size: 2em !important;
   font-weight: 900 !important;
   color: #00b14a;
   margin: 0 0 0 2%;
@@ -48,7 +48,7 @@ h2 {
 .home-footer {
   background-color: #000;
   position: fixed;
-  display:flex;
+  display: flex;
   align-items: center;
   justify-content: space-between;
   bottom: 0;

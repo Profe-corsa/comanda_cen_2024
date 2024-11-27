@@ -20,6 +20,9 @@ export class Pedido {
   estado: Estado = Estado.pendiente;
   nroMesa: string = '';
   hora: any;
+  pagado: number = 0;
+  propina?: number = 0;
+
   constructor() {
     this.hora = new Date();
   }
