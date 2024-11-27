@@ -6,7 +6,7 @@
     <ion-row>
       <ion-col
         col-12
-        *ngIf="usuario?.estado == undefined || usuario?.estado == 'aprobado'"
+        *ngIf="cliente?.estado == undefined || cliente?.estado == 'aprobado'"
       >
         <ion-card
           (click)="leerQR()"

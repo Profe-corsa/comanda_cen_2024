@@ -30,7 +30,7 @@ import { ToastService } from '../../services/toast.service';
 import { Objetos } from '../../clases/enumerados/Objetos';
 import { UsuarioService } from '../../services/usuario.service';
 import { Estados } from '../../clases/enumerados/Estados';
-import { Router, RouterLink, RouterModule } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataService } from 'src/app/services/data.service';
 import { LoadingService } from 'src/app/services/loading.service';
@@ -70,6 +70,7 @@ export class ClienteHomeComponent implements OnInit {
   mostrarEstadisticas: boolean = false;
   mostrarEncuesta: boolean = false;
   cliente: Cliente | any;
+
   constructor(
     private qrService: QrScannerService,
     private toast: ToastService,
@@ -77,24 +78,10 @@ export class ClienteHomeComponent implements OnInit {
     private authService: AuthService,
     private dataService: DataService,
     public loadingService: LoadingService,
-    private router: Router,
     private notificationService: PushMailNotificationService,
     private modalController: ModalController,
-    private firestore: Firestore,
+    private firestore: Firestore
   ) {
-    addIcons({
-      list,
-      qrCodeOutline,
-      chatbubblesOutline,
-      restaurantOutline,
-      bookOutline,
-      fastFoodOutline,
-      gameControllerOutline,
-      calendarOutline,
-      bagOutline,
-      addCircleOutline,
-      man,
-    });
     addIcons({
       list,
       qrCodeOutline,
@@ -121,7 +108,7 @@ export class ClienteHomeComponent implements OnInit {
       this.mostrarPedido = true;
     }
     this.actualizarPedido();
-    if (this.cliente.pedido.estado === Estado.cuentaEnviada){
+    if (this.cliente.pedido.estado === Estado.cuentaEnviada) {
       this.pedirCuenta();
     }
   }
@@ -382,7 +369,7 @@ export class ClienteHomeComponent implements OnInit {
   }
   async pedirCuenta() {
     this.actualizarPedido();
-  
+
     // Si el estado del pedido ya es 'cuentaEnviada', abrir el modal directamente
     if (this.pedido.estado === Estado.cuentaEnviada) {
       const modal = await this.modalController.create({
@@ -393,18 +380,18 @@ export class ClienteHomeComponent implements OnInit {
       });
       return await modal.present();
     }
-  
+
     // Cambiar el estado del pedido a 'cuentaPedida'
     this.actualizarEstadoPedidoCliente(this.pedido, Estado.cuentaPedida);
     this.loadingService.showLoading();
-  
+
     // Monitorear cambios de estado del pedido
     const intervalo = setInterval(async () => {
       await this.actualizarPedido(); // Actualizar el estado del pedido desde la base de datos
       if (this.pedido.estado === Estado.cuentaEnviada) {
         clearInterval(intervalo); // Detener el monitoreo
         this.loadingService.hideLoading(); // Ocultar el loading
-  
+
         // Abrir el modal con la cuenta
         const modal = await this.modalController.create({
           component: ModalPagarPedidoComponent,
@@ -416,7 +403,6 @@ export class ClienteHomeComponent implements OnInit {
       }
     }, 1000); // Verificar cada 1 segundo
   }
-  
 
   async cerrarSesion() {
     this.loadingService.showLoading();
@@ -424,13 +410,13 @@ export class ClienteHomeComponent implements OnInit {
     this.loadingService.hideLoading();
   }
 
-async actualizarEstadoPedidoCliente(
-  pedido: Pedido,
-  nuevoEstado: Estado
-): Promise<void> {
-  try {
-    // Buscar el usuario asociado al pedido
-    const usuario = this.cliente;
+  async actualizarEstadoPedidoCliente(
+    pedido: Pedido,
+    nuevoEstado: Estado
+  ): Promise<void> {
+    try {
+      // Buscar el usuario asociado al pedido
+      const usuario = this.cliente;
       if (usuario) {
         // Verificar que el usuario tiene un pedido asociado
         if (usuario.pedido && usuario.pedido.clienteId === pedido.clienteId) {
@@ -443,8 +429,11 @@ async actualizarEstadoPedidoCliente(
           });
           await updateDoc(pedidoRef, { estado: `${nuevoEstado}` });
           this.actualizarPedido();
-          this.notificationService.sendPushNotificationToRole('Solicitud de cuenta',
-             `El cliente de la mesa ${this.usuario.mesaAsignada} pidió la cuenta.`, 'mozo');
+          this.notificationService.sendPushNotificationToRole(
+            'Solicitud de cuenta',
+            `El cliente de la mesa ${this.usuario.mesaAsignada} pidió la cuenta.`,
+            'mozo'
+          );
           console.log('El estado del pedido se actualizó correctamente.');
         } else {
           console.log(
