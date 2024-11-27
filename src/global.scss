@@ -82,19 +82,6 @@ ion-item {
   border-radius: 10px;
 }
 
-// ion-button {
-//   --background: linear-gradient(
-//     to right,
-//     #d96d2d,
-//     #f4a40a
-//   ); /* Tonos más intensos */
-//   --border-radius: 8px;
-//   margin-bottom: 12px;
-//   color: #ffffff; /* Texto blanco para contraste */
-//   font-weight: bold;
-//   font-size: 18px; /* Aumenta el tamaño del texto en los botones */
-// }
-
 h1 {
   font-size: 2rem !important;
 }
@@ -104,6 +91,10 @@ h2 {
 }
 
 p {
+  font-size: 1.5rem !important;
+}
+
+.h2ajustado {
   font-size: 1.5rem !important;
 }
 

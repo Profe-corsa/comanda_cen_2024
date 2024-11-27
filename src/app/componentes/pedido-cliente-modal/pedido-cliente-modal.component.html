@@ -40,11 +40,13 @@
               *ngIf="usuarioId == undefined && estadoPedido == 'en preparación'"
             >
               <ion-icon
+                style="font-size: 2rem !important"
                 name="checkmark-circle-outline"
                 *ngIf="producto.estado != 'en preparación'"
                 color="success"
               ></ion-icon>
               <ion-icon
+                style="font-size: 2rem !important"
                 name="close-circle-outline"
                 *ngIf="producto.estado == 'en preparación'"
                 color="danger"
