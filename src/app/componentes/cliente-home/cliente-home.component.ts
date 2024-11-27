@@ -230,7 +230,7 @@ export class ClienteHomeComponent implements OnInit {
           mesaAsignada &&
           mesaAsignada.numero === parseInt(numeroMesa) &&
           this.usuario.mesaAsignada === '' &&
-          mesaAsignada?.estado === 'Disponible' &&
+          mesaAsignada?.estado === 'reservada' &&
           this.usuario.estado === Estados.puedeTomarMesa
         ) {
           // Actualizar los campos del usuario (por ejemplo: estado y numeroMesa)
