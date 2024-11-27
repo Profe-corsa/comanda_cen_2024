@@ -8,11 +8,13 @@
         col-12
         *ngIf="usuario?.estado == undefined || usuario?.estado == 'aprobado'"
       >
+  
         <ion-card
           (click)="leerQR()"
           class="ion-text-center ion-padding"
           color="000"
         >
+  
           <ion-icon name="list"></ion-icon>
           <h2 class="long-name">Lista de Espera</h2>
         </ion-card>
@@ -27,12 +29,13 @@
           usuario?.estado == 'mesaTomada'
         "
       >
-        " >
+
         <ion-card
           (click)="leerQR()"
           class="ion-text-center ion-padding"
           color="000"
         >
+    
           <ion-icon name="qr-code-outline"></ion-icon>
           <h2 class="long-name">QR de la mesa</h2>
         </ion-card>
@@ -43,10 +46,12 @@
         col-12
         *ngIf="usuario?.estado == undefined || usuario?.estado == 'mesaTomada'"
       >
+   
         <ion-card
           [routerLink]="['/consulta', usuario.perfil, usuario?.id]"
           class="ion-text-center ion-padding"
         >
+     
           <ion-icon name="chatbubbles-outline"></ion-icon>
           <h2 class="long-name">Consultar al mozo</h2>
         </ion-card>
@@ -61,6 +66,7 @@
           [routerLink]="['/carta', usuario?.id]"
           class="ion-text-center ion-padding"
         >
+  
           <ion-icon name="restaurant-outline"></ion-icon>
           <h2 class="long-name">Ver la carta</h2>
         </ion-card>
@@ -88,17 +94,6 @@
         </ion-card>
       </ion-col>
     </ion-row>
-    <ion-row>
-      <ion-col col-12 *ngIf="usuario?.estado === 'mesaTomada'">
-        <ion-card
-          [routerLink]="['/encuesta-cliente', usuario.id]"
-          class="ion-text-center ion-padding"
-        >
-          <ion-icon name="book-outline"></ion-icon>
-          <h2 class="long-name">Ver encuesta</h2>
-        </ion-card>
-      </ion-col>
-    </ion-row>
 
     @if (cliente.pedido != undefined) {
     <ion-row>
@@ -107,7 +102,7 @@
           (click)="confirmarRecepcionPedido()"
           class="ion-text-center ion-padding"
         >
-          class="ion-text-center ion-padding" >
+   
           <ion-icon name="fast-food-outline"></ion-icon>
           <h2 class="long-name">Confirmar recepción de pedido</h2>
         </ion-card>
