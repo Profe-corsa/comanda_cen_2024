@@ -41,6 +41,7 @@ import { Estado, Pedido } from 'src/app/clases/pedido';
 import { Cliente } from 'src/app/clases/cliente';
 import { ModalController } from '@ionic/angular';
 import { ModalPagarPedidoComponent } from '../modal-pagar-pedido/modal-pagar-pedido.component';
+import { doc, Firestore, updateDoc } from '@angular/fire/firestore';
 //import { EncuestaClienteComponent } from '../encuesta-cliente/encuesta-cliente.component';
 @Component({
   selector: 'app-cliente-home',
@@ -63,7 +64,7 @@ export class ClienteHomeComponent implements OnInit {
   @Input() usuario: Usuario | any;
   pedido: Pedido | any = [];
   mostrarPedido: boolean = false;
-  mostrarEstado: boolean = false;
+  mostrarEstado: boolean = true;
   mostrarJuegos: boolean = true;
   mostrarEstadisticas: boolean = false;
   mostrarEncuesta: boolean = false;
@@ -77,7 +78,8 @@ export class ClienteHomeComponent implements OnInit {
     public loadingService: LoadingService,
     private router: Router,
     private notificationService: PushMailNotificationService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private firestore: Firestore,
   ) {
     addIcons({
       list,
@@ -114,6 +116,10 @@ export class ClienteHomeComponent implements OnInit {
     console.log('el usuario en home:', this.usuario);
     if (this.cliente.pedido) {
       this.mostrarPedido = true;
+    }
+    this.actualizarPedido();
+    if (this.cliente.pedido.estado === Estado.cuentaEnviada){
+      this.pedirCuenta();
     }
   }
 
@@ -154,7 +160,7 @@ export class ClienteHomeComponent implements OnInit {
     this.pedido = await this.usuarioSrv.getIfExists(
       'pedidos',
       this.usuario.id,
-      new Date()
+      this.usuario.pedido.id
     );
   }
   async agregarAListaEspera() {
@@ -287,19 +293,83 @@ export class ClienteHomeComponent implements OnInit {
       );
     }
   }
-  async pedirCuenta(){
-    const modal = await this.modalController.create({
-      component: ModalPagarPedidoComponent,
-      componentProps: {
-        pedido: this.cliente.pedido,
-      },
-    });
-    return await modal.present();
+  async pedirCuenta() {
+    this.actualizarPedido();
+  
+    // Si el estado del pedido ya es 'cuentaEnviada', abrir el modal directamente
+    if (this.pedido.estado === Estado.cuentaEnviada) {
+      const modal = await this.modalController.create({
+        component: ModalPagarPedidoComponent,
+        componentProps: {
+          pedido: this.pedido,
+        },
+      });
+      return await modal.present();
+    }
+  
+    // Cambiar el estado del pedido a 'cuentaPedida'
+    this.actualizarEstadoPedidoCliente(this.pedido, Estado.cuentaPedida);
+    this.loadingService.showLoading();
+  
+    // Monitorear cambios de estado del pedido
+    const intervalo = setInterval(async () => {
+      await this.actualizarPedido(); // Actualizar el estado del pedido desde la base de datos
+      if (this.pedido.estado === Estado.cuentaEnviada) {
+        clearInterval(intervalo); // Detener el monitoreo
+        this.loadingService.hideLoading(); // Ocultar el loading
+  
+        // Abrir el modal con la cuenta
+        const modal = await this.modalController.create({
+          component: ModalPagarPedidoComponent,
+          componentProps: {
+            pedido: this.pedido,
+          },
+        });
+        return await modal.present();
+      }
+    }, 1000); // Verificar cada 1 segundo
   }
+  
 
   async cerrarSesion() {
     this.loadingService.showLoading();
     await this.authService.logOut();
     this.loadingService.hideLoading();
+  }
+
+async actualizarEstadoPedidoCliente(
+  pedido: Pedido,
+  nuevoEstado: Estado
+): Promise<void> {
+  try {
+    // Buscar el usuario asociado al pedido
+    const usuario = this.cliente;
+      if (usuario) {
+        // Verificar que el usuario tiene un pedido asociado
+        if (usuario.pedido && usuario.pedido.clienteId === pedido.clienteId) {
+          // Actualizar el estado del pedido
+          usuario.pedido.estado = nuevoEstado;
+          const pedidoRef = doc(this.firestore, `pedidos/${usuario.pedido.id}`);
+          // Guardar cambios en Firestore
+          await this.usuarioSrv.updateUser(usuario.id, {
+            pedido: usuario.pedido,
+          });
+          await updateDoc(pedidoRef, { estado: `${nuevoEstado}` });
+          this.actualizarPedido();
+          console.log('El estado del pedido se actualizó correctamente.');
+        } else {
+          console.log(
+            'El usuario no tiene un pedido asociado con el clienteId dado.'
+          );
+        }
+      } else {
+        console.log('No se encontró el usuario asociado al pedido.');
+      }
+    } catch (error) {
+      console.error(
+        'Error al actualizar el estado del pedido en el usuario:',
+        error
+      );
+    }
   }
 }

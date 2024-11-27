@@ -11,7 +11,7 @@ import { PushMailNotificationService } from 'src/app/services/push-mail-notifica
 import { ToastService } from 'src/app/services/toast.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { Cliente } from 'src/app/clases/cliente';
-
+import { doc, Firestore, updateDoc } from '@angular/fire/firestore';
 @Component({
   selector: 'app-mozo-lista-pedidos',
   templateUrl: './mozo-lista-pedidos.component.html',
@@ -28,7 +28,8 @@ export class MozoListaPedidosComponent implements OnInit {
     public loadingService: LoadingService,
     private notificationService: PushMailNotificationService,
     private toast: ToastService,
-    private usurioService: UsuarioService
+    private usurioService: UsuarioService,
+    private firestore: Firestore,
   ) {}
 
   ngOnInit() {
@@ -94,14 +95,16 @@ export class MozoListaPedidosComponent implements OnInit {
       if (usuario) {
         // Verificar que el usuario tiene un pedido asociado
         if (usuario.pedido && usuario.pedido.clienteId === pedido.clienteId) {
-          // Actualizar el estado del pedido
-          usuario.pedido.estado = nuevoEstado;
 
+          usuario.pedido.estado = nuevoEstado;
           // Guardar cambios en Firestore
           await this.usurioService.updateUser(usuario.id, {
             pedido: usuario.pedido,
           });
 
+          const pedidoRef = doc(this.firestore, `pedidos/${usuario.pedido.id}`);
+          // Guardar cambios en Firestore
+          await updateDoc(pedidoRef, { estado: `${nuevoEstado}` });
           console.log('El estado del pedido se actualizó correctamente.');
         } else {
           console.log(

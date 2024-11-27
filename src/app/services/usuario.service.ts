@@ -95,14 +95,14 @@ export class UsuarioService {
   async getIfExists(
     collectionName: string,
     clienteId: string,
-    fechaActual: Date
+    pedidoId: string
   ): Promise<any> {
     try {
       const collectionRef = collection(this.firestore, collectionName);
       const usuariosQuery = query(
         collectionRef,
         where('clienteId', '==', clienteId),
-        where('fecha', '==', fechaActual.toLocaleDateString())
+        where('id', '==', pedidoId)
       );
       const querySnapshot = await getDocs(usuariosQuery);
 
