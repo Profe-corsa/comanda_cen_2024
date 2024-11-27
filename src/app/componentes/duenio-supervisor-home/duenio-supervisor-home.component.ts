@@ -10,7 +10,12 @@ import {
 import { RouterLink } from '@angular/router';
 import { Usuario } from 'src/app/clases/usuario';
 import { addIcons } from 'ionicons';
-import { restaurantOutline, man, addCircleOutline } from 'ionicons/icons';
+import {
+  restaurantOutline,
+  man,
+  addCircleOutline,
+  clipboard,
+} from 'ionicons/icons';
 
 @Component({
   selector: 'app-duenio-supervisor-home',
@@ -27,12 +32,10 @@ import { restaurantOutline, man, addCircleOutline } from 'ionicons/icons';
     CommonModule,
   ],
 })
-export class DuenioSupervisorHomeComponent  {
+export class DuenioSupervisorHomeComponent {
   @Input() usuario: Usuario | any;
 
   constructor() {
-    addIcons({man,restaurantOutline,addCircleOutline});
+    addIcons({ addCircleOutline, clipboard, man, restaurantOutline });
   }
-
-  
 }
