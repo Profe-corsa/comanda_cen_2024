@@ -11,6 +11,7 @@ import { QrScannerService } from '../../services/qrscanner.service';
 import { Producto, TipoProducto } from 'src/app/clases/producto';
 import { AuthService } from 'src/app/services/auth.service';
 import { Usuario } from 'src/app/clases/usuario';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-alta-producto',
   templateUrl: './alta-producto.component.html',
@@ -25,21 +26,22 @@ export class AltaProductoComponent implements OnInit {
   fotos: string[] = [];
   // Opciones para el tipo de producto basadas en el enum
   tiposProductoOptions: { key: string; value: TipoProducto }[] = [];
+  @Input() tipoUsuario: string = '';
 
   constructor(
     private fb: FormBuilder,
     private dataService: DataService,
     private camaraService: CamaraService,
     private toast: ToastService,
-    private authService: AuthService
-    )
-   {
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.productoForm = this.fb.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
       tiempoPreparacion: ['', [Validators.required, Validators.min(1)]],
       precio: ['', [Validators.required, Validators.min(0)]],
-      tipo: [TipoProducto.Comida, [Validators.required]]
+      tipo: [TipoProducto.Comida, [Validators.required]],
     });
 
     // Inicializar las opciones basadas en el tipoCliente inicial
@@ -47,7 +49,7 @@ export class AltaProductoComponent implements OnInit {
   }
   ngOnInit() {
     this.usuario = this.authService.getUserLogueado();
-    if (this.usuario?.perfil){
+    if (this.usuario?.perfil) {
       this.tipoEmpleado = this.usuario.perfil;
     }
     console.log(this.tipoEmpleado);
@@ -57,10 +59,13 @@ export class AltaProductoComponent implements OnInit {
     if (this.fotos.length < 3) {
       try {
         const imageName = `producto_${Date.now()}.jpg`; // Genera un nombre único para la imagen
-        const imageUrl = await this.camaraService.tomarFoto('productos', imageName);
+        const imageUrl = await this.camaraService.tomarFoto(
+          'productos',
+          imageName
+        );
         this.fotos.push(imageUrl); // Agrega la URL de descarga a la lista de fotos
       } catch (error) {
-        this.toast.showError('Error al tomar foto: '+error);
+        this.toast.showError('Error al tomar foto: ' + error);
       }
     } else {
       this.toast.showError('Solo se permiten tres fotos.');
@@ -71,24 +76,28 @@ export class AltaProductoComponent implements OnInit {
       case 'cocinero':
         this.tiposProductoOptions = [
           { key: 'Comida', value: TipoProducto.Comida },
-          { key: 'Postre', value: TipoProducto.Postre }
+          { key: 'Postre', value: TipoProducto.Postre },
         ];
         break;
       case 'bartender':
         this.tiposProductoOptions = [
-          { key: 'Bebida', value: TipoProducto.Bebida }
+          { key: 'Bebida', value: TipoProducto.Bebida },
         ];
         break;
       default:
         this.tiposProductoOptions = [
           { key: 'Comida', value: TipoProducto.Comida },
           { key: 'Bebida', value: TipoProducto.Bebida },
-          { key: 'Postre', value: TipoProducto.Postre }
+          { key: 'Postre', value: TipoProducto.Postre },
         ];
-    } 
+    }
     const tipoActual = this.productoForm.get('tipo')?.value;
-    if (!this.tiposProductoOptions.some(option => option.value === tipoActual)) {
-      this.productoForm.get('tipo')?.setValue(this.tiposProductoOptions[0].value);
+    if (
+      !this.tiposProductoOptions.some((option) => option.value === tipoActual)
+    ) {
+      this.productoForm
+        .get('tipo')
+        ?.setValue(this.tiposProductoOptions[0].value);
     }
   }
   async guardarProducto() {
@@ -106,10 +115,12 @@ export class AltaProductoComponent implements OnInit {
       this.toast.showError('Complete todos los campos y cargue tres fotos.');
     }
   }
-  
-  
 
   generarCodigoQR(producto: any) {
     // Lógica para generar código QR aquí (ver paso 3)
+  }
+
+  volver() {
+    this.router.navigate(['/home']);
   }
 }

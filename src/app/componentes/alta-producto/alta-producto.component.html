@@ -19,7 +19,7 @@
             *ngIf="
               productoForm.get('nombre')?.invalid &&
               (productoForm.get('nombre')?.dirty ||
-              productoForm.get('nombre')?.touched)
+                productoForm.get('nombre')?.touched)
             "
             class="error-message"
           >
@@ -35,13 +35,16 @@
         <div class="form-group">
           <div class="input-wrapper">
             <!-- <ion-icon name="mail-outline"></ion-icon> -->
-            <ion-textarea placeholder="Descripcion" formControlName="descripcion"></ion-textarea>
+            <ion-textarea
+              placeholder="Descripcion"
+              formControlName="descripcion"
+            ></ion-textarea>
           </div>
           <div
             *ngIf="
               productoForm.get('descripcion')?.invalid &&
               (productoForm.get('descripcion')?.dirty ||
-              productoForm.get('descripcion')?.touched)
+                productoForm.get('descripcion')?.touched)
             "
             class="error-message"
           >
@@ -53,7 +56,6 @@
             </ion-text>
           </div>
         </div>
-            
 
         <!-- tiempo -->
         <div class="form-group">
@@ -69,7 +71,7 @@
             *ngIf="
               productoForm.get('tiempoPreparacion')?.invalid &&
               (productoForm.get('tiempoPreparacion')?.dirty ||
-              productoForm.get('tiempoPreparacion')?.touched)
+                productoForm.get('tiempoPreparacion')?.touched)
             "
             class="error-message"
           >
@@ -89,22 +91,31 @@
               formControlName="precio"
             ></ion-input>
           </div>
-          <div *ngIf="productoForm.get('precio')?.invalid && productoForm.get('precio')?.touched" class="error-message">
+          <div
+            *ngIf="
+              productoForm.get('precio')?.invalid &&
+              productoForm.get('precio')?.touched
+            "
+            class="error-message"
+          >
             <ion-text
-            color="danger"
-            *ngIf="productoForm.get('precio')?.errors?.['required']"
+              color="danger"
+              *ngIf="productoForm.get('precio')?.errors?.['required']"
             >
               El precio es requerido.
-          </ion-text>
+            </ion-text>
           </div>
         </div>
         <!-- Tipo de Producto -->
         <div class="form-group">
           <ion-select placeholder="Tipo de Producto" formControlName="tipo">
-            <ion-select-option *ngFor="let tipo of tiposProductoOptions" [value]="tipo.key">
+            <ion-select-option
+              *ngFor="let tipo of tiposProductoOptions"
+              [value]="tipo.key"
+            >
               {{ tipo.key }}
             </ion-select-option>
-          </ion-select>          
+          </ion-select>
         </div>
         <!-- Foto -->
         <div class="foto-container">
@@ -116,8 +127,6 @@
             </div>
           </div>
         </div>
-        
-        
 
         <div class="action-buttons">
           <ion-button
@@ -126,6 +135,9 @@
             [disabled]="!productoForm.valid"
           >
             Crear
+          </ion-button>
+          <ion-button expand="block" type="button" (click)="volver()">
+            Volver
           </ion-button>
         </div>
       </form>

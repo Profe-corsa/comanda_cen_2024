@@ -7,6 +7,7 @@ import { AnonimoRegistroComponent } from '../../componentes/anonimo-registro/ano
 import { ActivatedRoute } from '@angular/router';
 import { AltaMesaComponent } from 'src/app/componentes/alta-mesa/alta-mesa.component';
 import { DuenioEmpleadoComponent } from 'src/app/componentes/duenio-empleado/duenio-empleado.component';
+import { AltaProductoComponent } from '../../componentes/alta-producto/alta-producto.component';
 @Component({
   selector: 'app-registro',
   templateUrl: './registro.page.html',
@@ -20,6 +21,7 @@ import { DuenioEmpleadoComponent } from 'src/app/componentes/duenio-empleado/due
     AnonimoRegistroComponent,
     AltaMesaComponent,
     DuenioEmpleadoComponent,
+    AltaProductoComponent,
   ],
 })
 export class RegistroPage implements OnInit {

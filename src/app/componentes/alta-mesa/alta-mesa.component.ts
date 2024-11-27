@@ -63,9 +63,10 @@ import { CamaraService } from 'src/app/services/camara.service';
 })
 export class AltaMesaComponent {
   mesaForm: FormGroup;
-  foto: SafeUrl | undefined;
+  foto: SafeUrl | string = '';
   qrCode: SafeUrl | undefined;
   mesaFoto: string = '';
+  imageName: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -95,9 +96,10 @@ export class AltaMesaComponent {
   tomarFoto() {
     try {
       const imageName = 'mesa_' + Date.now().toString();
-      this.camaraService.tomarFoto('clientes', imageName).then((urlFoto) => {
+      this.camaraService.tomarFoto('mesas', imageName).then((urlFoto) => {
         //Guardar la url en el objeto usuario
         this.mesaFoto = urlFoto;
+        this.imageName = imageName;
       });
     } catch (error) {
       console.error('Error al tomar la foto:', error);
@@ -114,12 +116,15 @@ export class AltaMesaComponent {
       };
 
       await this.dataSrv.saveObject(mesaData, 'mesas').then(() => {
-        this.route.navigate(['home']);
+        this.route.navigate(['listados/mesas']);
       });
     }
   }
 
   volver() {
-    this.route.navigate(['home']);
+    if (typeof this.imageName === 'string' && this.imageName !== '') {
+      this.camaraService.deleteImage('mesas', this.imageName);
+    }
+    this.route.navigate(['/home']);
   }
 }
