@@ -86,6 +86,7 @@ export class AuthService {
       await this.notificationService.deleteToken();
       await signOut(this.auth);
       this.userSubject.next(null);
+      localStorage.clear();
       this.router.navigate(['/login']);
     } catch (error) {
       this.toastService.showError(

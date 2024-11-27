@@ -66,13 +66,14 @@
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col col-12 *ngIf="usuario?.estado === 'mesaTomada'">
+      <ion-col col-12 *ngIf="usuario?.estado === 'recibido' && usuario?.perfil === 'cliente'
+      && !tieneEncuesta">
         <ion-card
           [routerLink]="['/encuesta-cliente', usuario.id]"
           class="ion-text-center ion-padding"
         >
           <ion-icon name="book-outline"></ion-icon>
-          <h2 class="long-name">Ver encuesta</h2>
+          <h2 class="long-name">Realizar encuesta</h2>
         </ion-card>
       </ion-col>
     </ion-row>
@@ -104,7 +105,8 @@
       <!-- aca poner una condicion que verifiqie si el cliente realizo la encuesta -->
       <ion-col
         col-12
-        *ngIf="cliente?.pedido.estado == 'recibido' && mostrarEstadisticas"
+        *ngIf="(usuario.estado === 'enEspera' && usuario.perfil === 'cliente anonimo')
+         || (cliente?.pedido.estado == 'recibido' && mostrarEstadisticas)"
       >
         <ion-card class="ion-text-center ion-padding">
           <ion-icon name="fast-food-outline"></ion-icon>

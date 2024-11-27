@@ -70,6 +70,7 @@ export class ClienteHomeComponent implements OnInit {
   mostrarEstadisticas: boolean = false;
   mostrarEncuesta: boolean = false;
   cliente: Cliente | any;
+  tieneEncuesta: boolean = false;
 
   constructor(
     private qrService: QrScannerService,
@@ -104,6 +105,10 @@ export class ClienteHomeComponent implements OnInit {
     console.log('Cliente en home comp', this.cliente);
 
     console.log('el usuario en home:', this.usuario);
+    if (localStorage.getItem('UsuarioEncuesta'))
+    {
+      this.tieneEncuesta = true;
+    }
     if (this.cliente.pedido) {
       this.mostrarPedido = true;
     }
