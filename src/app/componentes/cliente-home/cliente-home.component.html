@@ -8,6 +8,7 @@
         col-12
         *ngIf="usuario?.estado == undefined || usuario?.estado == 'aprobado'"
       >
+  
         <ion-card
           (click)="leerQR()"
           class="ion-text-center ion-padding"
@@ -66,7 +67,7 @@
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col col-12 *ngIf="usuario?.estado === 'mesaTomada' && mostrarJuegos">
+      <ion-col col-12 *ngIf="usuario?.estado === 'mesaTomada'">
         <ion-card
           [routerLink]="['/encuesta-cliente', usuario.id]"
           class="ion-text-center ion-padding"
@@ -76,6 +77,19 @@
         </ion-card>
       </ion-col>
     </ion-row>
+    <ion-row>
+      <ion-col col-12>
+        <ion-card
+          [routerLink]="['/reservas', usuario?.id]"
+          class="ion-text-center ion-padding"
+        >
+          <ion-icon name="calendar-outline"></ion-icon>
+          <h2 class="long-name">Reservar</h2>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    @if (cliente.pedido != undefined) {
     <ion-row>
       <ion-col col-12 *ngIf="cliente?.pedido.estado == 'entregado'">
         <ion-card
@@ -87,22 +101,13 @@
         </ion-card>
       </ion-col>
     </ion-row>
-    <!-- <ion-row>
-      <ion-col col-12 *ngIf="mostrarJuegos">
-        <ion-card
-          [routerLink]="['/carta', usuario?.id]"
-          class="ion-text-center ion-padding"
-        >
-          <ion-icon name="game-controller-outline"></ion-icon>
-          <h2 class="long-name">Ver los juegos</h2>
-        </ion-card>
-      </ion-col>
-    </ion-row> -->
+
     <ion-row>
-      <ion-col col-12 *ngIf="cliente?.pedido.estado == 'recibido' && mostrarJuegos">
-        <ion-card
-          (click)="pedirCuenta()"
-          class="ion-text-center ion-padding">
+      <ion-col
+        col-12
+        *ngIf="cliente?.pedido.estado == 'recibido' && mostrarJuegos"
+      >
+        <ion-card (click)="pedirCuenta()" class="ion-text-center ion-padding">
           <ion-icon name="fast-food-outline"></ion-icon>
           <h2 class="long-name">Pedir la cuenta</h2>
         </ion-card>
@@ -112,6 +117,13 @@
       <ion-col col-12 *ngIf="cliente?.pedido.estado == 'recibido' && mostrarJuegos">
         <ion-card
           class="ion-text-center ion-padding">
+
+    <ion-row>
+      <ion-col
+        col-12
+        *ngIf="cliente?.pedido.estado == 'recibido' && mostrarJuegos"
+      >
+        <ion-card class="ion-text-center ion-padding">
           <ion-icon name="fast-food-outline"></ion-icon>
           <h2 class="long-name">Realizar encuesta</h2>
         </ion-card>
@@ -119,15 +131,33 @@
     </ion-row> -->
     <ion-row>
       <!-- aca poner una condicion que verifiqie si el cliente realizo la encuesta -->
-      <ion-col col-12 *ngIf="cliente?.pedido.estado == 'recibido' && mostrarEstadisticas">
-        <ion-card
-          class="ion-text-center ion-padding">
+      <ion-col
+        col-12
+        *ngIf="cliente?.pedido.estado == 'recibido' && mostrarEstadisticas"
+      >
+        <ion-card class="ion-text-center ion-padding">
           <ion-icon name="fast-food-outline"></ion-icon>
           <h2 class="long-name">Ver estadisticas</h2>
         </ion-card>
       </ion-col>
     </ion-row>
+
+    }
     <ion-row>
+      <ion-col col-12 *ngIf="mostrarJuegos">
+        <ion-card
+          [routerLink]="['/carta', usuario?.id]"
+          class="ion-text-center ion-padding"
+        >
+          <ion-icon name="game-controller-outline"></ion-icon>
+          <h2 class="long-name">Ver los juegos</h2>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row
+      *ngIf="usuario?.estado === 'aprobado' && usuario.perfil == 'cliente'"
+    >
       <ion-col col-12>
         <ion-card
           [routerLink]="['/reservas', usuario?.id]"

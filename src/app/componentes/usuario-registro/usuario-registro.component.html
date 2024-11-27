@@ -6,7 +6,6 @@
           <ion-col size="9">
             <div class="heading">
               <h1>Registrar un {{ esCliente ? "Cliente" : "Empleado" }}</h1>
-              <p>Únete a nosotros</p>
             </div>
           </ion-col>
           <ion-col size="3">
@@ -173,80 +172,89 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <div class="input-wrapper">
-            <!-- <ion-icon name="lock-closed-outline"></ion-icon> -->
-            <ion-input
-              [attr.type]="showPassword ? 'text' : 'password'"
-              placeholder="Password"
-              formControlName="password"
-            ></ion-input>
-            <ion-icon
-              [name]="showPassword ? 'eye-outline' : 'eye-off-outline'"
-              (click)="togglePasswordVisibility()"
-            ></ion-icon>
-          </div>
-          <div
-            *ngIf="
-              registerForm.get('password')?.invalid &&
-              (registerForm.get('password')?.dirty ||
-                registerForm.get('password')?.touched)
-            "
-            class="error-message"
-          >
-            <ion-text
-              color="danger"
-              *ngIf="registerForm.get('password')?.errors?.['required']"
-            >
-              Password es requerido.
-            </ion-text>
-            <ion-text
-              color="danger"
-              *ngIf="registerForm.get('password')?.errors?.['minlength']"
-            >
-              Password debe tener al menos 6 caracteres.
-            </ion-text>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="input-wrapper">
-            <!-- <ion-icon name="lock-closed-outline"></ion-icon> -->
-            <ion-input
-              [attr.type]="showRPassword ? 'text' : 'password'"
-              placeholder="Repetir Password"
-              formControlName="rpassword"
-            ></ion-input>
-            <ion-icon
-              [name]="showRPassword ? 'eye-outline' : 'eye-off-outline'"
-              (click)="toggleRpasswordVisibility()"
-            ></ion-icon>
-          </div>
-          <div
-            *ngIf="
-              registerForm.get('rpassword')?.invalid &&
-              (registerForm.get('rpassword')?.dirty ||
-                registerForm.get('rpassword')?.touched)
-            "
-            class="error-message"
-          >
-            <ion-text
-              color="danger"
-              *ngIf="registerForm.get('rpassword')?.errors?.['required']"
-            >
-              Password es requerido.
-            </ion-text>
-            <ion-text
-              color="danger"
-              *ngIf="registerForm.get('rpassword')?.errors?.['minlength']"
-            >
-              Password debe tener al menos 6 caracteres.
-            </ion-text>
-          </div>
-          <div *ngIf="registerForm.hasError('passwordMismatch')">
-            <ion-text color="danger">Las contraseñas no coinciden.</ion-text>
-          </div>
-        </div>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="">
+              <div class="form-group">
+                <div class="input-wrapper">
+                  <!-- <ion-icon name="lock-closed-outline"></ion-icon> -->
+                  <ion-input
+                    [attr.type]="showPassword ? 'text' : 'password'"
+                    placeholder="Password"
+                    formControlName="password"
+                  ></ion-input>
+                  <ion-icon
+                    [name]="showPassword ? 'eye-outline' : 'eye-off-outline'"
+                    (click)="togglePasswordVisibility()"
+                  ></ion-icon>
+                </div>
+                <div
+                  *ngIf="
+                    registerForm.get('password')?.invalid &&
+                    (registerForm.get('password')?.dirty ||
+                      registerForm.get('password')?.touched)
+                  "
+                  class="error-message"
+                >
+                  <ion-text
+                    color="danger"
+                    *ngIf="registerForm.get('password')?.errors?.['required']"
+                  >
+                    Password es requerido.
+                  </ion-text>
+                  <ion-text
+                    color="danger"
+                    *ngIf="registerForm.get('password')?.errors?.['minlength']"
+                  >
+                    Password debe tener al menos 6 caracteres.
+                  </ion-text>
+                </div>
+              </div>
+            </ion-col>
+            <ion-col size="">
+              <div class="form-group">
+                <div class="input-wrapper">
+                  <!-- <ion-icon name="lock-closed-outline"></ion-icon> -->
+                  <ion-input
+                    [attr.type]="showRPassword ? 'text' : 'password'"
+                    placeholder="Repetir Password"
+                    formControlName="rpassword"
+                  ></ion-input>
+                  <ion-icon
+                    [name]="showRPassword ? 'eye-outline' : 'eye-off-outline'"
+                    (click)="toggleRpasswordVisibility()"
+                  ></ion-icon>
+                </div>
+                <div
+                  *ngIf="
+                    registerForm.get('rpassword')?.invalid &&
+                    (registerForm.get('rpassword')?.dirty ||
+                      registerForm.get('rpassword')?.touched)
+                  "
+                  class="error-message"
+                >
+                  <ion-text
+                    color="danger"
+                    *ngIf="registerForm.get('rpassword')?.errors?.['required']"
+                  >
+                    Password es requerido.
+                  </ion-text>
+                  <ion-text
+                    color="danger"
+                    *ngIf="registerForm.get('rpassword')?.errors?.['minlength']"
+                  >
+                    Password debe tener al menos 6 caracteres.
+                  </ion-text>
+                  <ion-text
+                    *ngIf="registerForm.hasError('passwordMismatch')"
+                    color="danger"
+                    >Las contraseñas no coinciden.</ion-text
+                  >
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
 
         <div class="action-buttons">
           <ion-button expand="block" type="button" (click)="tomarFoto()">
@@ -259,10 +267,13 @@
           >
             Crear
           </ion-button>
-          <p>
+          <ion-button expand="block" type="button" (click)="irAlLogin()">
+            Volver
+          </ion-button>
+          <!-- <p>
             ¿Posees una cuenta?
             <a (click)="irAlLogin()" class="encabezado">Ir al ingreso</a>
-          </p>
+          </p> -->
         </div>
       </form>
     </ion-card>
