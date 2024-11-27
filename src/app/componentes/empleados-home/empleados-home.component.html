@@ -12,8 +12,9 @@
     col-12
     *ngIf="usuario?.perfil == 'cocinero' || usuario?.perfil == 'bartender'"
   >
+    <!-- (click)="seleccionarOpcion('altaProducto')" -->
     <ion-card
-      (click)="seleccionarOpcion('altaProducto')"
+      [routerLink]="['/registro', 'altaProducto']"
       class="ion-text-center ion-padding"
     >
       <ion-icon name="man"></ion-icon>

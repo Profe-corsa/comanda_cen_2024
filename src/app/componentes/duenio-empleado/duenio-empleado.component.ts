@@ -6,7 +6,7 @@ import {
   FormGroup,
   FormControl,
   Validators,
-  AbstractControl
+  AbstractControl,
 } from '@angular/forms';
 import { matchPasswordValidator } from 'src/app/validadores/match-password.validator';
 import { CamaraService } from '../../services/camara.service';
@@ -24,12 +24,7 @@ import { Perfiles } from 'src/app/clases/enumerados/perfiles';
   templateUrl: './duenio-empleado.component.html',
   styleUrls: ['./duenio-empleado.component.scss'],
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    IonicModule,
-    
-  ],
+  imports: [CommonModule, ReactiveFormsModule, IonicModule],
 })
 export class DuenioEmpleadoComponent {
   @Input() tipoUsuario: string = 'dueño';
@@ -38,7 +33,12 @@ export class DuenioEmpleadoComponent {
   public showPassword = false;
   public showRPassword = false;
   public usuario: Usuario | any;
-  perfiles = Object.values(Perfiles).filter(perfil => perfil !== Perfiles.dueño && perfil !== Perfiles.cliente && perfil !== Perfiles.clienteAnonimo);
+  perfiles = Object.values(Perfiles).filter(
+    (perfil) =>
+      perfil !== Perfiles.dueño &&
+      perfil !== Perfiles.cliente &&
+      perfil !== Perfiles.clienteAnonimo
+  );
   imageName: string | null = null;
   nombre: FormGroup | any;
   apellido: FormGroup | any;
@@ -48,7 +48,6 @@ export class DuenioEmpleadoComponent {
   perfil: FormGroup | any;
   password: FormGroup | any;
   rpassword: FormGroup | any;
-  
 
   constructor(
     private router: Router,
@@ -75,16 +74,13 @@ export class DuenioEmpleadoComponent {
       Validators.minLength(13),
       Validators.maxLength(13),
       Validators.pattern(/^\d{2}-\d{8}-\d{1}$/),
-      
-    ])
+    ]);
     this.email = new FormControl('', [Validators.required, Validators.email]);
     this.password = new FormControl('', [
       Validators.required,
       Validators.minLength(6),
     ]);
-    this.perfil = new FormControl('', [
-      Validators.required,
-    ]);
+    this.perfil = new FormControl('', [Validators.required]);
     this.rpassword = new FormControl('', [
       Validators.required,
       Validators.minLength(6),
@@ -201,12 +197,10 @@ export class DuenioEmpleadoComponent {
     });
   }
 
-  
-
   async irAlLogin() {
     if (this.imageName) {
       await this.camaraService.deleteImage('clientes', this.imageName);
     }
-    this.router.navigate(['/login']);
+    this.router.navigate(['/home']);
   }
 }

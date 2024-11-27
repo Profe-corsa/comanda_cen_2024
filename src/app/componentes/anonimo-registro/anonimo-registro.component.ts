@@ -44,7 +44,7 @@ import { AppComponent } from 'src/app/app.component';
     IonText,
     IonInput,
     ReactiveFormsModule,
-    AppComponent
+    AppComponent,
   ],
 })
 export class AnonimoRegistroComponent {
@@ -98,7 +98,9 @@ export class AnonimoRegistroComponent {
           await this.camaraService.deleteImage('clientes', this.imageName);
         }
         this.toast.showError(
-          'Error al crear un usuario anónimo: ' + error.message
+          'Error al crear un usuario anónimo: ' + error.message,
+          'middle',
+          5000
         );
       }
     } else if (this.registerForm.valid && this.usuario.apellido != '') {
@@ -109,7 +111,9 @@ export class AnonimoRegistroComponent {
         this.router.navigate([`/home/${this.usuario.id}`]);
       } catch (error: any) {
         this.toast.showError(
-          'Error al crear un usuario anónimo: ' + error.message
+          'Error al crear un usuario anónimo: ' + error.message,
+          'middle',
+          5000
         );
       }
     } else {
@@ -117,7 +121,9 @@ export class AnonimoRegistroComponent {
         await this.camaraService.deleteImage('clientes', this.imageName);
       }
       this.toast.showError(
-        'Debe completar al menos el nombre y tomar una foto de perfil, o el nombre y el apellido.'
+        'Debe completar al menos el nombre y tomar una foto de perfil, o el nombre y el apellido.',
+        'middle',
+        5000
       );
     }
   }

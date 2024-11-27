@@ -6,7 +6,6 @@
           <ion-col size="9">
             <div class="heading">
               <h1>Registrar un usuario</h1>
-              <p>Únete a nosotros</p>
             </div>
           </ion-col>
           <ion-col size="3">
@@ -84,74 +83,89 @@
           </ion-row>
         </ion-grid>
 
-        <!-- DNI -->
-        <div class="form-group">
-          <div class="input-wrapper">
-            <!-- <ion-icon name="mail-outline"></ion-icon> -->
-            <ion-input
-              type="number"
-              placeholder="DNI"
-              formControlName="dni"
-            ></ion-input>
-          </div>
-          <div
-            *ngIf="
-              registerForm.get('dni')?.invalid &&
-              (registerForm.get('dni')?.dirty ||
-                registerForm.get('dni')?.touched)
-            "
-            class="error-message"
-          >
-            <ion-text
-              color="danger"
-              *ngIf="registerForm.get('dni')?.errors?.['required']"
-            >
-              El DNI es requerido.
-            </ion-text>
-          </div>
-        </div>
-        <div class="form-group">
-          <div class="input-wrapper">
-            <ion-input
-              placeholder="CUIL"
-              formControlName="cuil"
-              (input)="formatCuil()" 
-            ></ion-input>
-          </div>
-          <div *ngIf="cuil.invalid && cuil.touched" class="error-message">
-            <ion-text
-            color="danger"
-            *ngIf="registerForm.get('cuil')?.errors?.['required']"
-            >
-              El CUIL es requerido.
-            </ion-text>
-            <ion-text
-              color="danger"
-              *ngIf="cuil.errors?.pattern"
-            >
-            Formato incorrecto. Debe ser XX-XXXXXXXX-X.
-            </ion-text>
-              
-          </div>
-        </div>
+        <!-- DNI y CUIL -->
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6">
+              <div class="form-group">
+                <div class="input-wrapper">
+                  <!-- <ion-icon name="mail-outline"></ion-icon> -->
+                  <ion-input
+                    type="number"
+                    placeholder="DNI"
+                    formControlName="dni"
+                  ></ion-input>
+                </div>
+                <div
+                  *ngIf="
+                    registerForm.get('dni')?.invalid &&
+                    (registerForm.get('dni')?.dirty ||
+                      registerForm.get('dni')?.touched)
+                  "
+                  class="error-message"
+                >
+                  <ion-text
+                    color="danger"
+                    *ngIf="registerForm.get('dni')?.errors?.['required']"
+                  >
+                    El DNI es requerido.
+                  </ion-text>
+                </div>
+              </div>
+            </ion-col>
+
+            <ion-col size="6">
+              <div class="form-group">
+                <div class="input-wrapper">
+                  <ion-input
+                    placeholder="CUIL"
+                    formControlName="cuil"
+                    (input)="formatCuil()"
+                  ></ion-input>
+                </div>
+                <div *ngIf="cuil.invalid && cuil.touched" class="error-message">
+                  <ion-text
+                    color="danger"
+                    *ngIf="registerForm.get('cuil')?.errors?.['required']"
+                  >
+                    El CUIL es requerido.
+                  </ion-text>
+                  <ion-text color="danger" *ngIf="cuil.errors?.pattern">
+                    Formato incorrecto. Debe ser XX-XXXXXXXX-X.
+                  </ion-text>
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
         <div *ngIf="tipoUsuario === 'empleado'" class="form-group">
           <div class="input-wrapper">
             <ion-select placeholder="Puesto" formControlName="perfil">
-              <ion-select-option 
-                *ngFor="let perfil of perfiles " 
+              <ion-select-option
+                *ngFor="let perfil of perfiles"
                 [value]="perfil"
               >
                 {{ perfil }}
               </ion-select-option>
             </ion-select>
           </div>
-          <div *ngIf="registerForm.get('perfil')?.invalid && registerForm.get('perfil')?.touched" class="error-message">
-            <ion-text color="danger" *ngIf="registerForm.get('perfil')?.errors?.['required']">
+          <div
+            *ngIf="
+              registerForm.get('perfil')?.invalid &&
+              registerForm.get('perfil')?.touched
+            "
+            class="error-message"
+          >
+            <ion-text
+              color="danger"
+              *ngIf="registerForm.get('perfil')?.errors?.['required']"
+            >
               El puesto es requerido.
             </ion-text>
           </div>
         </div>
-        
+
         <div class="form-group">
           <div class="input-wrapper">
             <!-- <ion-icon name="mail-outline"></ion-icon> -->
@@ -184,86 +198,95 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <div class="input-wrapper">
-            <!-- <ion-icon name="lock-closed-outline"></ion-icon> -->
-            <ion-input
-              [attr.type]="showPassword ? 'text' : 'password'"
-              placeholder="Password"
-              formControlName="password"
-            ></ion-input>
-            <ion-icon
-              [name]="showPassword ? 'eye-outline' : 'eye-off-outline'"
-              (click)="togglePasswordVisibility()"
-            ></ion-icon>
-          </div>
-          <div
-            *ngIf="
-              registerForm.get('password')?.invalid &&
-              (registerForm.get('password')?.dirty ||
-                registerForm.get('password')?.touched)
-            "
-            class="error-message"
-          >
-            <ion-text
-              color="danger"
-              *ngIf="registerForm.get('password')?.errors?.['required']"
-            >
-              Password es requerido.
-            </ion-text>
-            <ion-text
-              color="danger"
-              *ngIf="registerForm.get('password')?.errors?.['minlength']"
-            >
-              Password debe tener al menos 6 caracteres.
-            </ion-text>
-          </div>
-        </div>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6">
+              <div class="form-group">
+                <div class="input-wrapper">
+                  <!-- <ion-icon name="lock-closed-outline"></ion-icon> -->
+                  <ion-input
+                    [attr.type]="showPassword ? 'text' : 'password'"
+                    placeholder="Password"
+                    formControlName="password"
+                  ></ion-input>
+                  <ion-icon
+                    [name]="showPassword ? 'eye-outline' : 'eye-off-outline'"
+                    (click)="togglePasswordVisibility()"
+                  ></ion-icon>
+                </div>
+                <div
+                  *ngIf="
+                    registerForm.get('password')?.invalid &&
+                    (registerForm.get('password')?.dirty ||
+                      registerForm.get('password')?.touched)
+                  "
+                  class="error-message"
+                >
+                  <ion-text
+                    color="danger"
+                    *ngIf="registerForm.get('password')?.errors?.['required']"
+                  >
+                    Password es requerido.
+                  </ion-text>
+                  <ion-text
+                    color="danger"
+                    *ngIf="registerForm.get('password')?.errors?.['minlength']"
+                  >
+                    Password debe tener al menos 6 caracteres.
+                  </ion-text>
+                </div>
+              </div>
+            </ion-col>
 
-        <div class="form-group">
-          <div class="input-wrapper">
-            <!-- <ion-icon name="lock-closed-outline"></ion-icon> -->
-            <ion-input
-              [attr.type]="showRPassword ? 'text' : 'password'"
-              placeholder="Repetir Password"
-              formControlName="rpassword"
-            ></ion-input>
-            <ion-icon
-              [name]="showRPassword ? 'eye-outline' : 'eye-off-outline'"
-              (click)="toggleRpasswordVisibility()"
-            ></ion-icon>
-          </div>
-          <div
-            *ngIf="
-              registerForm.get('rpassword')?.invalid &&
-              (registerForm.get('rpassword')?.dirty ||
-                registerForm.get('rpassword')?.touched)
-            "
-            class="error-message"
-          >
-            <ion-text
-              color="danger"
-              *ngIf="registerForm.get('rpassword')?.errors?.['required']"
-            >
-              Password es requerido.
-            </ion-text>
-            <ion-text
-              color="danger"
-              *ngIf="registerForm.get('rpassword')?.errors?.['minlength']"
-            >
-              Password debe tener al menos 6 caracteres.
-            </ion-text>
-          </div>
-          <div *ngIf="registerForm.hasError('passwordMismatch')">
-            <ion-text color="danger">Las contraseñas no coinciden.</ion-text>
-          </div>
-        </div>
-
-        <ion-button expand="block" type="button" (click)="tomarFoto()">
-          Tomar foto
-        </ion-button>
+            <ion-col size="6">
+              <div class="form-group">
+                <div class="input-wrapper">
+                  <!-- <ion-icon name="lock-closed-outline"></ion-icon> -->
+                  <ion-input
+                    [attr.type]="showRPassword ? 'text' : 'password'"
+                    placeholder="Repetir Password"
+                    formControlName="rpassword"
+                  ></ion-input>
+                  <ion-icon
+                    [name]="showRPassword ? 'eye-outline' : 'eye-off-outline'"
+                    (click)="toggleRpasswordVisibility()"
+                  ></ion-icon>
+                </div>
+                <div
+                  *ngIf="
+                    registerForm.get('rpassword')?.invalid &&
+                    (registerForm.get('rpassword')?.dirty ||
+                      registerForm.get('rpassword')?.touched)
+                  "
+                  class="error-message"
+                >
+                  <ion-text
+                    color="danger"
+                    *ngIf="registerForm.get('rpassword')?.errors?.['required']"
+                  >
+                    Password es requerido.
+                  </ion-text>
+                  <ion-text
+                    color="danger"
+                    *ngIf="registerForm.get('rpassword')?.errors?.['minlength']"
+                  >
+                    Password debe tener al menos 6 caracteres.
+                  </ion-text>
+                </div>
+                <div *ngIf="registerForm.hasError('passwordMismatch')">
+                  <ion-text color="danger"
+                    >Las contraseñas no coinciden.</ion-text
+                  >
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
 
         <div class="action-buttons">
+          <ion-button expand="block" type="button" (click)="tomarFoto()">
+            Tomar foto
+          </ion-button>
           <ion-button
             expand="block"
             type="submit"
@@ -271,7 +294,9 @@
           >
             Crear
           </ion-button>
-          <p>¿Posees una cuenta? <a (click)="irAlLogin()">Ir al ingreso</a></p>
+          <ion-button expand="block" type="button" (click)="irAlLogin()">
+            Volver
+          </ion-button>
         </div>
       </form>
     </ion-card>
