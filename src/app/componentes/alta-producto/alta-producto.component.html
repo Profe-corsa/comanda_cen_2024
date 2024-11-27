@@ -57,66 +57,83 @@
           </div>
         </div>
 
-        <!-- tiempo -->
-        <div class="form-group">
-          <div class="input-wrapper">
-            <!-- <ion-icon name="mail-outline"></ion-icon> -->
-            <ion-input
-              type="number"
-              placeholder="tiempo"
-              formControlName="tiempoPreparacion"
-            ></ion-input>
-          </div>
-          <div
-            *ngIf="
-              productoForm.get('tiempoPreparacion')?.invalid &&
-              (productoForm.get('tiempoPreparacion')?.dirty ||
-                productoForm.get('tiempoPreparacion')?.touched)
-            "
-            class="error-message"
-          >
-            <ion-text
-              color="danger"
-              *ngIf="productoForm.get('dni')?.errors?.['required']"
-            >
-              El tiempo de elaboración es requerido.
-            </ion-text>
-          </div>
-        </div>
-        <div class="form-group">
-          <div class="input-wrapper">
-            <ion-input
-              type="number"
-              placeholder="precio"
-              formControlName="precio"
-            ></ion-input>
-          </div>
-          <div
-            *ngIf="
-              productoForm.get('precio')?.invalid &&
-              productoForm.get('precio')?.touched
-            "
-            class="error-message"
-          >
-            <ion-text
-              color="danger"
-              *ngIf="productoForm.get('precio')?.errors?.['required']"
-            >
-              El precio es requerido.
-            </ion-text>
-          </div>
-        </div>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6">
+              <!-- tiempo -->
+
+              <div class="form-group">
+                <div class="input-wrapper">
+                  <!-- <ion-icon name="mail-outline"></ion-icon> -->
+                  <ion-input
+                    type="number"
+                    placeholder="Tiempo"
+                    formControlName="tiempoPreparacion"
+                  ></ion-input>
+                </div>
+                <div
+                  *ngIf="
+                    productoForm.get('tiempoPreparacion')?.invalid &&
+                    (productoForm.get('tiempoPreparacion')?.dirty ||
+                      productoForm.get('tiempoPreparacion')?.touched)
+                  "
+                  class="error-message"
+                >
+                  <ion-text
+                    color="danger"
+                    *ngIf="productoForm.get('dni')?.errors?.['required']"
+                  >
+                    El tiempo de elaboración es requerido.
+                  </ion-text>
+                </div>
+              </div>
+            </ion-col>
+
+            <ion-col size="6">
+              <div class="form-group">
+                <div class="input-wrapper">
+                  <ion-input
+                    type="number"
+                    placeholder="Precio"
+                    formControlName="precio"
+                  ></ion-input>
+                </div>
+                <div
+                  *ngIf="
+                    productoForm.get('precio')?.invalid &&
+                    productoForm.get('precio')?.touched
+                  "
+                  class="error-message"
+                >
+                  <ion-text
+                    color="danger"
+                    *ngIf="productoForm.get('precio')?.errors?.['required']"
+                  >
+                    El precio es requerido.
+                  </ion-text>
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
         <!-- Tipo de Producto -->
         <div class="form-group">
-          <ion-select placeholder="Tipo de Producto" formControlName="tipo">
-            <ion-select-option
-              *ngFor="let tipo of tiposProductoOptions"
-              [value]="tipo.key"
-            >
-              {{ tipo.key }}
-            </ion-select-option>
-          </ion-select>
+          <div class="input-wrapper">
+            <ion-item class="selectTipo" style="width: 100%">
+              <ion-label>Tipo producto</ion-label>
+              <ion-select formControlName="tipo">
+                <ion-select-option
+                  *ngFor="let tipo of tiposProductoOptions"
+                  [value]="tipo.key"
+                >
+                  {{ tipo.key }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+          </div>
         </div>
+
         <!-- Foto -->
         <div class="foto-container">
           <ion-button (click)="tomarFoto()">Tomar Foto</ion-button>

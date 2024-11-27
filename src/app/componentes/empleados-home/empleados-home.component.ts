@@ -11,7 +11,12 @@ import {
 import { RouterLink } from '@angular/router';
 import { Usuario } from 'src/app/clases/usuario';
 import { addIcons } from 'ionicons';
-import { man, chatbubblesOutline, clipboard } from 'ionicons/icons';
+import {
+  man,
+  chatbubblesOutline,
+  clipboard,
+  fastFoodOutline,
+} from 'ionicons/icons';
 import { AltaProductoComponent } from '../alta-producto/alta-producto.component';
 
 @Component({
@@ -36,7 +41,7 @@ export class EmpleadosHomeComponent implements OnInit {
   opcionSeleccionada: string = '';
 
   constructor() {
-    addIcons({ man, clipboard, chatbubblesOutline });
+    addIcons({ man, fastFoodOutline, clipboard, chatbubblesOutline });
   }
 
   ngOnInit() {}
