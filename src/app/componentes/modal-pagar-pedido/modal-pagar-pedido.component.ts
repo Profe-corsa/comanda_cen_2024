@@ -40,10 +40,14 @@ export class ModalPagarPedidoComponent implements OnInit{
   }
 
   leerQR() {
-    this.abrirModalPropina();
-    // this.qrService.scanCode().then((qrData) => {
-    //   this.abrirModalPropina();
-    // });
+    this.qrService.scanCode().then((qrData) => {
+      if (qrData === 'propina'){
+        this.abrirModalPropina();
+      }
+      else {
+        this.toast.showError('El QR que escaneó no es el de propina')
+      }
+    });
   }
   verificarMonto() {
     // Verifica si el monto ingresado es igual al precio total
