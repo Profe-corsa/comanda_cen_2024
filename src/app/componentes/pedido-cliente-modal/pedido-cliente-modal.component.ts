@@ -203,7 +203,13 @@ export class PedidoClienteModalComponent implements OnInit {
         this.toastService.showExito('Pedido realizado');
 
         this.modalController.dismiss(nuevoPedido);
-        this.router.navigate(['/home']);
+        
+        if (this.usuario?.id && this.usuario.perfil === 'cliente anonimo'){
+          this.router.navigate(['/home', this.usuarioId]);
+        }
+        else {
+          this.router.navigate(['/home']);
+        }
       } catch (error) {
         this.loadindSrv.hideLoading();
         this.toastService.showError('Error al guardar el pedido: ' + error);
