@@ -443,6 +443,8 @@ async actualizarEstadoPedidoCliente(
           });
           await updateDoc(pedidoRef, { estado: `${nuevoEstado}` });
           this.actualizarPedido();
+          this.notificationService.sendPushNotificationToRole('Solicitud de cuenta',
+             `El cliente de la mesa ${this.usuario.mesaAsignada} pidió la cuenta.`, 'mozo');
           console.log('El estado del pedido se actualizó correctamente.');
         } else {
           console.log(
