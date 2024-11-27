@@ -14,4 +14,5 @@ export enum Estados {
   finalizado = 'finalizado',
   tieneReserva = 'tieneReserva',
   rechazado = 'rechazado',
+  cuentaEnviada = 'cuentaEnviada',
 }

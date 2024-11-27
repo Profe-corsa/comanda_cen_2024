@@ -8,7 +8,6 @@
         col-12
         *ngIf="usuario?.estado == undefined || usuario?.estado == 'aprobado'"
       >
-  
         <ion-card
           (click)="leerQR()"
           class="ion-text-center ion-padding"
@@ -126,6 +125,21 @@
         >
           <ion-icon name="calendar-outline"></ion-icon>
           <h2 class="long-name">Reservar</h2>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <!-- aca poner una condicion que verifiqie si el cliente realizo la encuesta -->
+      <ion-col
+        col-12
+        *ngIf="
+          usuario?.estado === 'enEspera' && usuario.perfil == 'cliente anonimo'
+        "
+      >
+        <ion-card class="ion-text-center ion-padding">
+          <ion-icon name="fast-food-outline"></ion-icon>
+          <h2 class="long-name">Ver estadisticas</h2>
         </ion-card>
       </ion-col>
     </ion-row>

@@ -7,10 +7,11 @@
     <ion-item
       (click)="cambiarEstadPedido(pedido)"
       *ngFor="let pedido of listaPedidos"
+      [ngClass]="{ 'item-custom': pedido.estado == 'finalizado' }"
     >
       <ion-label>
         <!-- <h2>Mesa: {{ pedido.mesa.numero }}</h2> -->
-        <ion-label
+        <ion-label class="estadoPedido"
           >Estado: <span>{{ pedido.estado | titlecase }}</span></ion-label
         >
         <p>
@@ -18,7 +19,7 @@
           >"
         </p>
         <ion-label
-          >Pedido hecho a las
+          >Fecha:
           {{ pedido.hora.toDate() | date : "dd/MM/yyyy HH:mm" }}</ion-label
         >
       </ion-label>

@@ -12,6 +12,7 @@ import { ToastService } from 'src/app/services/toast.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { Cliente } from 'src/app/clases/cliente';
 import { doc, Firestore, updateDoc } from '@angular/fire/firestore';
+import { Estados } from 'src/app/clases/enumerados/Estados';
 @Component({
   selector: 'app-mozo-lista-pedidos',
   templateUrl: './mozo-lista-pedidos.component.html',
@@ -29,7 +30,7 @@ export class MozoListaPedidosComponent implements OnInit {
     private notificationService: PushMailNotificationService,
     private toast: ToastService,
     private usurioService: UsuarioService,
-    private firestore: Firestore,
+    private firestore: Firestore
   ) {}
 
   ngOnInit() {
@@ -83,6 +84,59 @@ export class MozoListaPedidosComponent implements OnInit {
     }
   }
 
+  async finalizarPedido(pedido: Pedido) {
+    let mesaId = null;
+    const mesas = await this.dataService.getCollectionData('mesas');
+    mesas.find((mesa) => {
+      if (mesa.numero == pedido.nroMesa) {
+        mesaId = mesa.id;
+      }
+    });
+    console.log('mesas', mesas, mesaId);
+
+    try {
+      this.loadingService.showLoading();
+
+      //Mesa vuelve a estar disponible
+      if (mesaId != null) {
+        await this.dataService.updateObjectField(
+          'mesas',
+          mesaId,
+          'estado',
+          'Disponible'
+        );
+      }
+
+      //El usuario vuelve a su estado inicial y se le quita el pedido que ya pagó
+      if (pedido.clienteId != null && pedido.clienteId != undefined) {
+        await this.dataService.updateObjectField(
+          'usuarios',
+          pedido.clienteId,
+          'estado',
+          Estados.aprobado
+        );
+
+        await this.dataService.deleteObjectField(
+          'usuarios',
+          pedido.clienteId,
+          'pedido'
+        );
+      }
+
+      await this.dataService.updateObjectField(
+        'pedidos',
+        pedido.id,
+        'estado',
+        Estados.finalizado
+      );
+
+      this.loadingService.hideLoading();
+    } catch (error) {
+      this.loadingService.hideLoading();
+      console.error('Error al finalizar el pedido del pedido:', error);
+    }
+  }
+
   async actualizarEstadoPedidoCliente(
     pedido: Pedido,
     nuevoEstado: Estado
@@ -95,7 +149,6 @@ export class MozoListaPedidosComponent implements OnInit {
       if (usuario) {
         // Verificar que el usuario tiene un pedido asociado
         if (usuario.pedido && usuario.pedido.clienteId === pedido.clienteId) {
-
           usuario.pedido.estado = nuevoEstado;
           // Guardar cambios en Firestore
           await this.usurioService.updateUser(usuario.id, {
@@ -131,6 +184,7 @@ export class MozoListaPedidosComponent implements OnInit {
         componentProps: {
           productos: pedido.productos || [], // Valor por defecto si no existen productos
           estadoPedido: estado,
+          pedidoRecibido: pedido,
         },
       });
 
@@ -149,6 +203,12 @@ export class MozoListaPedidosComponent implements OnInit {
           } else if (estadoSeleccionado == 'entregado') {
             pedido.estado = Estado.entregado;
             this.confirmarCambioEstado(pedido);
+          } else if (estadoSeleccionado == 'cuentaEnviada') {
+            pedido.estado = Estado.cuentaEnviada;
+            this.confirmarCambioEstado(pedido);
+          } else if (estadoSeleccionado == 'pagado') {
+            pedido.estado = Estado.finalizado;
+            this.finalizarPedido(pedido);
           }
         }
       });

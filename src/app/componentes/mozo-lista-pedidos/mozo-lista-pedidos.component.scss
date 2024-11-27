@@ -33,8 +33,17 @@
 p {
   font-size: 19px !important;
   color: white !important;
+  margin-bottom: 10px;
 }
 
 span {
   font-weight: 800 !important;
+}
+
+.item-custom {
+  --background: mediumseagreen;
+}
+
+.estadoPedido {
+  font-size: 1.3rem;
 }

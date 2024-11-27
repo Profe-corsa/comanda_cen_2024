@@ -71,6 +71,12 @@ export class PedidoClienteModalComponent implements OnInit {
   @Output() totalActualizado = new EventEmitter<number>();
   usuario: Usuario | null = null;
   @Input() estadoPedido: string = 'default';
+  @Input() pedidoRecibido: Pedido | any;
+
+  //Variables para mostrar el detalle del pago del cliente
+  propina: number = 0;
+  montoIngresado: number = 0;
+  propinaPorcentaje: number = 0;
 
   constructor(
     private modalController: ModalController,
@@ -85,12 +91,14 @@ export class PedidoClienteModalComponent implements OnInit {
 
   ngOnInit() {
     this.agruparProductos();
-    this.calcularTotal();
     if (this.usuarioId) {
       this.usuarioService.getUser(this.usuarioId).subscribe((userData) => {
         this.usuario = userData; // Cambia el tipo de `usuario` a `Usuario | null`.
       });
     }
+    this.calcularTotal();
+
+    console.log(this.pedidoRecibido);
   }
 
   agruparProductos() {
@@ -115,6 +123,16 @@ export class PedidoClienteModalComponent implements OnInit {
       (total, producto) => total + producto.precio * producto.cantidad,
       0
     );
+
+    if (
+      this.pedidoRecibido != undefined &&
+      this.pedidoRecibido.estado == 'pagado'
+    ) {
+      this.total = this.pedidoRecibido.precioTotal;
+      this.propina = this.pedidoRecibido.propina;
+      this.montoIngresado = this.pedidoRecibido.pagado;
+      this.propinaPorcentaje = (this.propina / this.total) * 100;
+    }
   }
   eliminarProducto(index: number) {
     const producto = this.productosAgrupados[index];
