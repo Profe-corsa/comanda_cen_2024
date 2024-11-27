@@ -64,8 +64,8 @@ export class ClienteHomeComponent implements OnInit {
   @Input() usuario: Usuario | any;
   pedido: Pedido | any = [];
   mostrarPedido: boolean = false;
-  mostrarEstado: boolean = true;
-  mostrarJuegos: boolean = true;
+  mostrarEstado: boolean = false;
+  mostrarJuegos: boolean = false;
   mostrarEstadisticas: boolean = false;
   mostrarEncuesta: boolean = false;
   cliente: Cliente | any;
