@@ -39,7 +39,8 @@ export class EmpleadosHomeComponent implements OnInit {
     addIcons({ man, clipboard, chatbubblesOutline });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   seleccionarOpcion(opcion: string) {
     this.opcionSeleccionada = opcion;

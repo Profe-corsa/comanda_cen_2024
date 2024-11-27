@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Camera, CameraResultType } from '@capacitor/camera';
 import { IonicModule } from '@ionic/angular';
@@ -9,6 +9,8 @@ import { CamaraService } from 'src/app/services/camara.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { QrScannerService } from '../../services/qrscanner.service';
 import { Producto, TipoProducto } from 'src/app/clases/producto';
+import { AuthService } from 'src/app/services/auth.service';
+import { Usuario } from 'src/app/clases/usuario';
 @Component({
   selector: 'app-alta-producto',
   templateUrl: './alta-producto.component.html',
@@ -16,23 +18,20 @@ import { Producto, TipoProducto } from 'src/app/clases/producto';
   standalone: true,
   imports: [IonicModule, ReactiveFormsModule, CommonModule],
 })
-export class AltaProductoComponent {
-
+export class AltaProductoComponent implements OnInit {
+  tipoEmpleado: string = '';
+  usuario: Usuario | null = null;
   productoForm: FormGroup;
   fotos: string[] = [];
   // Opciones para el tipo de producto basadas en el enum
-  tiposProductoOptions = [
-    { key: 'Comida', value: TipoProducto.Comida },
-    { key: 'Bebida', value: TipoProducto.Bebida },
-    { key: 'Postre', value: TipoProducto.Postre }
-  ];
-
+  tiposProductoOptions: { key: string; value: TipoProducto }[] = [];
 
   constructor(
     private fb: FormBuilder,
     private dataService: DataService,
     private camaraService: CamaraService,
     private toast: ToastService,
+    private authService: AuthService
     )
    {
     this.productoForm = this.fb.group({
@@ -42,8 +41,18 @@ export class AltaProductoComponent {
       precio: ['', [Validators.required, Validators.min(0)]],
       tipo: [TipoProducto.Comida, [Validators.required]]
     });
-  }
 
+    // Inicializar las opciones basadas en el tipoCliente inicial
+    this.actualizarOpcionesTipoProducto();
+  }
+  ngOnInit() {
+    this.usuario = this.authService.getUserLogueado();
+    if (this.usuario?.perfil){
+      this.tipoEmpleado = this.usuario.perfil;
+    }
+    console.log(this.tipoEmpleado);
+    this.actualizarOpcionesTipoProducto();
+  }
   async tomarFoto() {
     if (this.fotos.length < 3) {
       try {
@@ -57,7 +66,31 @@ export class AltaProductoComponent {
       this.toast.showError('Solo se permiten tres fotos.');
     }
   }
-
+  actualizarOpcionesTipoProducto() {
+    switch (this.tipoEmpleado.toLowerCase()) {
+      case 'cocinero':
+        this.tiposProductoOptions = [
+          { key: 'Comida', value: TipoProducto.Comida },
+          { key: 'Postre', value: TipoProducto.Postre }
+        ];
+        break;
+      case 'bartender':
+        this.tiposProductoOptions = [
+          { key: 'Bebida', value: TipoProducto.Bebida }
+        ];
+        break;
+      default:
+        this.tiposProductoOptions = [
+          { key: 'Comida', value: TipoProducto.Comida },
+          { key: 'Bebida', value: TipoProducto.Bebida },
+          { key: 'Postre', value: TipoProducto.Postre }
+        ];
+    } 
+    const tipoActual = this.productoForm.get('tipo')?.value;
+    if (!this.tiposProductoOptions.some(option => option.value === tipoActual)) {
+      this.productoForm.get('tipo')?.setValue(this.tiposProductoOptions[0].value);
+    }
+  }
   async guardarProducto() {
     if (this.productoForm.valid && this.fotos.length === 3) {
       const producto = new Producto();
