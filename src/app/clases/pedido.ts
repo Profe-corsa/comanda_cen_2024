@@ -6,6 +6,8 @@ export enum Estado {
   finalizado = 'finalizado',
   entregado = 'entregado', //Cuando el mozo se lo lleva a la mesa
   recibido = 'recibido', //El cliente tiene el pedido en la mesa
+  cuentaPedida = 'cuentaPedida',
+  cuentaEnviada = 'cuentaEnviada',
   pagado = 'pagado', //Finalizò el pago del pedido
 }
 
