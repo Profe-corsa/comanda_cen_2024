@@ -112,8 +112,7 @@ export class ClienteHomeComponent implements OnInit {
       this.mostrarPedido = true;
     }
     this.actualizarPedido();
-    if (
-      this.cliente.pedido.estado === Estado.cuentaEnviada ||
+    if (this.cliente.pedido.estado === Estado.cuentaEnviada ||
       this.usuario.pedido.estado === Estado.cuentaEnviada
     ) {
       this.pedirCuenta();
@@ -128,7 +127,7 @@ export class ClienteHomeComponent implements OnInit {
       }
       // Verificar si el QR es de una mesa (formato "Mesa 1", "Mesa 2", etc.)
       else if (response.startsWith('Mesa ')) {
-        if (this.cliente.pedido || this.usuario.pediodo) {
+        if (this.cliente.pedido || this.usuario.pedido) {
           if (this.mostrarPedido) {
             if (this.mostrarEstado) {
               if (this.mostrarJuegos) {
