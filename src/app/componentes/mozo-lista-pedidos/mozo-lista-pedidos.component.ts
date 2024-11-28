@@ -105,6 +105,12 @@ export class MozoListaPedidosComponent implements OnInit {
           'estado',
           'Disponible'
         );
+        await this.dataService.updateObjectField(
+          'mesas',
+          mesaId,
+          'idClienteAsignado',
+          ''
+        );
       }
 
       //El usuario vuelve a su estado inicial y se le quita el pedido que ya pagó
