@@ -105,15 +105,16 @@ export class ClienteHomeComponent implements OnInit {
     console.log('Cliente en home comp', this.cliente);
 
     console.log('el usuario en home:', this.usuario);
-    if (localStorage.getItem('UsuarioEncuesta'))
-    {
+    if (localStorage.getItem('UsuarioEncuesta')) {
       this.tieneEncuesta = true;
     }
     if (this.cliente.pedido || this.usuario.pedido) {
       this.mostrarPedido = true;
     }
     this.actualizarPedido();
-    if (this.cliente.pedido.estado === Estado.cuentaEnviada || this.usuario.pedido.estado === Estado.cuentaEnviada) {
+    if (this.cliente.pedido.estado === Estado.cuentaEnviada ||
+      this.usuario.pedido.estado === Estado.cuentaEnviada
+    ) {
       this.pedirCuenta();
     }
   }
@@ -205,6 +206,7 @@ export class ClienteHomeComponent implements OnInit {
       this.loadingService.showLoading();
       const idCliente = this.usuario.id;
       const mesas = await this.dataService.obtenerMesas();
+      console.log('210-Numero mesa: ', numeroMesa);
 
       // Buscar la mesa que tiene el idClienteAsignado
       const mesaAsignada = mesas.find(
@@ -225,6 +227,7 @@ export class ClienteHomeComponent implements OnInit {
           return;
         }
 
+        console.log('231-Usuario: ', this.usuario.mesaAsignada);
         // Si se encontró la mesa asignada en la lista de espera y es la correcta
         if (
           mesaAsignada &&
