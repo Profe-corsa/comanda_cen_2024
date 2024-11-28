@@ -10,7 +10,7 @@
 <ion-content>
   <app-cliente-consulta
     [usuario]="usuarioActual"
-    *ngIf="usuarioActual && tipoUsuario === 'cliente'"
+    *ngIf="usuarioActual && (tipoUsuario === 'cliente' || tipoUsuario === 'cliente anonimo')"
   ></app-cliente-consulta>
   <app-mozo-consulta
     [usuario]="usuarioActual"
