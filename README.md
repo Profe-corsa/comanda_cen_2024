@@ -119,6 +119,7 @@ Con el pedido en su poder, el cliente podrá escanear el código QR de su mesa y
 El cliente, cuando no es anónimo, podrá realizar reservas para un tiempo futuro, pero hay que tener en cuenta de Comanda CEN solo abre de martes a domingo de 11:00-15:00 y de 19:00 a 24:00, por lo que solo se podrán realizar reservas dentro de este tiempo. Además si estás dentro del horario de tu reserva y te presentas en el restaurante, automaticamente se te pondrá en la lista para obtener la mesa que reservaste, pero si llegas pasado el tiempo, se te cancelará utomaticamente. Esperamos que nos entiendas!.
 
 ![reserva](Imagenes_comanda/1732806125456.jpg)
+**Aclaración: "Invalid time" es el dato por defecto del componente de ionic y marca que no se puede seleccionar una fecha sin completar la hora.
 
 ## 📊 QRs
 
