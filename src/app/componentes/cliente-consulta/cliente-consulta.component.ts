@@ -24,6 +24,7 @@ import { PushMailNotificationService } from 'src/app/services/push-mail-notifica
 import { Estados } from 'src/app/clases/enumerados/Estados';
 import { Estado } from 'src/app/clases/pedido';
 import { DataService } from 'src/app/services/data.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-cliente-consulta',
@@ -96,44 +97,63 @@ export class ClienteConsultaComponent implements OnInit {
     let encontroConsulta = false;
 
     //Suscribir a la consulta para recibir las actualizaciones
-    this.consultaService.getConsultaById(idConsulta).subscribe((consulta) => {
-      this.consultaCreada = true;
-      this.consulta = consulta;
+    // Crear una variable para manejar la suscripción
+    let consultaSubscription: Subscription;
 
-      //Guardar consulta en cliente y guardar cliente
-      if (cliente.consulta == undefined) {
-        cliente.consulta = [];
-        cliente.consulta.push(this.consulta);
-      } else {
-        for (let auxConsulta of cliente.consulta) {
-          //Sobrescribir si la consulta ya existía
-          if (auxConsulta.id == this.consulta.id) {
-            encontroConsulta = true;
-            indice = cliente.consulta.indexOf(auxConsulta);
-            cliente.consulta[indice] = this.consulta;
+    consultaSubscription = this.consultaService
+      .getConsultaById(idConsulta)
+      .subscribe((consulta) => {
+        this.consultaCreada = true;
+        this.consulta = consulta;
+
+        // Verificar si la consulta fue respondida
+        if (consulta.respuesta) {
+          this.toast.showExito(
+            'Un mozo ha respondido a su consulta.',
+            'middle'
+          );
+
+          // Desuscribirse cuando se recibe una respuesta
+          if (consultaSubscription) {
+            consultaSubscription.unsubscribe();
+          }
+          return;
+        }
+
+        //Guardar consulta en cliente y guardar cliente
+        if (cliente.consulta == undefined) {
+          cliente.consulta = [];
+          cliente.consulta.push(this.consulta);
+        } else {
+          for (let auxConsulta of cliente.consulta) {
+            //Sobrescribir si la consulta ya existía
+            if (auxConsulta.id == this.consulta.id) {
+              encontroConsulta = true;
+              indice = cliente.consulta.indexOf(auxConsulta);
+              cliente.consulta[indice] = this.consulta;
+            }
+          }
+
+          if (!encontroConsulta) {
+            cliente.consulta.push(this.consulta);
           }
         }
 
-        if (!encontroConsulta) {
-          cliente.consulta.push(this.consulta);
-        }
-      }
+        this.notificationSrv.sendPushNotificationToRole(
+          'Nueva consulta de cliente',
+          `El cliente de la mesa ${this.cliente.mesaAsignada} realizó una nueva consulta.`,
+          'mozo'
+        );
 
-      this.notificationSrv.sendPushNotificationToRole(
-        'Nueva consulta de cliente',
-        `El cliente de la mesa ${this.cliente.mesaAsignada} realizó una nueva consulta.`,
-        'mozo'
-      );
+        this.toast.showExito(
+          'Consulta enviada. Los mozos se pondrán en contacto a la brevedad',
+          'middle'
+        );
 
-      this.toast.showExito(
-        'Consulta enviada. Los mozos se pondrán en contacto a la brevedad',
-        'middle'
-      );
+        this.usuarioService.updateUser(cliente.id, cliente);
 
-      this.usuarioService.updateUser(cliente.id, cliente);
-
-      this.loadingService.hideLoading();
-    });
+        this.loadingService.hideLoading();
+      });
   }
 
   nuevaConsulta() {

@@ -9,8 +9,7 @@
       (click)="finalizarProductos(pedido)"
     >
       <ion-label>
-        <h2>Mesa:</h2>
-        <!--{{ pedido.mesa }} -->
+        <h2>Mesa: {{ pedido.nroMesa }}</h2>
         <ion-list>
           <ion-item *ngFor="let producto of pedido.productos">
             <ion-label>
