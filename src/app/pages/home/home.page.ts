@@ -70,68 +70,68 @@ export class HomePage {
 
     this.activatedRoute.paramMap.subscribe((paramMap) => {
       idUsuario = paramMap.get('usuarioAnonimo')!;
+    });
 
-      if (idUsuario == null) {
-        // idUsuario = this.authService.getUserLogueado()?.id ?? '';
-        this.usuario = this.authService.getUserLogueado();
-      } else {
-        this.userSrv.getUser(idUsuario).subscribe((userData) => {
-          this.usuario = userData; // Cambia el tipo de `usuario` a `Usuario | null`.
-        });
-      }
+    if (idUsuario == null) {
+      // idUsuario = this.authService.getUserLogueado()?.id ?? '';
+      this.usuario = this.authService.getUserLogueado();
+    } else {
+      this.userSrv.getUser(idUsuario).subscribe((userData) => {
+        this.usuario = userData; // Cambia el tipo de `usuario` a `Usuario | null`.
+      });
+    }
 
-      if (this.usuario.perfil == 'cliente') {
-        cliente = <Cliente>this.usuario;
+    if (this.usuario.perfil == 'cliente') {
+      cliente = <Cliente>this.usuario;
 
-        //Acciones sobre las reservas del usuario
-        if (cliente.reserva != undefined) {
-          console.log('entro 3');
+      //Acciones sobre las reservas del usuario
+      if (cliente.reserva != undefined) {
+        console.log('entro 3');
 
-          //En primer caso el Cliente está dentro del horario correcto
-          if (
-            Reserva.evaluarHorarioReserva(cliente.reserva) &&
-            cliente.estado == Estados.aprobado
-          ) {
-            cliente.estado = Estados.puedeTomarMesa;
+        //En primer caso el Cliente está dentro del horario correcto
+        if (
+          Reserva.evaluarHorarioReserva(cliente.reserva) &&
+          cliente.estado == Estados.aprobado
+        ) {
+          cliente.estado = Estados.puedeTomarMesa;
 
-            this.loadingService.showLoading();
-            try {
-              this.userSrv.updateUserFields(cliente.id, {
-                estado: cliente.estado,
-                mesaAsignada: cliente.reserva.mesa.numero, // Se le asigna la mesa que reservó al usuario
-              });
-              this.toast.showExito(
-                `Hola ${cliente.nombre} ${cliente.apellido}, tu reserva está lista para ser tomada.`,
-                'middle',
-                5000
-              );
-            } catch (error) {
-              this.toast.showError(
-                'No pudimos recibirte como mereces, por favor ponte en contacto con el metre.',
-                'bottom'
-              );
-              console.error(error);
-            } finally {
-              this.loadingService.hideLoading();
-            }
-          } else if (
-            Reserva.evaluarReservaVencida(cliente.reserva) &&
-            cliente.estado == Estados.aprobado
-          ) {
-            cliente.reserva.estado = EstadoReserva.cancelada;
-
-            // En ngOnInit
-            if (cliente.reserva) {
-              this.loadingService.showLoading();
-
-              this.cancelarReserva(cliente.reserva, cliente.id);
-            }
-
+          this.loadingService.showLoading();
+          try {
+            this.userSrv.updateUserFields(cliente.id, {
+              estado: cliente.estado,
+              mesaAsignada: cliente.reserva.mesa.numero, // Se le asigna la mesa que reservó al usuario
+            });
+            this.toast.showExito(
+              `Hola ${cliente.nombre} ${cliente.apellido}, tu reserva está lista para ser tomada.`,
+              'middle',
+              5000
+            );
+          } catch (error) {
+            this.toast.showError(
+              'No pudimos recibirte como mereces, por favor ponte en contacto con el metre.',
+              'bottom'
+            );
+            console.error(error);
+          } finally {
             this.loadingService.hideLoading();
           }
+        } else if (
+          Reserva.evaluarReservaVencida(cliente.reserva) &&
+          cliente.estado == Estados.aprobado
+        ) {
+          cliente.reserva.estado = EstadoReserva.cancelada;
+
+          // En ngOnInit
+          if (cliente.reserva) {
+            this.loadingService.showLoading();
+
+            this.cancelarReserva(cliente.reserva, cliente.id);
+          }
+
+          this.loadingService.hideLoading();
         }
       }
-    });
+    }
   }
 
   async cancelarReserva(reserva: Reserva, clienteId: string): Promise<void> {
