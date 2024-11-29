@@ -166,37 +166,75 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <div class="input-wrapper">
-            <!-- <ion-icon name="mail-outline"></ion-icon> -->
-            <ion-input
-              type="email"
-              placeholder="Email"
-              formControlName="email"
-            ></ion-input>
-          </div>
-          <div
-            *ngIf="
-              registerForm.get('email')?.invalid &&
-              (registerForm.get('email')?.dirty ||
-                registerForm.get('email')?.touched)
-            "
-            class="error-message"
-          >
-            <ion-text
-              color="danger"
-              *ngIf="registerForm.get('email')?.errors?.['required']"
-            >
-              Email es requerido.
-            </ion-text>
-            <ion-text
-              color="danger"
-              *ngIf="registerForm.get('email')?.errors?.['email']"
-            >
-              Email no es válido.
-            </ion-text>
-          </div>
-        </div>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6">
+              <div class="form-group">
+                <div class="input-wrapper">
+                  <!-- <ion-icon name="mail-outline"></ion-icon> -->
+                  <ion-input
+                    type="email"
+                    placeholder="Correo"
+                    formControlName="email"
+                  ></ion-input>
+                </div>
+                <div
+                  *ngIf="
+                    registerForm.get('email')?.invalid &&
+                    (registerForm.get('email')?.dirty ||
+                      registerForm.get('email')?.touched)
+                  "
+                  class="error-message"
+                >
+                  <ion-text
+                    color="danger"
+                    *ngIf="registerForm.get('email')?.errors?.['required']"
+                  >
+                    Correo es requerido.
+                  </ion-text>
+                  <ion-text
+                    color="danger"
+                    *ngIf="registerForm.get('email')?.errors?.['email']"
+                  >
+                    Correo no es válido.
+                  </ion-text>
+                </div>
+              </div>
+            </ion-col>
+            <ion-col size="6">
+              <div class="form-group">
+                <div class="input-wrapper">
+                  <!-- <ion-icon name="mail-outline"></ion-icon> -->
+                  <ion-input
+                    type="email"
+                    placeholder="Correo Google"
+                    formControlName="emailGoogle"
+                  ></ion-input>
+                </div>
+                <div
+                  *ngIf="
+                    registerForm.get('emailGoogle')?.invalid &&
+                    registerForm.get('emailGoogle')?.touched
+                  "
+                  class="error-message"
+                >
+                  <ion-text
+                    color="danger"
+                    *ngIf="registerForm.get('emailGoogle')?.errors?.['notGoogleEmail']"
+                  >
+                    Debe ser Gmail.
+                  </ion-text>
+                  <ion-text
+                    color="danger"
+                    *ngIf="registerForm.get('email')?.errors?.['email']"
+                  >
+                    Correo de Google no válido.
+                  </ion-text>
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
 
         <ion-grid>
           <ion-row>
@@ -284,19 +322,13 @@
         </ion-grid>
 
         <div class="action-buttons">
-          <ion-button expand="block" type="button" (click)="tomarFoto()">
-            Tomar foto
-          </ion-button>
-          <ion-button
-            expand="block"
-            type="submit"
-            [disabled]="!registerForm.valid"
+          <ion-button expand="block" type="button" (click)="tomarFoto()"
+            >Tomar foto</ion-button
           >
-            Crear
-          </ion-button>
-          <ion-button expand="block" type="button" (click)="irAlLogin()">
-            Volver
-          </ion-button>
+          <ion-button expand="block" type="submit">Crear</ion-button>
+          <ion-button expand="block" type="button" (click)="irAlLogin()"
+            >Volver</ion-button
+          >
         </div>
       </form>
     </ion-card>

@@ -21,6 +21,7 @@ import { addIcons } from 'ionicons';
 import { arrowBackCircleOutline } from 'ionicons/icons';
 import { MesasListaComponent } from '../../componentes/mesas-lista/mesas-lista.component';
 import { DuenioSupervisorListaEsperaComponent } from '../../componentes/duenio-supervisor-lista-espera/duenio-supervisor-lista-espera.component';
+import { ListadoEncuestasComponent } from 'src/app/componentes/listado-encuestas/listado-encuestas.component';
 
 @Component({
   selector: 'app-listados',
@@ -45,6 +46,7 @@ import { DuenioSupervisorListaEsperaComponent } from '../../componentes/duenio-s
     CocineroBartenderPedidoComponent,
     MesasListaComponent,
     DuenioSupervisorListaEsperaComponent,
+    ListadoEncuestasComponent,
   ],
 })
 export class ListadosPage implements OnInit {

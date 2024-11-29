@@ -20,6 +20,7 @@ export class Consulta {
       'mensaje': '',
       'mozo': '',
       'hora': null};
+
     this.estado = EstadoConsulta.enviada;
   }
 }
