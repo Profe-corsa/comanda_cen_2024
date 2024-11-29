@@ -107,7 +107,7 @@ export class ClienteConsultaComponent implements OnInit {
         this.consulta = consulta;
 
         // Verificar si la consulta fue respondida
-        if (consulta.respuesta) {
+        if (consulta.respuesta.mensaje) {
           this.toast.showExito(
             'Un mozo ha respondido a su consulta.',
             'middle'
