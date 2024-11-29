@@ -1,6 +1,7 @@
 export class Usuario {
   id: string = '';
   email: string = '';
+  emailGoogle?: string = '';
   password: string = '';
   perfil: string = '';
   nombre: string = '';

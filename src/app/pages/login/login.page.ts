@@ -15,6 +15,9 @@ import {
   IonFabList,
   IonRouterLink,
   IonSpinner,
+  IonGrid,
+  IonRow,
+  IonCol,
 } from '@ionic/angular/standalone';
 import {
   ReactiveFormsModule,
@@ -33,6 +36,7 @@ import {
   mailOutline,
   ellipsisHorizontal,
   personCircleOutline,
+  logoGoogle,
 } from 'ionicons/icons';
 import { Subscription } from 'rxjs';
 import { Perfiles } from 'src/app/clases/enumerados/perfiles';
@@ -48,6 +52,9 @@ import { PushMailNotificationService } from 'src/app/services/push-mail-notifica
   styleUrls: ['./login.page.scss'],
   standalone: true,
   imports: [
+    IonCol,
+    IonRow,
+    IonGrid,
     IonSpinner,
     ReactiveFormsModule,
     CommonModule,
@@ -73,6 +80,8 @@ export class LoginPage {
   showPassword = false;
   showUserOptions = false; // Para mostrar u ocultar los botones de usuario
 
+  user: any; //Para pruebas
+
   constructor(
     private router: Router,
     private authService: AuthService,
@@ -90,6 +99,7 @@ export class LoginPage {
     addIcons({
       mailOutline,
       lockClosedOutline,
+      logoGoogle,
       ellipsisHorizontal,
       personCircleOutline,
       eyeOutline,
@@ -177,6 +187,52 @@ export class LoginPage {
     } else {
       //Este es un error para nosotros. Todos los errores de autenticación son informados por Firebase.
       console.error('Formulario inválido');
+    }
+  }
+
+  async onGoogleLogin() {
+    let res: any;
+    this.loadingService.showLoading();
+    try {
+      res = await this.authService.googleSignIn();
+      console.log('User con Google: ', res);
+
+      this.suscripcion = this.userSrv
+        .getUser(res.userData.id)
+        .subscribe((usuario: any) => {
+          if (usuario != undefined) {
+            //Si el usuario se logueo guardamos el token
+            this.notificationService.init(usuario);
+
+            if (
+              usuario.perfil == Perfiles.cliente &&
+              usuario.estado == Estados.pendienteDeAprobacion
+            ) {
+              this.loadingService.hideLoading();
+              this.toast.showError(
+                'Lo sentimos, pero su cuenta aún se encuentra Pendiente de aprobación.'
+              );
+              this.limpiarInputs();
+            } else if (
+              usuario.perfil == Perfiles.cliente &&
+              usuario.estado == Estados.rechazado
+            ) {
+              this.limpiarInputs();
+              this.loadingService.hideLoading();
+              this.toast.showError(
+                'Lo sentimos, pero su cuenta fue rechazada.'
+              );
+            } else {
+              this.limpiarInputs();
+              this.suscripcion.unsubscribe();
+              this.loadingService.hideLoading();
+              this.router.navigate(['/home']);
+            }
+          }
+        });
+    } catch (error: any) {
+      this.loadingService.hideLoading();
+      this.toast.showError('Falló el ingreso: ' + error.message);
     }
   }
 

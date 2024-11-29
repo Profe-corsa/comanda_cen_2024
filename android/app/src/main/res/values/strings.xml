@@ -4,4 +4,5 @@
     <string name="title_activity_main">Comanda CEN</string>
     <string name="package_name">io.ionic.comanda</string>
     <string name="custom_url_scheme">io.ionic.comanda</string>
+    <string name="server_client_id">388609361201-m87jvekt4819pamvq5cau7thtgahdk16.apps.googleusercontent.com</string>
 </resources>

@@ -43,7 +43,7 @@ import { PushMailNotificationService } from 'src/app/services/push-mail-notifica
     IonIcon,
     IonItem,
     LoadingComponent,
-    RouterLink
+    RouterLink,
   ],
 })
 export class MozoConsultaComponent implements OnInit {
@@ -52,6 +52,7 @@ export class MozoConsultaComponent implements OnInit {
   responderFlag: boolean = false;
   consultaSeleccionada = {} as Consulta;
   usuarioConsulta = {} as Cliente;
+  mensajeRespuesta = '';
 
   constructor(
     private consultaService: MensajesService,
@@ -108,7 +109,14 @@ export class MozoConsultaComponent implements OnInit {
   async devolverConsulta() {
     try {
       this.loadingService.showLoading();
+      console.log('Esta es la respuesta del mozo', this.mensajeRespuesta);
+      this.consultaSeleccionada.respuesta = {
+        mensaje: this.mensajeRespuesta,
+        mozo: `${this.usuario.nombre} ${this.usuario.apellido}`,
+        fecha: new Date(),
+      };
       this.consultaSeleccionada.estado = EstadoConsulta.respondida;
+      console.log('Esta es la respuesta del mozo', this.consultaSeleccionada);
       await this.actualizarConsulta();
     } catch (error) {
       console.error('Error al devolver la consulta: ' + error);

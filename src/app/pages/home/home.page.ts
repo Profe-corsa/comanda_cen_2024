@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   IonHeader,
@@ -45,7 +45,7 @@ import { Mesa } from 'src/app/clases/mesa';
     EmpleadosHomeComponent,
   ],
 })
-export class HomePage {
+export class HomePage implements OnInit {
   usuario: Usuario | any;
   idAnonimo: string = '';
   suscripcion: Subscription | any;
@@ -74,6 +74,10 @@ export class HomePage {
       if (idUsuario == null) {
         // idUsuario = this.authService.getUserLogueado()?.id ?? '';
         this.usuario = this.authService.getUserLogueado();
+
+        this.userSrv.getUser(this.usuario.id).subscribe((userData) => {
+          this.usuario = userData; // Cambia el tipo de `usuario` a `Usuario | null`.
+        });
       } else {
         this.userSrv.getUser(idUsuario).subscribe((userData) => {
           this.usuario = userData; // Cambia el tipo de `usuario` a `Usuario | null`.

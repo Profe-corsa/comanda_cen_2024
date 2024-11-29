@@ -110,12 +110,13 @@ export class ClienteHomeComponent implements OnInit {
     }
     if (this.cliente.pedido || this.usuario.pedido) {
       this.mostrarPedido = true;
-    }
-    this.actualizarPedido();
-    if (this.cliente.pedido.estado === Estado.cuentaEnviada ||
-      this.usuario.pedido.estado === Estado.cuentaEnviada
-    ) {
-      this.pedirCuenta();
+      this.actualizarPedido();
+      if (
+        this.cliente.pedido.estado === Estado.cuentaEnviada ||
+        this.usuario.pedido.estado === Estado.cuentaEnviada
+      ) {
+        this.pedirCuenta();
+      }
     }
   }
 
