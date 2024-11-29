@@ -17,7 +17,7 @@
             <ion-icon name="mail-outline"></ion-icon>
             <ion-input
               type="email"
-              placeholder="Email"
+              placeholder="Correo"
               formControlName="email"
             ></ion-input>
           </div>
@@ -32,13 +32,13 @@
               color="danger"
               *ngIf="loginForm.get('email')?.errors?.['required']"
             >
-              Email es requerido.
+              Correo es requerido.
             </ion-text>
             <ion-text
               color="danger"
               *ngIf="loginForm.get('email')?.errors?.['email']"
             >
-              Email no es válido.
+              Correo no es válido.
             </ion-text>
           </div>
         </div>
@@ -48,7 +48,7 @@
             <ion-icon name="lock-closed-outline"></ion-icon>
             <ion-input
               [attr.type]="showPassword ? 'text' : 'password'"
-              placeholder="Password"
+              placeholder="Clave"
               formControlName="password"
             ></ion-input>
             <ion-icon
@@ -68,22 +68,43 @@
               color="danger"
               *ngIf="loginForm.get('password')?.errors?.['required']"
             >
-              Password es requerido.
+              Clave es requerido.
             </ion-text>
             <ion-text
               color="danger"
               *ngIf="loginForm.get('password')?.errors?.['minlength']"
             >
-              Password debe tener al menos 6 caracteres.
+              Clave debe tener al menos 6 caracteres.
             </ion-text>
           </div>
         </div>
 
         <div class="action-buttons">
-          <ion-button expand="block" type="submit" [disabled]="!loginForm.valid"
-            >Ingresar</ion-button
-          >
-          <p class="forgot-password">¿No tienes una cuenta?</p>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="8">
+                <ion-button
+                  class="ingresar-button"
+                  expand="block"
+                  type="submit"
+                  [disabled]="!loginForm.valid"
+                  >Ingresar</ion-button
+                >
+              </ion-col>
+              <ion-col size="4">
+                <ion-button
+                  expand="block"
+                  fill="outline"
+                  (click)="onGoogleLogin()"
+                >
+                  <ion-icon name="logo-google"></ion-icon>
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+          <p class="forgot-password" style="margin-top: auto">
+            ¿No tienes una cuenta?
+          </p>
           <ion-button
             expand="block"
             fill="outline"

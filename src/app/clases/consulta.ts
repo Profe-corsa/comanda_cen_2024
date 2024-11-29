@@ -10,13 +10,13 @@ export class Consulta {
   idCliente: string = '';
   nroMesa: number = 0;
   textoConsulta: string;
-  respuesta: string;
+  respuesta: {};
   estado: string;
   hora: any;
 
   constructor() {
     this.textoConsulta = '';
-    this.respuesta = '';
+    this.respuesta = {};
     this.estado = EstadoConsulta.enviada;
   }
 }

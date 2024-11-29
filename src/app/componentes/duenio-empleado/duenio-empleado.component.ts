@@ -19,6 +19,8 @@ import { qrCodeOutline, eyeOutline, eyeOffOutline } from 'ionicons/icons';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Perfiles } from 'src/app/clases/enumerados/perfiles';
+import { googleEmailValidator } from 'src/app/validadores/google-email.validator';
+
 @Component({
   selector: 'app-duenio-empleado',
   templateUrl: './duenio-empleado.component.html',
@@ -45,6 +47,7 @@ export class DuenioEmpleadoComponent {
   dni: FormGroup | any;
   cuil: FormGroup | any;
   email: FormGroup | any;
+  emailGoogle: FormGroup | any;
   perfil: FormGroup | any;
   password: FormGroup | any;
   rpassword: FormGroup | any;
@@ -76,6 +79,10 @@ export class DuenioEmpleadoComponent {
       Validators.pattern(/^\d{2}-\d{8}-\d{1}$/),
     ]);
     this.email = new FormControl('', [Validators.required, Validators.email]);
+    this.emailGoogle = new FormControl('', [
+      Validators.email,
+      googleEmailValidator(),
+    ]);
     this.password = new FormControl('', [
       Validators.required,
       Validators.minLength(6),
@@ -93,6 +100,7 @@ export class DuenioEmpleadoComponent {
         dni: this.dni,
         cuil: this.cuil,
         email: this.email,
+        emailGoogle: this.emailGoogle,
         perfil: this.perfil,
         password: this.password,
         rpassword: this.rpassword,
@@ -132,6 +140,10 @@ export class DuenioEmpleadoComponent {
     this.usuario.nombre = formValues.nombre.trim();
     this.usuario.apellido = formValues.apellido.trim();
     this.usuario.email = formValues.email;
+    if (this.registerForm.get('emailGoogle')?.valid) {
+      this.usuario.emailGoogle = formValues.emailGoogle;
+      console.log('emailGoogle', this.usuario.emailGoogle);
+    }
     this.usuario.perfil = formValues.perfil;
     this.usuario.password = formValues.password;
     this.usuario.dni = formValues.dni;
@@ -139,24 +151,71 @@ export class DuenioEmpleadoComponent {
   }
 
   async onRegister(formValues: any) {
-    if (this.registerForm.valid && this.usuario.foto) {
-      this.formUsuario(formValues);
-      try {
-        await this.usuarioSrv.saveUserWithEmailAndPassword(this.usuario);
-        this.toastService.showExito('Usuario Registrado');
-        this.router.navigate(['/home']);
-      } catch (error: any) {
-        console.error(error.message);
-        this.toastService.showError(
-          '¡Se produjo un error al dar de alta el usuario!'
-        );
-        if (this.imageName) {
-          await this.camaraService.deleteImage('clientes', this.imageName);
+    if (this.registerForm.get('nombre')?.valid) {
+      if (this.registerForm.get('apellido')?.valid) {
+        if (this.registerForm.get('email')?.valid) {
+          if (this.registerForm.get('perfil')?.valid) {
+            if (this.registerForm.get('password')?.valid) {
+              if (this.registerForm.get('dni')?.valid) {
+                if (this.registerForm.get('cuil')?.valid) {
+                  if (this.usuario.foto) {
+                    this.formUsuario(formValues);
+                    try {
+                      await this.usuarioSrv.saveUserWithEmailAndPassword(
+                        this.usuario
+                      );
+                      this.toastService.showExito('Usuario Registrado');
+                      this.router.navigate(['/home']);
+                    } catch (error: any) {
+                      console.error(error.message);
+                      this.toastService.showError(
+                        '¡Se produjo un error al dar de alta el usuario!'
+                      );
+                      if (this.imageName) {
+                        await this.camaraService.deleteImage(
+                          'clientes',
+                          this.imageName
+                        );
+                      }
+                    }
+                  } else {
+                    this.toastService.showError(
+                      'Debe tomar una foto de perfil'
+                    );
+                  }
+                } else {
+                  this.toastService.showError(
+                    'No puede crear un nuevo empleado sin CUIL o que este no sea válido.'
+                  );
+                }
+              } else {
+                this.toastService.showError(
+                  'No puede crear un nuevo empleado sin DNI o que este no sea válido.'
+                );
+              }
+            } else {
+              this.toastService.showError(
+                'No puede crear un nuevo empleado sin clave o que este no sea válida.'
+              );
+            }
+          } else {
+            this.toastService.showError(
+              'No puede crear un nuevo empleado sin perfil o que este no sea válido.'
+            );
+          }
+        } else {
+          this.toastService.showError(
+            'No puede crear un nuevo empleado sin correo o que este no sea válido.'
+          );
         }
+      } else {
+        this.toastService.showError(
+          'No puede crear un nuevo empleado sin apellido o que este no sea válido.'
+        );
       }
     } else {
       this.toastService.showError(
-        'Debe completar todos los campos y tomar una foto de perfil'
+        'No puede crear un nuevo empleado sin nombre o que este no sea válido.'
       );
     }
   }

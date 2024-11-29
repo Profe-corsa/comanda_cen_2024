@@ -83,6 +83,12 @@ ion-content {
   }
 }
 
+ion-grid {
+  width: 106%;
+  margin-left: -10px;
+  margin-bottom: -10px;
+}
+
 /* Mensajes de error */
 .error-message {
   margin-top: 4px;
