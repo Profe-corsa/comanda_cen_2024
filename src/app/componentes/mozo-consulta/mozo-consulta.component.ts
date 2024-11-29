@@ -52,7 +52,7 @@ export class MozoConsultaComponent implements OnInit {
   responderFlag: boolean = false;
   consultaSeleccionada = {} as Consulta;
   usuarioConsulta = {} as Cliente;
-  mensajeRespuesta = '';
+  mensajeRespuesta: string = ''; 
 
   constructor(
     private consultaService: MensajesService,
@@ -79,6 +79,7 @@ export class MozoConsultaComponent implements OnInit {
   }
 
   async responder(consulta?: Consulta) {
+    console.log(consulta);
     if (!this.responderFlag && consulta != undefined) {
       this.responderFlag = true;
       this.consultaSeleccionada = consulta;
@@ -109,12 +110,8 @@ export class MozoConsultaComponent implements OnInit {
   async devolverConsulta() {
     try {
       this.loadingService.showLoading();
-      console.log('Esta es la respuesta del mozo', this.mensajeRespuesta);
-      this.consultaSeleccionada.respuesta = {
-        mensaje: this.mensajeRespuesta,
-        mozo: `${this.usuario.nombre} ${this.usuario.apellido}`,
-        fecha: new Date(),
-      };
+      this.consultaSeleccionada.respuesta= {'mensaje' : this.mensajeRespuesta,
+         'mozo': `${this.usuario.apellido} ${this.usuario.nombre}`, 'hora': new Date()};
       this.consultaSeleccionada.estado = EstadoConsulta.respondida;
       console.log('Esta es la respuesta del mozo', this.consultaSeleccionada);
       await this.actualizarConsulta();
@@ -125,17 +122,19 @@ export class MozoConsultaComponent implements OnInit {
 
   async actualizarConsulta() {
     try {
+
       // Verificar que se haya recuperado el usuario correctamente.
       if (!this.usuarioConsulta || !this.usuarioConsulta.consulta) {
         this.loadingService.hideLoading();
         this.toast.showError('No se pudo recuperar el usuario.');
         return;
       }
-
       // Encontrar el índice de la consulta dentro del array de consultas del usuario.
-      const indice = this.usuarioConsulta.consulta.findIndex(
-        (consulta) => consulta.id === this.consultaSeleccionada.id
-      );
+      const indice = this.usuarioConsulta.consulta.findIndex((consulta) => {
+        console.log(`${consulta.id} <br> ${this.consultaSeleccionada.id}`);
+        return consulta.id === this.consultaSeleccionada.id; // Retorna el resultado.
+      });
+      console.log(indice)
 
       if (indice === -1) {
         this.loadingService.hideLoading();

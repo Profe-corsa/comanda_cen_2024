@@ -5,7 +5,7 @@
   <h1>Consultas pendientes de respuesta</h1>
   <div id="lista-consultas">
     <ion-list>
-      <ion-item
+      <ion-item class="item-list-consulta"
         (click)="responder(consulta)"
         *ngFor="let consulta of listadoConsultas"
       >
@@ -32,10 +32,10 @@
 </div>
 
 <div id="contenedor" *ngIf="responderFlag">
-  <h3>Consulta del cliente:</h3>
+  <h1>Consulta del cliente: {{usuarioConsulta.nombre}} {{usuarioConsulta.apellido}}</h1>
 
   <ion-item *ngIf="consultaSeleccionada !== undefined">
-    <ion-label position="stacked">Consulta:</ion-label>
+    <ion-textarea disabled readonly *ngIf="!consultaSeleccionada.textoConsulta">Consulta:</ion-textarea>
     <ion-textarea disabled readonly>{{
       consultaSeleccionada.textoConsulta
     }}</ion-textarea>
@@ -46,8 +46,7 @@
 
   <h3>Respuesta:</h3>
   <ion-item>
-    <ion-label position="stacked">Respuesta:</ion-label>
-    <ion-textarea [(ngModel)]="consultaSeleccionada.respuesta"></ion-textarea>
+    <ion-textarea [(ngModel)]="mensajeRespuesta" class="textarea-respuesta" placeholder="Ingrese la respuesta aquí." ></ion-textarea>
   </ion-item>
 
   <ion-button color="success" (click)="devolverConsulta()"

@@ -3,6 +3,7 @@
   flex-direction: column;
   padding: 0.5vh 5vw 2vh 5vw;
   height: 80vh;
+  color: white;
 }
 
 #lista-consultas {
@@ -20,5 +21,42 @@
   width: 100%;
 }
 }
+ion-textarea {
+  font-size: 1.5rem;
+  padding: 15px;
+  color: white;
+}
+.textarea-respuesta{
+  font-weight: 600;
+}
+
+.ionLabel {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: white;
+}
+
+ion-item {
+  --background: #d96d2d80 !important;
+  border-radius: 15px;
+  border: 4px solid #f4a40a;
+  display: flex;
+  flex-direction: column;
+}
+
+.ion-text-right {
+  font-size: 25px;
+  span {
+    color: #f4a40a;
+    font-weight: 600;
+  }
+}
+.item-list-consulta{
+  --background: linear-gradient(to right, #d96d2d, #f4a40a) !important;
+}
+ion-button {
+  font-size: 1.5rem;
+}
+
 
 

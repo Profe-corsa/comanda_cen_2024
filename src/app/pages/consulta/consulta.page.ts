@@ -40,7 +40,7 @@ export class ConsultaPage implements OnInit {
   tipoUsuario: any = '';
   idUsuario: any = '';
   usuarioActual: Usuario | null = null;
-
+  
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
