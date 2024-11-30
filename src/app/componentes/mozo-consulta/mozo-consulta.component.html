@@ -1,18 +1,22 @@
 <div *ngIf="loadingService.loadingStatus">
   <app-loading></app-loading>
 </div>
+
 <div id="contenedor" *ngIf="!responderFlag">
   <h1>Consultas pendientes de respuesta</h1>
   <div id="lista-consultas">
     <ion-list>
-      <ion-item class="item-list-consulta"
+      <ion-item
+        class="item-list-consulta"
         (click)="responder(consulta)"
         *ngFor="let consulta of listadoConsultas"
       >
         <ion-label>
           <h2>Mesa: {{ consulta.nroMesa }}</h2>
-          <ion-label
-            >Consulta: {{ consulta.textoConsulta | slice : 0 : 10
+          <ion-label> Cliente : {{ consulta?.nombreCliente }} </ion-label>
+          <ion-label>
+            Consulta:
+            {{ consulta.textoConsulta | slice : 0 : 10
             }}{{ consulta.textoConsulta.length > 10 ? "..." : "" }}</ion-label
           >
           <ion-label *ngIf="consulta.hora !== undefined"
@@ -24,33 +28,39 @@
     </ion-list>
   </div>
 
-  <div id="boton-pedidos">
-    <ion-button [routerLink]="['/mozo-home']">
-      Ver Pedidos Pendientes
-    </ion-button>
+  <div id="contenedor" *ngIf="responderFlag">
+    <h1>
+      Consulta del cliente: {{ usuarioConsulta.nombre }}
+      {{ usuarioConsulta.apellido }}
+    </h1>
+
+    <ion-item *ngIf="consultaSeleccionada !== undefined">
+      <ion-textarea
+        disabled
+        readonly
+        *ngIf="!consultaSeleccionada.textoConsulta"
+        >Consulta:</ion-textarea
+      >
+      <ion-textarea disabled readonly>{{
+        consultaSeleccionada.textoConsulta
+      }}</ion-textarea>
+    </ion-item>
+    <ion-label class="ion-text-right" *ngIf="consultaSeleccionada !== undefined"
+      >Estado de la consulta: {{ consultaSeleccionada.estado }}</ion-label
+    >
+
+    <h3>Respuesta:</h3>
+    <ion-item>
+      <ion-textarea
+        [(ngModel)]="mensajeRespuesta"
+        class="textarea-respuesta"
+        placeholder="Ingrese la respuesta aquí."
+      ></ion-textarea>
+    </ion-item>
+
+    <ion-button color="success" (click)="devolverConsulta()"
+      >Enviar Respuesta</ion-button
+    >
+    <ion-button color="success" (click)="responder()">Volver</ion-button>
   </div>
-</div>
-
-<div id="contenedor" *ngIf="responderFlag">
-  <h1>Consulta del cliente: {{usuarioConsulta.nombre}} {{usuarioConsulta.apellido}}</h1>
-
-  <ion-item *ngIf="consultaSeleccionada !== undefined">
-    <ion-textarea disabled readonly *ngIf="!consultaSeleccionada.textoConsulta">Consulta:</ion-textarea>
-    <ion-textarea disabled readonly>{{
-      consultaSeleccionada.textoConsulta
-    }}</ion-textarea>
-  </ion-item>
-  <ion-label class="ion-text-right" *ngIf="consultaSeleccionada !== undefined"
-    >Estado de la consulta: {{ consultaSeleccionada.estado }}</ion-label
-  >
-
-  <h3>Respuesta:</h3>
-  <ion-item>
-    <ion-textarea [(ngModel)]="mensajeRespuesta" class="textarea-respuesta" placeholder="Ingrese la respuesta aquí." ></ion-textarea>
-  </ion-item>
-
-  <ion-button color="success" (click)="devolverConsulta()"
-    >Enviar Respuesta</ion-button
-  >
-  <ion-button color="success" (click)="responder()">Volver</ion-button>
 </div>

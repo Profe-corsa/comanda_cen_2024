@@ -78,6 +78,7 @@ export class ClienteConsultaComponent implements OnInit {
       consulta = this.cliente.consulta[indiceUltimaConsulta];
       this.consulta = consulta;
       this.consultaCreada = true;
+      console.log(indiceUltimaConsulta);
     } else {
       this.consultaCreada = false;
       this.consulta = new Consulta();
@@ -85,12 +86,13 @@ export class ClienteConsultaComponent implements OnInit {
   }
 
   async crearConsulta() {
-    console.log(this.textoCliente);
     let cliente = <Cliente>this.usuario;
     this.consulta.textoConsulta = this.textoCliente;
     this.consulta.nroMesa = this.cliente.mesaAsignada;
     this.consulta.idCliente = this.usuario.id;
     this.consulta.hora = new Date();
+    this.consulta.nombreCliente = `${this.cliente.nombre} ${this.cliente.apellido}`;
+    console.log('Consulta del cliente', this.consulta);
     this.loadingService.showLoading();
     let idConsulta = await this.consultaService.addConsulta(this.consulta);
     let indice: number;
@@ -98,62 +100,61 @@ export class ClienteConsultaComponent implements OnInit {
 
     //Suscribir a la consulta para recibir las actualizaciones
     // Crear una variable para manejar la suscripción
-    let consultaSubscription: Subscription;
+    // let consultaSubscription: Subscription;
 
-    consultaSubscription = this.consultaService
-      .getConsultaById(idConsulta)
-      .subscribe((consulta) => {
-        this.consultaCreada = true;
-        this.consulta = consulta;
+    // consultaSubscription = this.consultaService
+    this.consultaService.getConsultaById(idConsulta).subscribe((consulta) => {
+      this.consultaCreada = true;
+      this.consulta = consulta;
 
-        // Verificar si la consulta fue respondida
-        if (consulta.respuesta.mensaje) {
-          this.toast.showExito(
-            'Un mozo ha respondido a su consulta.',
-            'middle'
-          );
+      // Verificar si la consulta fue respondida
+      // if (consulta.respuesta.mensaje) {
+      //   this.toast.showExito(
+      //     'Un mozo ha respondido a su consulta.',
+      //     'middle'
+      //   );
 
-          // Desuscribirse cuando se recibe una respuesta
-          if (consultaSubscription) {
-            consultaSubscription.unsubscribe();
+      //   // Desuscribirse cuando se recibe una respuesta
+      //   if (consultaSubscription) {
+      //     consultaSubscription.unsubscribe();
+      //   }
+      //   return;
+      // }
+
+      //Guardar consulta en cliente y guardar cliente
+      if (cliente.consulta == undefined) {
+        cliente.consulta = [];
+        cliente.consulta.push(this.consulta);
+      } else {
+        for (let auxConsulta of cliente.consulta) {
+          //Sobrescribir si la consulta ya existía
+          if (auxConsulta.id == this.consulta.id) {
+            encontroConsulta = true;
+            indice = cliente.consulta.indexOf(auxConsulta);
+            cliente.consulta[indice] = this.consulta;
           }
-          return;
         }
 
-        //Guardar consulta en cliente y guardar cliente
-        if (cliente.consulta == undefined) {
-          cliente.consulta = [];
+        if (!encontroConsulta) {
           cliente.consulta.push(this.consulta);
-        } else {
-          for (let auxConsulta of cliente.consulta) {
-            //Sobrescribir si la consulta ya existía
-            if (auxConsulta.id == this.consulta.id) {
-              encontroConsulta = true;
-              indice = cliente.consulta.indexOf(auxConsulta);
-              cliente.consulta[indice] = this.consulta;
-            }
-          }
-
-          if (!encontroConsulta) {
-            cliente.consulta.push(this.consulta);
-          }
         }
+      }
 
-        this.notificationSrv.sendPushNotificationToRole(
-          'Nueva consulta de cliente',
-          `El cliente de la mesa ${this.cliente.mesaAsignada} realizó una nueva consulta.`,
-          'mozo'
-        );
+      this.usuarioService.updateUser(cliente.id, cliente);
 
-        this.toast.showExito(
-          'Consulta enviada. Los mozos se pondrán en contacto a la brevedad',
-          'middle'
-        );
+      this.loadingService.hideLoading();
+    });
 
-        this.usuarioService.updateUser(cliente.id, cliente);
+    this.notificationSrv.sendPushNotificationToRole(
+      'Nueva consulta de cliente',
+      `El cliente de la mesa ${this.cliente.mesaAsignada} realizó una nueva consulta.`,
+      'mozo'
+    );
 
-        this.loadingService.hideLoading();
-      });
+    this.toast.showExito(
+      'Consulta enviada. Los mozos se pondrán en contacto a la brevedad',
+      'middle'
+    );
   }
 
   nuevaConsulta() {

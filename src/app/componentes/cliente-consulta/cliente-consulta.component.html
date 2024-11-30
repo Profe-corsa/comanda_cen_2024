@@ -30,17 +30,19 @@
     >Nueva Consulta</ion-button
   >
 
-  <h1>Respuesta:</h1>
-  <p>Mozo: {{ consulta.respuesta.mozo }}</p>
-  <ion-item *ngIf="consultaCreada && consulta.estado == 'respondida'">
-    <ion-label *ngIf="!consulta.respuesta.mensaje" position="stacked"
-      >Respuesta</ion-label
-    >
-    <ion-textarea disabled readonly>{{
-      consulta.respuesta.mensaje
-    }}</ion-textarea>
-  </ion-item>
-  <span>{{
-    consulta.respuesta.hora.toDate() | date : "dd/MM/yyyy HH:mm"
-  }}</span>
+  <div *ngIf="consultaCreada && consulta.estado == 'respondida'">
+    <h1>Respuesta:</h1>
+    <p>Mozo: {{ consulta.respuesta.mozo }}</p>
+    <ion-item *ngIf="consultaCreada && consulta.estado == 'respondida'">
+      <ion-label *ngIf="!consulta.respuesta.mensaje" position="stacked"
+        >Respuesta</ion-label
+      >
+      <ion-textarea disabled readonly>{{
+        consulta.respuesta.mensaje
+      }}</ion-textarea>
+    </ion-item>
+    <span>{{
+      consulta.respuesta.hora.toDate() | date : "dd/MM/yyyy HH:mm"
+    }}</span>
+  </div>
 </div>

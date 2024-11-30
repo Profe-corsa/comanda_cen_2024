@@ -249,7 +249,7 @@
                   <!-- <ion-icon name="lock-closed-outline"></ion-icon> -->
                   <ion-input
                     [attr.type]="showPassword ? 'text' : 'password'"
-                    placeholder="Password"
+                    placeholder="Clave"
                     formControlName="password"
                   ></ion-input>
                   <ion-icon
@@ -269,13 +269,13 @@
                     color="danger"
                     *ngIf="registerForm.get('password')?.errors?.['required']"
                   >
-                    Password es requerido.
+                    Clave es requerida.
                   </ion-text>
                   <ion-text
                     color="danger"
                     *ngIf="registerForm.get('password')?.errors?.['minlength']"
                   >
-                    Password debe tener al menos 6 caracteres.
+                    Clave debe tener al menos 6 caracteres.
                   </ion-text>
                 </div>
               </div>
@@ -287,7 +287,7 @@
                   <!-- <ion-icon name="lock-closed-outline"></ion-icon> -->
                   <ion-input
                     [attr.type]="showRPassword ? 'text' : 'password'"
-                    placeholder="Repetir Password"
+                    placeholder="Repetir Clave"
                     formControlName="rpassword"
                   ></ion-input>
                   <ion-icon
@@ -307,19 +307,17 @@
                     color="danger"
                     *ngIf="registerForm.get('rpassword')?.errors?.['required']"
                   >
-                    Password es requerido.
+                    Clave es requerida.
                   </ion-text>
                   <ion-text
                     color="danger"
                     *ngIf="registerForm.get('rpassword')?.errors?.['minlength']"
                   >
-                    Password debe tener al menos 6 caracteres.
+                    Clave debe tener al menos 6 caracteres.
                   </ion-text>
                 </div>
                 <div *ngIf="registerForm.hasError('passwordMismatch')">
-                  <ion-text color="danger"
-                    >Las contraseñas no coinciden.</ion-text
-                  >
+                  <ion-text color="danger">Las Claves no coinciden.</ion-text>
                 </div>
               </div>
             </ion-col>
