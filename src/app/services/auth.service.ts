@@ -59,6 +59,56 @@ export class AuthService {
     });
   }
 
+  // async googleSignIn() {
+  //   try {
+  //     // Iniciar sesión con Google
+  //     let googleUser = await GoogleAuth.signIn();
+  //     console.log('Usuario recibido con el login de Google:', googleUser);
+
+  //     const user = googleUser;
+
+  //     if (!user || !user.email) {
+  //       throw new Error('No se pudo obtener el correo del usuario.');
+  //     }
+
+  //     // Verificar el correo en Firestore
+  //     const userEmail = user.email;
+  //     const usersRef = collection(this.firestore, 'usuarios');
+
+  //     // Consulta en el campo "email"
+  //     const q = query(usersRef, where('email', '==', userEmail));
+  //     console.log('Consulta en el campo "email":', q);
+  //     const snapshot = await getDocs(q);
+  //     console.log('Resultados de la consulta:', snapshot);
+
+  //     if (!snapshot.empty) {
+  //       console.log('Usuario encontrado en el campo "email"');
+
+  //       // Extraer datos del documento encontrado
+  //       const userData = snapshot.docs[0].data(); // Primer documento encontrado
+  //       return { googleUser, userData }; // Devolver Google User y datos del Firestore
+  //     }
+
+  //     // Si no se encontró, buscar en el campo "emailGoogle"
+  //     const qGoogle = query(usersRef, where('emailGoogle', '==', userEmail));
+  //     const snapshotGoogle = await getDocs(qGoogle);
+
+  //     if (!snapshotGoogle.empty) {
+  //       console.log('Usuario encontrado en el campo "emailGoogle"');
+
+  //       // Extraer datos del documento encontrado
+  //       const userDataGoogle = snapshotGoogle.docs[0].data(); // Primer documento encontrado
+  //       return { googleUser, userData: userDataGoogle }; // Devolver Google User y datos del Firestore
+  //     }
+
+  //     // Si no se encontró en ninguna de las dos, devolver null
+  //     return null;
+  //   } catch (error: any) {
+  //     console.error('Error en el login con Google:', error);
+  //     throw error;
+  //   }
+  // }
+
   async googleSignIn() {
     try {
       // Iniciar sesión con Google
@@ -77,14 +127,24 @@ export class AuthService {
 
       // Consulta en el campo "email"
       const q = query(usersRef, where('email', '==', userEmail));
+      console.log('Consulta en el campo "email":', q);
       const snapshot = await getDocs(q);
+      console.log('Resultados de la consulta:', snapshot);
 
       if (!snapshot.empty) {
         console.log('Usuario encontrado en el campo "email"');
 
-        // Extraer datos del documento encontrado
-        const userData = snapshot.docs[0].data(); // Primer documento encontrado
-        return { googleUser, userData }; // Devolver Google User y datos del Firestore
+        // Extraer datos e ID del documento encontrado
+        const userDoc = snapshot.docs[0]; // Primer documento encontrado
+        const userData = userDoc.data(); // Datos del documento
+        const userId = userDoc.id; // ID del documento
+
+        //Guarda el usuario en una promesa
+        const appUser = await this.loadUserDataId(userId);
+        console.log('appUserId', appUser);
+        this.userSubject.next(appUser);
+
+        return { googleUser, userData, userId }; // Devolver Google User, datos del Firestore e ID del documento
       }
 
       // Si no se encontró, buscar en el campo "emailGoogle"
@@ -94,9 +154,17 @@ export class AuthService {
       if (!snapshotGoogle.empty) {
         console.log('Usuario encontrado en el campo "emailGoogle"');
 
-        // Extraer datos del documento encontrado
-        const userDataGoogle = snapshotGoogle.docs[0].data(); // Primer documento encontrado
-        return { googleUser, userData: userDataGoogle }; // Devolver Google User y datos del Firestore
+        // Extraer datos e ID del documento encontrado
+        const userDocGoogle = snapshotGoogle.docs[0]; // Primer documento encontrado
+        const userDataGoogle = userDocGoogle.data(); // Datos del documento
+        const userIdGoogle = userDocGoogle.id; // ID del documento
+        console.log(userDocGoogle, userDataGoogle, userIdGoogle);
+
+        const appUser = await this.loadUserDataId(userIdGoogle);
+        console.log('appUserId', appUser);
+        this.userSubject.next(appUser);
+
+        return { googleUser, userData: userDataGoogle, userId: userIdGoogle }; // Devolver Google User, datos del Firestore e ID del documento
       }
 
       // Si no se encontró en ninguna de las dos, devolver null
@@ -110,13 +178,15 @@ export class AuthService {
   async login(email: string, password: string): Promise<any> {
     try {
       const res = await signInWithEmailAndPassword(this.auth, email, password);
+      console.log('respuesta de auth', res.user);
       const appUser = await this.loadUserData(res.user);
+      console.log('appUser', appUser);
       this.userSubject.next(appUser);
-      console.log('respuesta de auth', res);
       return res;
     } catch (error: any) {
       const errorMessage = this.toastService.translateFirebaseError(error.code);
-      this.toastService.showError(errorMessage);
+      // this.toastService.showError(errorMessage);
+      console.log(errorMessage);
     }
   }
 
@@ -145,6 +215,15 @@ export class AuthService {
 
   private async loadUserData(firebaseUser: FirebaseUser): Promise<Usuario> {
     const userDocRef = doc(this.firestore, `usuarios/${firebaseUser.uid}`);
+    const userDoc = await getDoc(userDocRef);
+    if (userDoc.exists()) {
+      return userDoc.data() as Usuario;
+    }
+    return {} as Usuario;
+  }
+
+  private async loadUserDataId(id: string): Promise<Usuario> {
+    const userDocRef = doc(this.firestore, `usuarios/${id}`);
     const userDoc = await getDoc(userDocRef);
     if (userDoc.exists()) {
       return userDoc.data() as Usuario;
