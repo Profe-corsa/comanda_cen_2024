@@ -78,6 +78,7 @@ export class ClienteConsultaComponent implements OnInit {
       consulta = this.cliente.consulta[indiceUltimaConsulta];
       this.consulta = consulta;
       this.consultaCreada = true;
+      console.log(indiceUltimaConsulta);
     } else {
       this.consultaCreada = false;
       this.consulta = new Consulta();

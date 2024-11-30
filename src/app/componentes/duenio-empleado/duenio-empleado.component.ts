@@ -20,13 +20,16 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Perfiles } from 'src/app/clases/enumerados/perfiles';
 import { googleEmailValidator } from 'src/app/validadores/google-email.validator';
+import { LoadingComponent } from 'src/app/componentes/loading/loading.component';
+import { LoadingService } from 'src/app/services/loading.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-duenio-empleado',
   templateUrl: './duenio-empleado.component.html',
   styleUrls: ['./duenio-empleado.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, IonicModule],
+  imports: [CommonModule, ReactiveFormsModule, IonicModule, LoadingComponent],
 })
 export class DuenioEmpleadoComponent {
   @Input() tipoUsuario: string = 'dueño';
@@ -52,13 +55,17 @@ export class DuenioEmpleadoComponent {
   password: FormGroup | any;
   rpassword: FormGroup | any;
 
+  usuarioLogueado: Usuario | any;
+
   constructor(
     private router: Router,
     private fb: FormBuilder,
     private camaraService: CamaraService,
     private usuarioSrv: UsuarioService,
     private toastService: ToastService,
-    private qrscannerService: QrScannerService
+    private qrscannerService: QrScannerService,
+    public loadingService: LoadingService,
+    private authService: AuthService
   ) {
     this.nombre = new FormControl('', [
       Validators.required,
@@ -113,6 +120,9 @@ export class DuenioEmpleadoComponent {
       eyeOutline,
       eyeOffOutline,
     });
+
+    this.usuarioLogueado = this.authService.getUserLogueado();
+    console.log('this.usuarioLogueado', this.usuarioLogueado);
   }
 
   togglePasswordVisibility() {
@@ -151,6 +161,27 @@ export class DuenioEmpleadoComponent {
   }
 
   async onRegister(formValues: any) {
+    console.log(
+      'Validez del input',
+      this.registerForm.get('emailGoogle')?.valid
+    );
+    console.log(
+      'Validez vacío',
+      this.registerForm.get('emailGoogle')?.value != ''
+    );
+
+    if (
+      !this.registerForm.get('emailGoogle')?.valid &&
+      this.registerForm.get('emailGoogle')?.value != ''
+    ) {
+      console.log('entro aca');
+      this.registerForm.get('emailGoogle')?.setValue('');
+      this.toastService.showError(
+        'Debe ingresar un correo de Google válido y con dominio "@gmail.com".'
+      );
+      return;
+    }
+
     if (this.registerForm.get('nombre')?.valid) {
       if (this.registerForm.get('apellido')?.valid) {
         if (this.registerForm.get('email')?.valid) {
@@ -161,15 +192,20 @@ export class DuenioEmpleadoComponent {
                   if (this.usuario.foto) {
                     this.formUsuario(formValues);
                     try {
+                      this.loadingService.showLoading();
                       await this.usuarioSrv.saveUserWithEmailAndPassword(
                         this.usuario
                       );
                       this.toastService.showExito('Usuario Registrado');
-                      this.router.navigate(['/home']);
+                      this.loadingService.hideLoading();
+                      this.registerForm.reset();
+                      // this.router.navigate(['/home']);
                     } catch (error: any) {
+                      this.loadingService.hideLoading();
                       console.error(error.message);
                       this.toastService.showError(
-                        '¡Se produjo un error al dar de alta el usuario!'
+                        '¡Se produjo un error al dar de alta el usuario!',
+                        'middle'
                       );
                       if (this.imageName) {
                         await this.camaraService.deleteImage(
@@ -260,6 +296,8 @@ export class DuenioEmpleadoComponent {
     if (this.imageName) {
       await this.camaraService.deleteImage('clientes', this.imageName);
     }
-    this.router.navigate(['/home']);
+    if (this.usuarioLogueado == null || this.usuarioLogueado == undefined)
+      this.router.navigate(['/login']);
+    this.router.navigate(['/home', this.usuarioLogueado.id]);
   }
 }

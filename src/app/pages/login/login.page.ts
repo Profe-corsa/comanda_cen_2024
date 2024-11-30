@@ -147,6 +147,18 @@ export class LoginPage {
       try {
         res = await this.authService.login(email, password);
 
+        if (res == null) {
+          {
+            this.loadingService.hideLoading();
+            this.toast.showError(
+              'No se pudo iniciar sesión con las credenciales proporcionadas.',
+              'middle',
+              5000
+            );
+            return;
+          }
+        }
+
         this.suscripcion = this.userSrv
           .getUser(res.user.uid)
           .subscribe((usuario: any) => {
@@ -160,7 +172,9 @@ export class LoginPage {
               ) {
                 this.loadingService.hideLoading();
                 this.toast.showError(
-                  'Lo sentimos, pero su cuenta aún se encuentra Pendiente de aprobación.'
+                  'Lo sentimos, pero su cuenta aún se encuentra Pendiente de aprobación.',
+                  'middle',
+                  5000
                 );
                 this.limpiarInputs();
               } else if (
@@ -195,10 +209,22 @@ export class LoginPage {
     this.loadingService.showLoading();
     try {
       res = await this.authService.googleSignIn();
-      console.log('User con Google: ', res);
+      console.log('User con Google en login: ', res);
+
+      if (res == null) {
+        {
+          this.loadingService.hideLoading();
+          this.toast.showError(
+            'No se pudo iniciar sesión con Google o no posee una cuenta registrada en la Comanda CEN con este correo.',
+            'middle',
+            5000
+          );
+          return;
+        }
+      }
 
       this.suscripcion = this.userSrv
-        .getUser(res.userData.id)
+        .getUser(res.userId)
         .subscribe((usuario: any) => {
           if (usuario != undefined) {
             //Si el usuario se logueo guardamos el token
@@ -210,7 +236,9 @@ export class LoginPage {
             ) {
               this.loadingService.hideLoading();
               this.toast.showError(
-                'Lo sentimos, pero su cuenta aún se encuentra Pendiente de aprobación.'
+                'Lo sentimos, pero su cuenta aún se encuentra Pendiente de aprobación.',
+                'middle',
+                5000
               );
               this.limpiarInputs();
             } else if (
@@ -220,7 +248,9 @@ export class LoginPage {
               this.limpiarInputs();
               this.loadingService.hideLoading();
               this.toast.showError(
-                'Lo sentimos, pero su cuenta fue rechazada.'
+                'Lo sentimos, pero su cuenta fue rechazada.',
+                'middle',
+                5000
               );
             } else {
               this.limpiarInputs();
