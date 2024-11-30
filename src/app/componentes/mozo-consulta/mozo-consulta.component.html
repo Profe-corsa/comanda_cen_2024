@@ -12,12 +12,11 @@
         *ngFor="let consulta of listadoConsultas"
       >
         <ion-label>
-          <h2>Mesa: {{ consulta.nroMesa }}</h2>
-          <ion-label> Cliente : {{ consulta?.nombreCliente }} </ion-label>
-          <ion-label>
-            Consulta:
-            {{ consulta.textoConsulta | slice : 0 : 10
-            }}{{ consulta.textoConsulta.length > 10 ? "..." : "" }}</ion-label
+
+          <h2>Mesa: {{ consulta.nroMesa }} </h2>
+          <ion-label> Cliente : {{ consulta?.nombreCliente |titlecase }} </ion-label>
+          <ion-label>Consulta: {{ consulta.textoConsulta | slice : 0 : 10
+            }}{{ consulta.textoConsulta.length > 10 ? "..." : "" }} </ion-label
           >
           <ion-label *ngIf="consulta.hora !== undefined"
             >Hora:
@@ -27,12 +26,10 @@
       </ion-item>
     </ion-list>
   </div>
+</div>
 
-  <div id="contenedor" *ngIf="responderFlag">
-    <h1>
-      Consulta del cliente: {{ usuarioConsulta.nombre }}
-      {{ usuarioConsulta.apellido }}
-    </h1>
+<div id="contenedor" *ngIf="responderFlag">
+  <h1>Consulta del cliente: {{usuarioConsulta.nombre}} {{usuarioConsulta.apellido}}</h1>
 
     <ion-item *ngIf="consultaSeleccionada !== undefined">
       <ion-textarea

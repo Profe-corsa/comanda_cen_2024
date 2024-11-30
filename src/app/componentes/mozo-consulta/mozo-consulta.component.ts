@@ -109,7 +109,6 @@ export class MozoConsultaComponent implements OnInit {
 
       try {
         await this.getUsuario(this.consultaSeleccionada.idCliente);
-
         // Cambiar el estado a 'leída' si la consulta no ha sido respondida
         if (this.consultaSeleccionada.estado === EstadoConsulta.enviada) {
           this.loadingService.showLoading();
@@ -128,6 +127,7 @@ export class MozoConsultaComponent implements OnInit {
       this.usuarioConsulta = {} as Cliente;
     }
   }
+
 
   async getUsuario(id: string) {
     try {
