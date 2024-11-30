@@ -45,20 +45,20 @@ Este proyecto se desarrolló en el marco de la materia _Práctica Profesional Su
 
 ### Semana 4
 
-| _Responsabilidad_       | _Cristian Corsa (α)_  | _Nicolás Miguenz (β)_                                                         | _Ezequiel Monson (γ)_                                  |
-| ----------------------- | --------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------ |
-| _Módulos asignados_     | Encuesta y resultados | Finalización del circuito de pedido (mozo)<br> Detalle de la mesa <br>Reserva | Finalización del circuito de pedido (Cliente)<br> Pago |
-| _Fecha de inicio_       | 23/11/2024            | 23/11/2024                                                                    | 23/11/2024                                             |
-| _Fecha de finalización_ | 29/11/2024            | 29/11/2024                                                                    | 29/11/2024                                             |
-| _Rama (Branch)_         | feature/alta-mesa     | nmiguenz                                                                      | ezemonson                                              |
+| _Responsabilidad_       | _Cristian Corsa (α)_  | _Nicolás Miguenz (β)_                                                                                                           | _Ezequiel Monson (γ)_                                                              |
+| ----------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| _Módulos asignados_     | Encuesta y resultados | Finalización del circuito de pedido (mozo)<br> Detalle de la mesa <br>Reserva<br> Login con Google <br>Correcciones en consulta | Finalización del circuito de pedido (Cliente)<br>Pago <br>Correcciones en consulta |
+| _Fecha de inicio_       | 23/11/2024            | 23/11/2024                                                                                                                      | 23/11/2024                                                                         |
+| _Fecha de finalización_ | 29/11/2024            | 29/11/2024                                                                                                                      | 29/11/2024                                                                         |
+| _Rama (Branch)_         | feature/alta-mesa     | nmiguenz                                                                                                                        | ezemonson                                                                          |
 
 ## 📱 ¿Cómo utilizar la Comanda CEN?
 
 ### Inicio de sesión
 
-Cualquier de los usuarios aceptados por el sistema (Dueño/Supervisor, Empleados, Clientes) pueden utilizar esta forma de ingreso, indistintamente, ya que al ingresar, el Sistema determinará de qué tipo de perfil se trata.
+Cualquier de los usuarios aceptados por el sistema (Dueño/Supervisor, Empleados, Clientes) pueden utilizar esta forma de ingreso, indistintamente, ya que al ingresar, el Sistema determinará de qué tipo de perfil se trata. Recientemente se añadió la opción de acceder con cuentas de Google para todos los usuarios que cuenten con registros en la base de datos cuyo dominio sea "gmail.com". Además, los usuarios cuyo perfil es empleado, podrán ingresar a la aplicación, tanto con el correo proporcionado por la empresa, como con el de gmail, si es que se lo determinaron al dueño o supervisor, al momento de realizarles el alta en el Sistema.
 
-![Login](Imagenes_comanda/1732806125511.jpg)
+![Login](Imagenes_comanda/1732968910893.jpg) ![LoginGoogle](Imagenes_comanda/1732968910880.jpg)
 
 ### Registros
 
@@ -66,7 +66,7 @@ En la apliación existen varios tipos de registros, para un cliente, para emplea
 
 #### Cliente
 
-![Cliente](Imagenes_comanda/1732806125498.jpg)
+![Cliente](Imagenes_comanda/1732968910870.jpg)
 
 #### Cliente anónimo
 
@@ -74,7 +74,7 @@ En la apliación existen varios tipos de registros, para un cliente, para emplea
 
 #### Empleados / Dueño-Supervisor
 
-![Empleado](Imagenes_comanda/1732806125475.jpg)
+![Empleado](Imagenes_comanda/1732968910859.jpg)
 
 ### Home del cliente
 
@@ -106,7 +106,17 @@ Una vez con la mesa en su poder, el cliente podrá realizar pedidos ingresando e
 
 Cuando el cliente tenga alguna inquietud, podrá realizarle una consulta a los mozos, quienes serán notificados mediante un mensaje de tipo push.
 
-![consultas](Imagenes_comanda/1732806125431.jpg)
+#### Nueva consulta
+
+![consultas](Imagenes_comanda/1732968910838.jpg)
+
+#### Listado de consultas
+
+![consultasLista](Imagenes_comanda/1732968910823.jpg)
+
+#### Respuesta a la consulta del lado del cliente
+
+![consultasRespuesta](Imagenes_comanda/1732968910847.jpg)
 
 ### 📝 Encuesta
 
@@ -119,7 +129,7 @@ Con el pedido en su poder, el cliente podrá escanear el código QR de su mesa y
 El cliente, cuando no es anónimo, podrá realizar reservas para un tiempo futuro, pero hay que tener en cuenta de Comanda CEN solo abre de martes a domingo de 11:00-15:00 y de 19:00 a 24:00, por lo que solo se podrán realizar reservas dentro de este tiempo. Además si estás dentro del horario de tu reserva y te presentas en el restaurante, automaticamente se te pondrá en la lista para obtener la mesa que reservaste, pero si llegas pasado el tiempo, se te cancelará utomaticamente. Esperamos que nos entiendas!.
 
 ![reserva](Imagenes_comanda/1732806125456.jpg)
-**Aclaración: "Invalid time" es el dato por defecto del componente de ionic y marca que no se puede seleccionar una fecha sin completar la hora.
+\*\*Aclaración: "Invalid time" es el dato por defecto del componente de ionic y marca que no se puede seleccionar una fecha sin completar la hora.
 
 ## 📊 QRs
 
