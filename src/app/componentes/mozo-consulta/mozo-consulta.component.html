@@ -10,10 +10,10 @@
         *ngFor="let consulta of listadoConsultas"
       >
         <ion-label>
-          <h2>Mesa: {{ consulta.nroMesa }}</h2>
-          <ion-label
-            >Consulta: {{ consulta.textoConsulta | slice : 0 : 10
-            }}{{ consulta.textoConsulta.length > 10 ? "..." : "" }}</ion-label
+          <h2>Mesa: {{ consulta.nroMesa }} </h2>
+          <ion-label> Cliente : {{ consulta?.nombreCliente |titlecase }} </ion-label>
+          <ion-label>Consulta: {{ consulta.textoConsulta | slice : 0 : 10
+            }}{{ consulta.textoConsulta.length > 10 ? "..." : "" }} </ion-label
           >
           <ion-label *ngIf="consulta.hora !== undefined"
             >Hora:
@@ -22,12 +22,6 @@
         </ion-label>
       </ion-item>
     </ion-list>
-  </div>
-
-  <div id="boton-pedidos">
-    <ion-button [routerLink]="['/mozo-home']">
-      Ver Pedidos Pendientes
-    </ion-button>
   </div>
 </div>
 
