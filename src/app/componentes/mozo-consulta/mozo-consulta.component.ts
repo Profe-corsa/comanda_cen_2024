@@ -126,7 +126,26 @@ export class MozoConsultaComponent implements OnInit {
       this.responderFlag = false;
       this.consultaSeleccionada = {} as Consulta;
       this.usuarioConsulta = {} as Cliente;
+      console.log('entro aca error', this.responderFlag);
     }
+  }
+
+  mostrarDetalle(consulta: Consulta) {
+    console.log('Consulta seleccionada:', consulta);
+    this.responderFlag = true;
+    this.consultaSeleccionada = consulta;
+
+    // Obtener información del cliente
+    this.getUsuario(consulta.idCliente).catch((error) => {
+      console.error('Error al obtener el usuario:', error);
+    });
+  }
+
+  volver() {
+    this.responderFlag = false;
+    this.consultaSeleccionada = {} as Consulta;
+    this.usuarioConsulta = {} as Cliente;
+    this.mensajeRespuesta = '';
   }
 
   async getUsuario(id: string) {

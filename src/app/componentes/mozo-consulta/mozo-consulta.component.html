@@ -13,7 +13,9 @@
       >
         <ion-label>
           <h2>Mesa: {{ consulta.nroMesa }}</h2>
-          <ion-label> Cliente : {{ consulta?.nombreCliente }} </ion-label>
+          <ion-label>
+            Cliente : {{ consulta?.nombreCliente | titlecase }}
+          </ion-label>
           <ion-label>
             Consulta:
             {{ consulta.textoConsulta | slice : 0 : 10
