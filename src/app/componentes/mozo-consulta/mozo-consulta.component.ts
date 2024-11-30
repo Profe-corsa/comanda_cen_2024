@@ -52,7 +52,7 @@ export class MozoConsultaComponent implements OnInit {
   responderFlag: boolean = false;
   consultaSeleccionada = {} as Consulta;
   usuarioConsulta = {} as Cliente;
-  mensajeRespuesta: string = ''; 
+  mensajeRespuesta: string = '';
 
   constructor(
     private consultaService: MensajesService,
@@ -76,20 +76,51 @@ export class MozoConsultaComponent implements OnInit {
         // Concatenar las consultas leídas al listado existente
         this.listadoConsultas = this.listadoConsultas.concat(consultas);
       });
+
+    console.log(this.listadoConsultas);
   }
+
+  // async responder(consulta?: Consulta) {
+  //   console.log(consulta);
+  //   if (!this.responderFlag && consulta != undefined) {
+  //     this.responderFlag = true;
+  //     this.consultaSeleccionada = consulta;
+  //     await this.getUsuario(this.consultaSeleccionada.idCliente);
+
+  //     // Cambiar el estado a 'leída' si la consulta no ha sido respondida
+  //     if (this.consultaSeleccionada.estado === EstadoConsulta.enviada) {
+  //       this.loadingService.showLoading();
+  //       this.consultaSeleccionada.estado = EstadoConsulta.leida;
+  //       await this.actualizarConsulta();
+  //     }
+  //   } else {
+  //     this.responderFlag = false;
+  //     this.consultaSeleccionada = {} as Consulta;
+  //     this.usuarioConsulta = {} as Cliente;
+  //   }
+  // }
 
   async responder(consulta?: Consulta) {
     console.log(consulta);
     if (!this.responderFlag && consulta != undefined) {
       this.responderFlag = true;
       this.consultaSeleccionada = consulta;
-      await this.getUsuario(this.consultaSeleccionada.idCliente);
+      console.log(consulta, this.responderFlag);
 
-      // Cambiar el estado a 'leída' si la consulta no ha sido respondida
-      if (this.consultaSeleccionada.estado === EstadoConsulta.enviada) {
-        this.loadingService.showLoading();
-        this.consultaSeleccionada.estado = EstadoConsulta.leida;
-        await this.actualizarConsulta();
+      try {
+        await this.getUsuario(this.consultaSeleccionada.idCliente);
+
+        // Cambiar el estado a 'leída' si la consulta no ha sido respondida
+        if (this.consultaSeleccionada.estado === EstadoConsulta.enviada) {
+          this.loadingService.showLoading();
+          this.consultaSeleccionada.estado = EstadoConsulta.leida;
+          await this.actualizarConsulta();
+        }
+      } catch (error) {
+        console.error('Error al procesar la consulta:', error);
+        // Opcional: Mostrar un mensaje de error al usuario
+      } finally {
+        this.loadingService.hideLoading(); // Oculta el loading en todos los casos
       }
     } else {
       this.responderFlag = false;
@@ -110,8 +141,11 @@ export class MozoConsultaComponent implements OnInit {
   async devolverConsulta() {
     try {
       this.loadingService.showLoading();
-      this.consultaSeleccionada.respuesta= {'mensaje' : this.mensajeRespuesta,
-         'mozo': `${this.usuario.apellido} ${this.usuario.nombre}`, 'hora': new Date()};
+      this.consultaSeleccionada.respuesta = {
+        mensaje: this.mensajeRespuesta,
+        mozo: `${this.usuario.apellido} ${this.usuario.nombre}`,
+        hora: new Date(),
+      };
       this.consultaSeleccionada.estado = EstadoConsulta.respondida;
       console.log('Esta es la respuesta del mozo', this.consultaSeleccionada);
       await this.actualizarConsulta();
@@ -122,7 +156,6 @@ export class MozoConsultaComponent implements OnInit {
 
   async actualizarConsulta() {
     try {
-
       // Verificar que se haya recuperado el usuario correctamente.
       if (!this.usuarioConsulta || !this.usuarioConsulta.consulta) {
         this.loadingService.hideLoading();
@@ -134,7 +167,7 @@ export class MozoConsultaComponent implements OnInit {
         console.log(`${consulta.id} <br> ${this.consultaSeleccionada.id}`);
         return consulta.id === this.consultaSeleccionada.id; // Retorna el resultado.
       });
-      console.log(indice)
+      console.log(indice);
 
       if (indice === -1) {
         this.loadingService.hideLoading();
