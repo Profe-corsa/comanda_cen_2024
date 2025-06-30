@@ -128,7 +128,6 @@ export class MozoConsultaComponent implements OnInit {
     }
   }
 
-
   async getUsuario(id: string) {
     try {
       this.usuarioConsulta = await firstValueFrom(this.userSrv.getUser(id));

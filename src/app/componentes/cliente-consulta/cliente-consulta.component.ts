@@ -11,6 +11,7 @@ import {
   IonLabel,
   IonItem,
   IonTextarea,
+  IonList,
 } from '@ionic/angular/standalone';
 import { Consulta } from 'src/app/clases/consulta';
 import { MensajesService } from 'src/app/services/mensaje.service';
@@ -32,6 +33,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./cliente-consulta.component.scss'],
   standalone: true,
   imports: [
+    IonList,
     IonTextarea,
     IonLabel,
     IonContent,
