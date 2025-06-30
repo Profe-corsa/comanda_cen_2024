@@ -1,0 +1,43 @@
+#contenedor {
+  display: flex;
+  flex-direction: column;
+  padding: 2vh 2vw 2vh 2vw;
+}
+
+.mesa-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+ion-card {
+  width: 350px;
+  height: 185px;
+  text-align: center;
+  padding: 10px;
+}
+
+.mesa-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 10px;
+}
+
+.mesa-icon img {
+  width: 100px;
+  height: auto;
+}
+
+.disponible {
+  filter: drop-shadow(0 0 5px #6ef937);
+}
+
+.ocupado {
+  filter: drop-shadow(0 0 5px #ff4848);
+}
+
+.mesa-label {
+  font-size: 18px;
+  font-weight: bold;
+}

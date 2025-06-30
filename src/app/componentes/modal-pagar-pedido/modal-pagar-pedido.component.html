@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Detalles del Pedido</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrarModal()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let item of pedido?.productos">
+      <ion-label>
+        {{ item.nombre }} - {{ item.cantidad }}
+      </ion-label>
+      <ion-note slot="end">{{ item.precio | currency }}</ion-note>
+    </ion-item>
+  </ion-list>
+  <div class="ion-padding">
+    <ion-item>
+      <ion-label position="floating">Monto a pagar</ion-label>
+      <ion-input 
+        type="number" 
+        [(ngModel)]="montoIngresado" 
+        (input)="verificarMonto()">
+      </ion-input>
+    </ion-item>
+  </div>
+  <div class="ion-text-center">
+    <h3 *ngIf="propina > 0">Subtotal: {{ pedido?.precioTotal | currency }}</h3>
+    <h3 *ngIf="propina > 0">Propina: {{ propina }}%</h3>
+    <h1>Total: {{ precioTotal | currency }}</h1>
+  </div>
+
+  <div class="ion-padding">
+    <ion-button expand="block" (click)="leerQR()">Propina</ion-button>
+    <ion-button expand="block" [disabled]="!puedePagar" (click)="pagarPedido()">
+      Pagar
+    </ion-button>
+  </div>
+</ion-content>

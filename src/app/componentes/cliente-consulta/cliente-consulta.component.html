@@ -1,0 +1,48 @@
+<div *ngIf="loadingService.loadingStatus">
+  <app-loading></app-loading>
+</div>
+
+<div id="contenedor">
+  <h1>Su consulta:</h1>
+  <ion-item *ngIf="!consultaCreada">
+    <ion-label class="ionLabel" position="floating"
+      >Escriba su consulta:</ion-label
+    >
+    <ion-textarea [(ngModel)]="textoCliente"></ion-textarea>
+  </ion-item>
+  <ion-item *ngIf="consultaCreada == true && consulta != undefined">
+    <ion-textarea disabled readonly>{{ consulta.textoConsulta }}</ion-textarea>
+  </ion-item>
+  <span *ngIf="consultaCreada == true && consulta != undefined">
+    {{ consulta.hora.toDate() | date : "dd/MM/yyyy HH:mm" }}</span
+  >
+  <ion-label
+    class="ion-text-right"
+    *ngIf="consultaCreada == true && consulta != undefined"
+    >Estado de la consulta:
+    <span>{{ consulta.estado | titlecase }}</span></ion-label
+  >
+
+  <ion-button color="success" *ngIf="!consultaCreada" (click)="crearConsulta()"
+    >Enviar</ion-button
+  >
+  <ion-button color="danger" *ngIf="consultaCreada" (click)="nuevaConsulta()"
+    >Nueva Consulta</ion-button
+  >
+
+  <div *ngIf="consultaCreada && consulta.estado == 'respondida'">
+    <h1>Respuesta:</h1>
+    <p>Mozo: {{ consulta.respuesta.mozo }}</p>
+    <ion-item *ngIf="consultaCreada && consulta.estado == 'respondida'">
+      <ion-label *ngIf="!consulta.respuesta.mensaje" position="stacked"
+        >Respuesta</ion-label
+      >
+      <ion-textarea disabled readonly>{{
+        consulta.respuesta.mensaje
+      }}</ion-textarea>
+    </ion-item>
+    <span>{{
+      consulta.respuesta.hora.toDate() | date : "dd/MM/yyyy HH:mm"
+    }}</span>
+  </div>
+</div>

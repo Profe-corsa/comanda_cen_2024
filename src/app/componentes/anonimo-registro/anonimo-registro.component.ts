@@ -25,6 +25,7 @@ import {
   IonIcon,
 } from '@ionic/angular/standalone';
 import { CamaraService } from '../../services/camara.service';
+import { AppComponent } from 'src/app/app.component';
 
 @Component({
   selector: 'app-anonimo-registro',
@@ -43,6 +44,7 @@ import { CamaraService } from '../../services/camara.service';
     IonText,
     IonInput,
     ReactiveFormsModule,
+    AppComponent,
   ],
 })
 export class AnonimoRegistroComponent {
@@ -55,7 +57,8 @@ export class AnonimoRegistroComponent {
     private router: Router,
     private fb: FormBuilder,
     private toast: ToastService,
-    private camaraService: CamaraService
+    private camaraService: CamaraService,
+    private appComponent: AppComponent
   ) {
     this.usuario = new Usuario();
 
@@ -95,7 +98,9 @@ export class AnonimoRegistroComponent {
           await this.camaraService.deleteImage('clientes', this.imageName);
         }
         this.toast.showError(
-          'Error al crear un usuario anónimo: ' + error.message
+          'Error al crear un usuario anónimo: ' + error.message,
+          'middle',
+          5000
         );
       }
     } else if (this.registerForm.valid && this.usuario.apellido != '') {
@@ -106,7 +111,9 @@ export class AnonimoRegistroComponent {
         this.router.navigate([`/home/${this.usuario.id}`]);
       } catch (error: any) {
         this.toast.showError(
-          'Error al crear un usuario anónimo: ' + error.message
+          'Error al crear un usuario anónimo: ' + error.message,
+          'middle',
+          5000
         );
       }
     } else {
@@ -114,7 +121,9 @@ export class AnonimoRegistroComponent {
         await this.camaraService.deleteImage('clientes', this.imageName);
       }
       this.toast.showError(
-        'Debe completar al menos el nombre y tomar una foto de perfil, o el nombre y el apellido.'
+        'Debe completar al menos el nombre y tomar una foto de perfil, o el nombre y el apellido.',
+        'middle',
+        5000
       );
     }
   }
@@ -154,6 +163,7 @@ export class AnonimoRegistroComponent {
     if (this.imageName) {
       await this.camaraService.deleteImage('clientes', this.imageName);
     }
+    this.appComponent.playCloseSound();
     this.clear();
     this.router.navigate(['/login']);
   }

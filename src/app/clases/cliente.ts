@@ -1,11 +1,12 @@
 import { Usuario } from './usuario';
 import { Mesa } from './mesa';
 import { Consulta } from './consulta';
-import { Reserva } from './reserva';
+import { Pedido } from './pedido';
+import { Reserva } from './Reserva';
 
 export class Cliente extends Usuario {
-  mesa?: Mesa;
-  // pedido?:Pedido;
   consulta?: Consulta[];
+  mesa?: Mesa;
+  pedido?: Pedido[];
   reserva?: Reserva;
 }

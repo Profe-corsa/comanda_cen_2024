@@ -17,6 +17,7 @@ import { Usuario } from '../clases/usuario';
 import { Observable } from 'rxjs/internal/Observable';
 import { from } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -75,6 +76,56 @@ export class UsuarioService {
     const userDocRef = doc(this.usuariosCollection, userId);
     // Usamos `docData` para obtener los datos del documento como un Observable
     return docData(userDocRef, { idField: 'id' }) as Observable<Usuario>;
+  }
+
+  async getUserPromise(idUsuario: string): Promise<any | undefined> {
+    try {
+      // Crea la referencia al documento del usuario
+      const userDocRef = doc(this.firestore, `usuarios/${idUsuario}`);
+      // Usa `docData` para obtener los datos del documento
+      const userData = await firstValueFrom(
+        docData(userDocRef, { idField: 'id' })
+      );
+      return userData as Usuario;
+    } catch (error) {
+      console.error('Error al obtener el usuario con promesa:', error);
+      throw error;
+    }
+  }
+  async getIfExists(
+    collectionName: string,
+    clienteId: string,
+    pedidoId: string
+  ): Promise<any> {
+    try {
+      const collectionRef = collection(this.firestore, collectionName);
+      const usuariosQuery = query(
+        collectionRef,
+        where('clienteId', '==', clienteId),
+        where('id', '==', pedidoId)
+      );
+      const querySnapshot = await getDocs(usuariosQuery);
+
+      if (!querySnapshot.empty) {
+        const record = querySnapshot.docs[0].data();
+        console.log(
+          `Se encontró un documento en ${collectionName} con clienteId = ${clienteId}:`,
+          record
+        );
+        return record;
+      } else {
+        console.log(
+          `No se encontró ningún documento en ${collectionName} con clienteId = ${clienteId}`
+        );
+        return null; // No se encontró ningún documento
+      }
+    } catch (error) {
+      console.error(
+        `Error al buscar documentos en ${collectionName} con clienteId = ${clienteId}:`,
+        error
+      );
+      return null; // En caso de error, retorna null
+    }
   }
 
   obtenerUsuariosPorPerfil(perfil: string): Observable<Usuario[]> {
@@ -139,6 +190,23 @@ export class UsuarioService {
     } catch (error) {
       console.error(
         `Error al actualizar el campo ${fieldName} del usuario ${userId}:`,
+        error
+      );
+      throw error;
+    }
+  }
+
+  // Actualiza múltiples campos de un usuario en Firestore
+  async updateUserFields(userId: string, updateData: any): Promise<void> {
+    try {
+      const userDocRef = doc(this.usuariosCollection, userId);
+
+      // Actualizar múltiples campos al mismo tiempo
+      await updateDoc(userDocRef, updateData);
+      console.log(`Campos del usuario ${userId} actualizados correctamente.`);
+    } catch (error) {
+      console.error(
+        `Error al actualizar los campos del usuario ${userId}:`,
         error
       );
       throw error;

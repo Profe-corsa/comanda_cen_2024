@@ -1,4 +1,4 @@
-<ion-grid>
+<ion-grid *ngIf="opcionSeleccionada === ''">
   <ion-col col-12 *ngIf="usuario?.perfil == 'metre'">
     <ion-card
       [routerLink]="['/listados', 'espera']"
@@ -8,4 +8,60 @@
       <h2 class="long-name">Clientes en Lista de Espera</h2>
     </ion-card>
   </ion-col>
+  <ion-col
+    col-12
+    *ngIf="usuario?.perfil == 'cocinero' || usuario?.perfil == 'bartender'"
+  >
+    <!-- (click)="seleccionarOpcion('altaProducto')" -->
+    <ion-card
+      [routerLink]="['/registro', 'altaProducto']"
+      class="ion-text-center ion-padding"
+    >
+      <ion-icon name="fast-food-outline"></ion-icon>
+      <h2 class="long-name">Dar producto de Alta</h2>
+    </ion-card>
+  </ion-col>
+
+  <!-- MOZO -->
+  <ion-row>
+    <ion-col col-12 *ngIf="usuario?.perfil == 'mozo'">
+      <ion-card
+        [routerLink]="['/listados', 'pedidos']"
+        class="ion-text-center ion-padding"
+      >
+        <ion-icon name="clipboard"></ion-icon>
+        <h2 class="long-name">Listado de pedidos</h2>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col col-12 *ngIf="usuario?.perfil == 'mozo'">
+      <ion-card
+        [routerLink]="['/consulta', usuario.perfil, usuario?.id]"
+        class="ion-text-center ion-padding"
+      >
+        <ion-icon name="chatbubbles-outline"></ion-icon>
+        <h2 class="long-name">Consultas de clientes</h2>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+
+  <!-- COCINERO / BARTENDER -->
+  <ion-row>
+    <ion-col
+      col-12
+      *ngIf="usuario?.perfil == 'bartender' || usuario?.perfil == 'cocinero'"
+    >
+      <ion-card
+        [routerLink]="['/listados', 'preparacion']"
+        class="ion-text-center ion-padding"
+      >
+        <ion-icon name="clipboard"></ion-icon>
+        <h2 class="long-name">Pedidos pendientes</h2>
+      </ion-card>
+    </ion-col>
+  </ion-row>
 </ion-grid>
+<app-alta-producto
+  *ngIf="opcionSeleccionada === 'altaProducto'"
+></app-alta-producto>

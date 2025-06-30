@@ -1,5 +1,5 @@
 section {
-  margin-top: 2vh;
+  // margin-top: 2vh;
 }
 
 ion-icon {
@@ -20,4 +20,40 @@ h2 {
 
 .long-name {
   font-size: 1.2em;
+}
+
+.title {
+  font-size: 1em !important;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #e8af37 !important;
+  white-space: nowrap;
+  margin-right: 2%;
+}
+.subtitle {
+  padding: 0 0.5em;
+  font-size: 1em !important;
+  font-weight: 600 !important;
+  text-transform: lowercase;
+  color: #e8af37;
+  white-space: nowrap;
+}
+
+.price {
+  font-size: 2em !important;
+  font-weight: 900 !important;
+  color: #00b14a;
+  margin: 0 0 0 2%;
+}
+.home-footer {
+  background-color: #000;
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  bottom: 0;
+  left: 0;
+  width: 100%; /* Asegura que ocupe todo el ancho de la ventana */
+  z-index: 1000; /* Para asegurarte de que quede por encima de otros elementos */
+  box-shadow: 0px -5px 10px rgb(232, 175, 55, 0.5);
 }

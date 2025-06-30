@@ -4,14 +4,20 @@ import {
   IonCard,
   IonIcon,
   IonRouterLink,
-  IonRow,
   IonCol,
   IonGrid,
+  IonRow,
 } from '@ionic/angular/standalone';
 import { RouterLink } from '@angular/router';
 import { Usuario } from 'src/app/clases/usuario';
 import { addIcons } from 'ionicons';
-import { man } from 'ionicons/icons';
+import {
+  man,
+  chatbubblesOutline,
+  clipboard,
+  fastFoodOutline,
+} from 'ionicons/icons';
+import { AltaProductoComponent } from '../alta-producto/alta-producto.component';
 
 @Component({
   selector: 'app-empleados-home',
@@ -19,22 +25,28 @@ import { man } from 'ionicons/icons';
   styleUrls: ['./empleados-home.component.scss'],
   standalone: true,
   imports: [
+    IonRow,
     IonGrid,
     CommonModule,
     IonCard,
     IonIcon,
     IonRouterLink,
-    IonRow,
     IonCol,
     RouterLink,
+    AltaProductoComponent,
   ],
 })
 export class EmpleadosHomeComponent implements OnInit {
   @Input() usuario: Usuario | any;
+  opcionSeleccionada: string = '';
 
   constructor() {
-    addIcons({ man });
+    addIcons({ man, fastFoodOutline, clipboard, chatbubblesOutline });
   }
 
   ngOnInit() {}
+
+  seleccionarOpcion(opcion: string) {
+    this.opcionSeleccionada = opcion;
+  }
 }

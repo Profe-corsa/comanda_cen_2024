@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ToastController } from '@ionic/angular';
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
 @Injectable({
   providedIn: 'root',
@@ -7,12 +8,41 @@ import { ToastController } from '@ionic/angular';
 export class ToastService {
   constructor(private toastController: ToastController) {}
 
-  async showError(message: string, position?: 'top' | 'bottom' | 'middle') {
+  async showError(
+    message: string,
+    position?: 'top' | 'bottom' | 'middle',
+    duration?: number
+  ) {
     const toast = await this.toastController.create({
       message: message,
-      duration: 3000, // Duración del toast
+      duration: duration ?? 3000, // Duración del toast
       position: position ?? 'top', // Posición del toast
       color: 'danger', // Color del toast
+      cssClass: 'custom-toast',
+    });
+    const image = this.createImage(
+      'assets/icon/logo_Uno.png',
+      'Profile logo',
+      '50',
+      '50'
+    );
+    toast.shadowRoot?.querySelector('.toast-container')?.appendChild(image);
+
+    Haptics.vibrate({ duration: 500 });
+
+    await toast.present();
+  }
+
+  async showExito(
+    message: string,
+    position?: 'top' | 'bottom' | 'middle',
+    duration?: number
+  ) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: duration ?? 3000, // Duración del toast
+      position: position ?? 'top', // Posición del toast
+      color: 'success', // Color del toast
       cssClass: 'custom-toast',
     });
     const image = this.createImage(
@@ -26,10 +56,16 @@ export class ToastService {
     await toast.present();
   }
 
-  async showExito(message: string, position?: 'top' | 'bottom' | 'middle') {
+  async showNotificacion(
+    message: any,
+    position?: 'top' | 'bottom' | 'middle',
+    duration?: number,
+    title?: string
+  ) {
     const toast = await this.toastController.create({
+      header: title,
       message: message,
-      duration: 3000, // Duración del toast
+      duration: duration ?? 3000, // Duración del toast
       position: position ?? 'top', // Posición del toast
       color: 'success', // Color del toast
       cssClass: 'custom-toast',

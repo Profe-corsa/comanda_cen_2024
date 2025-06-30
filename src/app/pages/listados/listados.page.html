@@ -1,9 +1,9 @@
 <ion-header>
   <ion-toolbar color="titulo">
-    <!-- <ion-button slot="start" fill="clear" (click)="inicio()"> -->
-    <!-- <ion-icon name="arrow-back"></ion-icon> -->
-    <!-- </ion-button> -->
-    <ion-title>Lista de {{object}}</ion-title>
+    <ion-button slot="start" fill="clear" (click)="inicio()">
+      <ion-icon name="arrow-back-circle-outline"></ion-icon>
+    </ion-button>
+    <ion-title>Lista de {{ txtHeader }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -12,4 +12,13 @@
     *ngIf="object == 'clientesPendientes'"
   ></app-supervisor-lista-clientes-pendientes>
   <app-metre-lista-espera *ngIf="object == 'espera'"></app-metre-lista-espera>
+  <app-mozo-lista-pedidos *ngIf="object == 'pedidos'"></app-mozo-lista-pedidos>
+  <app-cocinero-bartender-pedido
+    *ngIf="object == 'preparacion'"
+  ></app-cocinero-bartender-pedido>
+  <app-mesas-lista *ngIf="object == 'mesas'"></app-mesas-lista>
+  <app-duenio-supervisor-lista-espera
+    *ngIf="object == 'reservas'"
+  ></app-duenio-supervisor-lista-espera>
+  <app-listado-encuestas *ngIf="object == 'resultados'"></app-listado-encuestas>
 </ion-content>

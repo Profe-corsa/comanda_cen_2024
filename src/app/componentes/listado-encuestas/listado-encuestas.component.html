@@ -1,0 +1,21 @@
+<div id="contenedor-global">
+  <div id="contenedor-graficos">
+  <div *ngFor="let grafico of graficos" class="contenedor-grafico">
+    <canvas
+      baseChart
+      [data]="grafico.data"
+      [options]="grafico.opciones"
+      [type]="grafico.tipo">
+    </canvas>
+  </div>
+  </div>
+  <ion-card *ngFor="let comentario of comentarios" class="card-comentario">
+    <ion-card-header>
+    <ion-card-title>{{ comentario }}</ion-card-title>
+ 
+  </ion-card-header>
+ 
+    
+  </ion-card>
+
+</div>

@@ -1,0 +1,59 @@
+<ion-header>
+  <ion-toolbar color="titulo">
+    <ion-button slot="start" fill="clear" (click)="inicio()">
+      <ion-icon name="arrow-back-circle-outline"></ion-icon>
+    </ion-button>
+    <ion-title>Reservas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="container">
+    <ion-card class="login-card">
+      <div class="heading">
+        <p class="encabezado">
+          Horarios: martes a domingo de 11:00-15:00 y 19:00 - 24:00.
+        </p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="confirmarReserva()">
+        <div class="form-group">
+          <div class="input-wrapper">
+            <ion-datetime
+              class="styleDt"
+              formControlName="fecha"
+              [minuteValues]="[0, 15, 30, 45]"
+              [hourValues]="horasDisponibles"
+              (ionChange)="onFechaSeleccionadaChange($event)"
+              [isDateEnabled]="isDateEnabled"
+              hourCycle="h24"
+              locale="es-ES"
+            >
+              <span slot="time-label">Hora</span></ion-datetime
+            >
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="input-wrapper">
+            <!-- <ion-icon name="mail-outline"></ion-icon> -->
+            <ion-input
+              type="number"
+              placeholder="Cantidad de comensales"
+              class="input"
+              formControlName="cantidadComensales"
+              required
+            >
+            </ion-input>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <ion-button expand="block" type="submit" [disabled]="!form.valid">
+            Confirmar Reserva
+          </ion-button>
+        </div>
+      </form>
+    </ion-card>
+  </div>
+</ion-content>

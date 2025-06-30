@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-toolbar color="titulo">
+    <ion-button slot="start" fill="clear" (click)="inicio()">
+      <ion-icon name="arrow-back-circle-outline"></ion-icon>
+    </ion-button>
+    <ion-title>Consulta al Mozo</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <app-cliente-consulta
+    [usuario]="usuarioActual"
+    *ngIf="usuarioActual && (tipoUsuario === 'cliente' || tipoUsuario === 'cliente anonimo')"
+  ></app-cliente-consulta>
+  <app-mozo-consulta
+    [usuario]="usuarioActual"
+    *ngIf="tipoUsuario == 'mozo' && usuarioActual != undefined"
+  ></app-mozo-consulta>
+</ion-content>

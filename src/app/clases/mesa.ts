@@ -1,5 +1,5 @@
-import { Reserva, EstadoReserva } from './reserva';
 import { Estados } from './enumerados/Estados';
+import { Reserva } from './Reserva';
 
 export class Mesa {
   id: string = '';
@@ -8,8 +8,8 @@ export class Mesa {
   tipo: string = '';
   foto: string = '';
   estado: string = '';
-  reservas: Reserva[];
-
+  idClienteAsignado?: string = '';
+  reservas: Reserva[] = [];
   constructor() {
     this.reservas = [];
   }

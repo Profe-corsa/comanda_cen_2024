@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-button
+      #volverButton
+      slot="start"
+      fill="clear"
+      (click)="volver()"
+      [hidden]="!botonVisible"
+    >
+      <ion-icon name="arrow-back-circle-outline"></ion-icon>
+    </ion-button>
+    <ion-title>Mozo - Gestión de Pedidos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card *ngIf="pedidosPendientes.length > 0; else noPedidos">
+    <ion-card-header>
+      <ion-card-title>Pedidos Pendientes</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let pedido of pedidosPendientes">
+          <ion-label>
+            <h3>Pedido {{ pedido.id }}</h3>
+            <p>Cliente: {{ pedido.clienteId }}</p>
+            <p>Estado: {{ pedido.estado }}</p>
+            <p>Mesa: {{ obtenerMesaParaPedido(pedido.clienteId) | async }}</p>
+            <p>Hora: {{ pedido.tiempoEstimado | date : "short" }}</p>
+          </ion-label>
+          <ion-button color="success" (click)="confirmarPedido(pedido)">
+            Confirmar
+          </ion-button>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ng-template #noPedidos>
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>No hay pedidos pendientes</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p>No se encontraron pedidos pendientes de confirmación.</p>
+      </ion-card-content>
+    </ion-card>
+  </ng-template>
+</ion-content>

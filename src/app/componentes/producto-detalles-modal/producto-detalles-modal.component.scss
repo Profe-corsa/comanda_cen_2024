@@ -1,0 +1,107 @@
+.contenedor-carrusel {
+    position: relative;
+    width: 100%;
+    height: 30%; /* You can adjust the height of the Swiper container as needed */
+  }
+  
+  swiper-container {
+    width: 100%;
+    height: 100%; /* Adjust this based on your desired size for the carousel */
+  }
+  
+  .indicators {
+    
+    position: absolute;
+    bottom: 10px; /* Adjust this to change the distance from the bottom */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    z-index: 10; /* Ensure the indicators appear above the swiper container */
+  }
+  
+  .indicators span {
+    font-size: 20px;
+    color: rgba(0, 0, 0, 0.5); /* Default color for the indicator */
+    cursor: pointer;
+  }
+  
+  .indicators .active {
+    color: #e8af37; /* Active indicator color */
+  }
+  
+  
+swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+  
+swiper-slide img {
+    width: 100%;
+    height: 20em;
+    object-fit: cover;
+    border-radius: 1em;
+}
+.contenedor-detalles{
+    padding: 2%;
+    background-color: #000;
+    margin: 4%;
+    color: #d96d2d;
+    border-radius: 1em;
+    display: flex
+;
+    flex-direction: column;
+    justify-content: space-around;
+}
+.titulo{
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 2em;
+}
+.descripcion{
+    font-weight: 400;
+    font-size: 1.2em;
+}
+.precio{  
+    font-weight: 600;
+    font-size: 1.2em;
+}
+.tiempo{
+    font-size: 1.2em;
+}
+ion-content {
+    --background: url("/assets/background.jpg") no-repeat center center / cover;
+    display: flex;
+    flex-direction: column;
+  }
+.contenedor-btn-close{
+    display:flex;
+    justify-content: end;
+    align-items: center;
+}
+.btn-close {
+    color: #d96d2d;
+    font-weight: 800;
+    background: transparent;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    transition: background 0.3s, border 0.3s;
+}
+
+.btn-close:active {
+    color: white;
+    background: rgba(255, 0, 0, 0.5); /* Fondo rojo semi-transparente */
+    border-radius: 8px; /* Mantener los bordes redondeados */
+}
+.contenedor-botones{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-aniadir{
+    --border-color: #d96d2d !important;
+    --background:  linear-gradient(to right, #d96d2d, #f4a40a) !important;
+}

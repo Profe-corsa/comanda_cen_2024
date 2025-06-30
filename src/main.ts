@@ -21,13 +21,18 @@ import { AppComponent } from './app/app.component';
 import { IonicModule } from '@ionic/angular';
 import { getDatabase, provideDatabase } from '@angular/fire/database';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
+import { LoadingComponent } from './app/componentes/loading/loading.component';
+import { provideHttpClient } from '@angular/common/http';
+
 // Call the element loader before the bootstrapModule/bootstrapApplication call
 defineCustomElements(window);
 
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    { provide: LoadingComponent, useClass: LoadingComponent },
     provideIonicAngular(),
+    provideHttpClient(),
     importProvidersFrom(IonicModule.forRoot({})),
     provideRouter(routes, withPreloading(PreloadAllModules)),
     provideFirebaseApp(() =>

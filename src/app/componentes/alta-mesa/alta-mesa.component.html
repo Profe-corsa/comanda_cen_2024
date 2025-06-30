@@ -1,62 +1,99 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Alta de Mesa</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
   <div class="container">
     <ion-card class="login-card">
-      <form (submit)="onSubmit()" [formGroup]="mesaForm">
-        <ion-item>
-          <ion-label position="floating">Número de Mesa</ion-label>
-          <ion-input formControlName="numero" type="number"></ion-input>
-        </ion-item>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="12">
+            <div class="heading">
+              <h1>Registrar una mesa</h1>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
 
-        <ion-item>
-          <ion-label position="floating">Capacidad</ion-label>
-          <ion-input formControlName="nroComensales" type="number"></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-label>Tipo</ion-label>
-          <ion-select formControlName="tipo">
-            <ion-select-option value="VIP">VIP</ion-select-option>
-            <ion-select-option value="Discapacitados"
-              >Para discapacitados</ion-select-option
-            >
-            <ion-select-option value="Estándar">Estándar</ion-select-option>
-          </ion-select>
-        </ion-item>
-
-        <ion-item>
-          <div class="action-buttons">
-            <ion-button expand="block" (click)="tomarFoto()"
-              >Tomar Foto</ion-button
-            >
+      <form [formGroup]="mesaForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <div class="input-wrapper">
+            <ion-input
+              type="number"
+              placeholder="Número de Mesa"
+              formControlName="numero"
+            ></ion-input>
           </div>
-        </ion-item>
-
-        <div *ngIf="foto">
-          <img [src]="foto" alt="Foto de la mesa" />
         </div>
 
-        <ion-item>
-          <div class="action-buttons">
-            <ion-button
-              expand="block"
-              type="submit"
-              [disabled]="mesaForm.invalid"
-              >Guardar Mesa</ion-button
-            >
+        <div class="form-group">
+          <div class="input-wrapper">
+            <!-- <ion-icon name="lock-closed-outline"></ion-icon> -->
+            <ion-input
+              placeholder="Nro. de comensales"
+              formControlName="nroComensales"
+              type="number"
+            ></ion-input>
           </div>
-        </ion-item>
-      </form>
 
-      <div *ngIf="qrCode">
-        <p>Código QR:</p>
-        <img [src]="qrCode" alt="QR de la mesa" />
-      </div>
+          <ion-item class="selectTipo">
+            <ion-label>Tipo </ion-label>
+            <ion-select formControlName="tipo">
+              <ion-select-option value="VIP">VIP</ion-select-option>
+              <ion-select-option value="Discapacitados"
+                >Para discapacitados</ion-select-option
+              >
+              <ion-select-option value="Estándar">Estándar</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <!-- <div
+            *ngIf="
+              registerForm.get('password')?.invalid &&
+              (registerForm.get('password')?.dirty ||
+                registerForm.get('password')?.touched)
+            "
+            class="error-message"
+          >
+            <ion-text
+              color="danger"
+              *ngIf="registerForm.get('password')?.errors?.['required']"
+            >
+              Password es requerido.
+            </ion-text>
+            <ion-text
+              color="danger"
+              *ngIf="registerForm.get('password')?.errors?.['minlength']"
+            >
+              Password debe tener al menos 6 caracteres.
+            </ion-text>
+          </div> -->
+        </div>
+
+        <div class="form-group" *ngIf="mesaFoto">
+          <div class="input-wrapper">
+            <div class="contenedor-foto">
+              <img [src]="mesaFoto" alt="Foto de la mesa" />
+            </div>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <ion-button expand="block" type="button" (click)="tomarFoto()">
+            Tomar foto
+          </ion-button>
+          <ion-button expand="block" type="submit" [disabled]="!mesaForm.valid">
+            Guardar Mesa
+          </ion-button>
+          <ion-button
+            class="volver"
+            expand="block"
+            type="submit"
+            (click)="volver()"
+          >
+            <ion-icon
+              style="font-size: 2rem !important"
+              name="caret-back-circle"
+            ></ion-icon>
+          </ion-button>
+        </div>
+      </form>
     </ion-card>
   </div>
 </ion-content>

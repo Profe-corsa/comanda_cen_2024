@@ -1,4 +1,9 @@
 <ion-content>
+  <!-- Mostrar el loading spinner cuando isLoading es true -->
+  <div *ngIf="loadingService.loadingStatus">
+    <app-loading></app-loading>
+  </div>
+
   <div class="container">
     <ion-card class="login-card">
       <form [formGroup]="loginForm" (ngSubmit)="onlogin()">
@@ -12,7 +17,7 @@
             <ion-icon name="mail-outline"></ion-icon>
             <ion-input
               type="email"
-              placeholder="Email"
+              placeholder="Correo"
               formControlName="email"
             ></ion-input>
           </div>
@@ -27,13 +32,13 @@
               color="danger"
               *ngIf="loginForm.get('email')?.errors?.['required']"
             >
-              Email es requerido.
+              Correo es requerido.
             </ion-text>
             <ion-text
               color="danger"
               *ngIf="loginForm.get('email')?.errors?.['email']"
             >
-              Email no es válido.
+              Correo no es válido.
             </ion-text>
           </div>
         </div>
@@ -43,7 +48,7 @@
             <ion-icon name="lock-closed-outline"></ion-icon>
             <ion-input
               [attr.type]="showPassword ? 'text' : 'password'"
-              placeholder="Password"
+              placeholder="Clave"
               formControlName="password"
             ></ion-input>
             <ion-icon
@@ -63,22 +68,48 @@
               color="danger"
               *ngIf="loginForm.get('password')?.errors?.['required']"
             >
-              Password es requerido.
+              Clave es requerido.
             </ion-text>
             <ion-text
               color="danger"
               *ngIf="loginForm.get('password')?.errors?.['minlength']"
             >
-              Password debe tener al menos 6 caracteres.
+              Clave debe tener al menos 6 caracteres.
             </ion-text>
           </div>
         </div>
 
         <div class="action-buttons">
-          <ion-button expand="block" type="submit" [disabled]="!loginForm.valid"
-            >Ingresar</ion-button
-          >
-          <p class="forgot-password">¿No tienes una cuenta?</p>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="8">
+                <ion-button
+                  class="ingresar-button"
+                  expand="block"
+                  type="submit"
+                  [disabled]="!loginForm.valid"
+                  >Ingresar</ion-button
+                >
+              </ion-col>
+              <ion-col size="4">
+                <ion-button
+                  expand="block"
+                  fill="outline"
+                  (click)="onGoogleLogin()"
+                >
+                  <!-- <ion-icon name="logo-google"></ion-icon> -->
+                  <img
+                    src="\assets\google-symbol_2875404.png"
+                    alt=""
+                    style="width: 50%"
+                  />
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+          <p class="forgot-password" style="margin-top: auto">
+            ¿No tienes una cuenta?
+          </p>
           <ion-button
             expand="block"
             fill="outline"
@@ -134,6 +165,22 @@
           >
             <img src="\assets\Usuarios\cliente.png" alt="" />
           </ion-fab-button>
+        </ion-fab-list>
+        <ion-fab-list side="top" class="fab-list-head">
+          <div class="fab-list-top">
+            <ion-fab-button
+              [ngClass]="{'small-fab-child': showUserOptions}"
+              (click)="fillFormWithUser(5)"
+            >
+              <img src="\assets\Usuarios\metre.png" alt="" />
+            </ion-fab-button>
+            <ion-fab-button
+              [ngClass]="{'small-fab-child': showUserOptions}"
+              (click)="fillFormWithUser(6)"
+            >
+              <img src="\assets\Usuarios\cocinero.png" alt="" />
+            </ion-fab-button>
+          </div>
         </ion-fab-list>
       </ion-fab>
     </div>

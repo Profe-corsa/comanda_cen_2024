@@ -14,6 +14,10 @@ import {
   IonFab,
   IonFabList,
   IonRouterLink,
+  IonSpinner,
+  IonGrid,
+  IonRow,
+  IonCol,
 } from '@ionic/angular/standalone';
 import {
   ReactiveFormsModule,
@@ -32,11 +36,15 @@ import {
   mailOutline,
   ellipsisHorizontal,
   personCircleOutline,
+  logoGoogle,
 } from 'ionicons/icons';
 import { Subscription } from 'rxjs';
 import { Perfiles } from 'src/app/clases/enumerados/perfiles';
 import { Estados } from 'src/app/clases/enumerados/Estados';
 import { ToastService } from 'src/app/services/toast.service';
+import { LoadingService } from 'src/app/services/loading.service';
+import { LoadingComponent } from 'src/app/componentes/loading/loading.component';
+import { PushMailNotificationService } from 'src/app/services/push-mail-notification.service';
 
 @Component({
   selector: 'app-login',
@@ -44,6 +52,10 @@ import { ToastService } from 'src/app/services/toast.service';
   styleUrls: ['./login.page.scss'],
   standalone: true,
   imports: [
+    IonCol,
+    IonRow,
+    IonGrid,
+    IonSpinner,
     ReactiveFormsModule,
     CommonModule,
     IonRouterLink,
@@ -59,6 +71,7 @@ import { ToastService } from 'src/app/services/toast.service';
     IonFab,
     IonFabList,
     IonInput,
+    LoadingComponent,
   ],
 })
 export class LoginPage {
@@ -67,12 +80,16 @@ export class LoginPage {
   showPassword = false;
   showUserOptions = false; // Para mostrar u ocultar los botones de usuario
 
+  user: any; //Para pruebas
+
   constructor(
     private router: Router,
     private authService: AuthService,
     private userSrv: UsuarioService,
     private fb: FormBuilder,
-    private toast: ToastService
+    private toast: ToastService,
+    public loadingService: LoadingService,
+    private notificationService: PushMailNotificationService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -82,6 +99,7 @@ export class LoginPage {
     addIcons({
       mailOutline,
       lockClosedOutline,
+      logoGoogle,
       ellipsisHorizontal,
       personCircleOutline,
       eyeOutline,
@@ -101,9 +119,11 @@ export class LoginPage {
   fillFormWithUser(userIndex: number) {
     const users = [
       { email: 'duenio@comandacen.com', password: '123456' },
-      { email: 'metre@gmail.com', password: '123456' },
-      { email: 'prueba@test2.com', password: '123456' },
+      { email: 'mozo@comandacen.com', password: '123456' },
+      { email: 'bartender@comandacen.com', password: '123456' },
       { email: 'nmiguenz@gmail.com', password: '123456' },
+      { email: 'metre@gmail.com', password: '123456' },
+      { email: 'cocinero@comandacen.com', password: '123456' },
     ];
 
     const selectedUser = users[userIndex - 1];
@@ -122,20 +142,39 @@ export class LoginPage {
 
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
+      // Mostrar el loading antes de la petición
+      this.loadingService.showLoading();
       try {
         res = await this.authService.login(email, password);
-        console.log(res);
+
+        if (res == null) {
+          {
+            this.loadingService.hideLoading();
+            this.toast.showError(
+              'No se pudo iniciar sesión con las credenciales proporcionadas.',
+              'middle',
+              5000
+            );
+            return;
+          }
+        }
 
         this.suscripcion = this.userSrv
           .getUser(res.user.uid)
           .subscribe((usuario: any) => {
             if (usuario != undefined) {
+              //Si el usuario se logueo guardamos el token
+              this.notificationService.init(usuario);
+
               if (
                 usuario.perfil == Perfiles.cliente &&
                 usuario.estado == Estados.pendienteDeAprobacion
               ) {
+                this.loadingService.hideLoading();
                 this.toast.showError(
-                  'Lo sentimos, pero su cuenta aún se encuentra Pendiente de aprobación.'
+                  'Lo sentimos, pero su cuenta aún se encuentra Pendiente de aprobación.',
+                  'middle',
+                  5000
                 );
                 this.limpiarInputs();
               } else if (
@@ -143,18 +182,20 @@ export class LoginPage {
                 usuario.estado == Estados.rechazado
               ) {
                 this.limpiarInputs();
+                this.loadingService.hideLoading();
                 this.toast.showError(
                   'Lo sentimos, pero su cuenta fue rechazada.'
                 );
               } else {
-                console.log('Login correcto');
                 this.limpiarInputs();
                 this.suscripcion.unsubscribe();
+                this.loadingService.hideLoading();
                 this.router.navigate(['/home']);
               }
             }
           });
       } catch (error: any) {
+        this.loadingService.hideLoading();
         this.toast.showError('Falló el ingreso: ' + error.message);
       }
     } else {
@@ -163,12 +204,73 @@ export class LoginPage {
     }
   }
 
+  async onGoogleLogin() {
+    let res: any;
+    this.loadingService.showLoading();
+    try {
+      res = await this.authService.googleSignIn();
+      console.log('User con Google en login: ', res);
+
+      if (res == null) {
+        {
+          this.loadingService.hideLoading();
+          this.toast.showError(
+            'No se pudo iniciar sesión con Google o no posee una cuenta registrada en la Comanda CEN con este correo.',
+            'middle',
+            5000
+          );
+          return;
+        }
+      }
+
+      this.suscripcion = this.userSrv
+        .getUser(res.userId)
+        .subscribe((usuario: any) => {
+          if (usuario != undefined) {
+            //Si el usuario se logueo guardamos el token
+            this.notificationService.init(usuario);
+
+            if (
+              usuario.perfil == Perfiles.cliente &&
+              usuario.estado == Estados.pendienteDeAprobacion
+            ) {
+              this.loadingService.hideLoading();
+              this.toast.showError(
+                'Lo sentimos, pero su cuenta aún se encuentra Pendiente de aprobación.',
+                'middle',
+                5000
+              );
+              this.limpiarInputs();
+            } else if (
+              usuario.perfil == Perfiles.cliente &&
+              usuario.estado == Estados.rechazado
+            ) {
+              this.limpiarInputs();
+              this.loadingService.hideLoading();
+              this.toast.showError(
+                'Lo sentimos, pero su cuenta fue rechazada.',
+                'middle',
+                5000
+              );
+            } else {
+              this.limpiarInputs();
+              this.suscripcion.unsubscribe();
+              this.loadingService.hideLoading();
+              this.router.navigate(['/home']);
+            }
+          }
+        });
+    } catch (error: any) {
+      this.loadingService.hideLoading();
+      this.toast.showError('Falló el ingreso: ' + error.message);
+    }
+  }
+
   irARegistro(tipoCliente: string) {
     this.router.navigate([`/registro/${tipoCliente}`]);
   }
 
   limpiarInputs() {
-    // Se limpia el formulario
     this.loginForm.reset();
   }
 }

@@ -1,0 +1,82 @@
+ion-thumbnail img {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+.btn-close {
+  color: white;
+  font-weight: 800;
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: 8px; /* Bordes redondeados */
+  transition: background 0.3s, border 0.3s; /* Transición suave */
+}
+.btn-close:active {
+  color: white;
+  background: rgba(255, 0, 0, 0.5); /* Fondo rojo semi-transparente */
+  border-radius: 8px; /* Mantener los bordes redondeados */
+}
+ion-content {
+  --background: url("/assets/background.jpg") no-repeat center center / cover;
+  display: flex;
+  flex-direction: column;
+}
+.contenedor-principal {
+  padding: 2%;
+  background-color: #000;
+  margin: 4%;
+  height: 96%;
+  border-radius: 1em;
+  display: flex;
+  flex-direction: column;
+  color: #d96d2d;
+}
+.contenido {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  color: #d96d2d;
+}
+.footer {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  --background: #000;
+}
+.btn-pedir {
+  width: 100%;
+  --background: linear-gradient(to right, #d96d2d, #f4a40a) !important;
+}
+.titulo-close {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.titulo {
+  font-size: 2em;
+  font-weight: 900;
+  margin-left: 40%;
+}
+ion-item {
+  --background: #000;
+  box-shadow: 0 1px 2px #d96d2d;
+  color: #d96d2d;
+}
+
+.detalle-pago {
+  background-color: rgba(0, 0, 0, 0.8); /* Fondo semi-transparente */
+  color: #d96d2d; /* Color de texto */
+  padding: 1rem; /* Espaciado interno */
+  border-radius: 10px; /* Bordes redondeados */
+  margin: 1rem 0; /* Espaciado externo */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* Sombra */
+}
+
+.detalle-item {
+  display: flex; /* Flexbox para alinear texto */
+  justify-content: space-between; /* Distribuir espacio entre texto */
+  margin-bottom: 0.5rem; /* Espaciado entre filas */
+  font-size: 1.2rem; /* Tamaño de fuente */
+}

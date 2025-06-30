@@ -1,0 +1,32 @@
+<div *ngIf="loadingService.loadingStatus">
+  <app-loading></app-loading>
+</div>
+
+<div id="contenedor">
+  <ion-list>
+    <ion-item
+      (click)="cambiarEstadPedido(pedido)"
+      *ngFor="let pedido of listaPedidos"
+      [ngClass]="{ 'item-custom': pedido.estado == 'finalizado' }"
+    >
+      <ion-label>
+        <!-- <h2>Mesa: {{ pedido.mesa.numero }}</h2> -->
+        <ion-label class="estadoPedido"
+          >Estado: <span>{{ pedido.estado | titlecase }}</span></ion-label
+        >
+        <p>
+          Tiempo estimado: <span>{{ pedido.tiempoEstimado }}</span
+          >"
+        </p>
+        <ion-label
+          >Fecha:
+          {{ pedido.hora.toDate() | date : "dd/MM/yyyy HH:mm" }}</ion-label
+        >
+      </ion-label>
+      <div
+        class="status-indicator"
+        [ngClass]="getStatusClass(pedido.estado)"
+      ></div>
+    </ion-item>
+  </ion-list>
+</div>

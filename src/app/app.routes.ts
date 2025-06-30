@@ -38,5 +38,64 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/listados/listados.page').then((m) => m.ListadosPage),
   },
-
+  {
+    //object va a ser el tipo de usuario que accceda a la consulta
+    path: 'consulta/:object/:id',
+    loadComponent: () =>
+      import('./pages/consulta/consulta.page').then((m) => m.ConsultaPage),
+  },
+  {
+    path: 'alta-producto',
+    loadComponent: () =>
+      import('./componentes/alta-producto/alta-producto.component').then(
+        (m) => m.AltaProductoComponent
+      ),
+  },
+  {
+    path: 'carta/:id',
+    loadComponent: () =>
+      import('./componentes/carta/carta.component').then(
+        (m) => m.CartaComponent
+      ),
+  },
+  {
+    path: 'mozo-home',
+    loadComponent: () =>
+      import('./componentes/mozo-home/mozo-home.component').then(
+        (m) => m.MozoHomeComponent
+      ),
+  },
+  {
+    path: 'estado-pedidos/:id',
+    loadComponent: () =>
+      import('./componentes/estado-pedidos/estado-pedidos.component').then(
+        (m) => m.EstadoPedidosComponent
+      ),
+  },
+  {
+    path: 'menu-juegos',
+    loadComponent: () =>
+      import('./componentes/menu-juegos/menu-juegos.component').then(
+        (m) => m.MenuJuegosComponent
+      ),
+  },
+  {
+    path: 'shuffle-cups',
+    loadComponent: () =>
+      import('./componentes/shuffle-cups/shuffle-cups.component').then(
+        (m) => m.ShuffleCupsComponent
+      ),
+  },
+  {
+    path: 'encuesta-cliente/:id',
+    loadComponent: () =>
+      import('./componentes/encuesta-cliente/encuesta-cliente.component').then(
+        (m) => m.EncuestaClienteComponent
+      ),
+  },
+  {
+    path: 'reservas/:id',
+    loadComponent: () =>
+      import('./pages/reservas/reservas.page').then((m) => m.ReservasPage),
+  },
 ];

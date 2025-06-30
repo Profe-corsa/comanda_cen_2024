@@ -7,4 +7,16 @@
     *ngIf="rutaUsuarioPerfil === 'clienteAnonimo'"
   ></app-anonimo-registro>
   <app-alta-mesa *ngIf="rutaUsuarioPerfil === 'alta-mesa'"></app-alta-mesa>
+  <app-duenio-empleado
+    *ngIf="rutaUsuarioPerfil === 'empleado'"
+    [tipoUsuario]="'empleado'"
+  ></app-duenio-empleado>
+  <app-duenio-empleado
+    *ngIf="rutaUsuarioPerfil === 'dueño'"
+    [tipoUsuario]="'dueño'"
+  ></app-duenio-empleado>
+  <app-alta-producto
+    *ngIf="rutaUsuarioPerfil === 'altaProducto'"
+    [tipoUsuario]="'bartender || cocinero'"
+  ></app-alta-producto>
 </ion-content>
